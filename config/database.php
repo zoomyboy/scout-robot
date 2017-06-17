@@ -54,6 +54,21 @@ return [
             'engine' => null,
         ],
 
+        'mysqltest' => [
+            'driver' => 'mysql',
+            'host' => '127.0.0.1',
+            'port' => '3306',
+            'database' => env('DB_TEST_DATABASE'),
+            'username' => env('DB_TEST_USERNAME'),
+            'password' => env('DB_TEST_PASSWORD'),
+            'unix_socket' => env('DB_SOCKET', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'strict' => true,
+            'engine' => null,
+        ],
+
         'pgsql' => [
             'driver' => 'pgsql',
             'host' => env('DB_HOST', '127.0.0.1'),
