@@ -11,5 +11,14 @@ let mix = require('laravel-mix');
  |
  */
 
+mix.webpackConfig({
+	resolve: {
+		alias: {
+			'uiStyle.less$': '/node_modules/z-ui/style.less'
+		}
+	}
+});
+
 mix.js('resources/assets/js/app.js', 'public/js')
-   .sass('resources/assets/sass/app.scss', 'public/css');
+	.js('resources/assets/js/login.js', 'public/js')
+	.browserSync({proxy: 'http://kasseneu.dev'});

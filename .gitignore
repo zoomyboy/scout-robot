@@ -13,3 +13,5 @@ npm-debug.log
 *.swp
 *.swo
 *.swm
+/resources/assets/js/lib
+/public
