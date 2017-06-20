@@ -41896,20 +41896,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
 	props: {
@@ -41917,6 +41903,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			type: Array,
 			required: true
 		}
+	},
+	components: {
+		footerlink: __webpack_require__(358)
 	},
 	computed: {
 		eachWidth: function eachWidth() {
@@ -42445,13 +42434,13 @@ module.exports = [{ route: 'member.index', label: 'Mitglieder', icon: 'user' }];
 /* 218 */
 /***/ (function(module, exports) {
 
-module.exports = [{ route: 'config.index', label: 'Konfiguration', icon: 'wheel' }];
+module.exports = [{ route: 'config.index', tooltip: 'Konfiguration', icon: 'cogs' }, { href: '/logout', tooltip: 'Ausloggen', icon: 'sign-out' }];
 
 /***/ }),
 /* 219 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = [{ path: '/member', component: __webpack_require__(330), name: 'member.index' }];
+module.exports = [{ path: '/member', component: __webpack_require__(330), name: 'member.index' }, { path: '/config', component: __webpack_require__(363), name: 'config.index' }];
 
 /***/ }),
 /* 220 */,
@@ -42553,7 +42542,7 @@ exports = module.exports = __webpack_require__(1)();
 
 
 // module
-exports.push([module.i, "\n.tooltip-inner {\n  width: 250px !important;\n  max-width: 250px;\n}\n.cp-sidebar-footer {\n  position: absolute;\n  bottom: 0;\n  width: 100%;\n  font-size: 0;\n}\n.cp-sidebar-footer > div {\n  padding: 10px;\n  background-color: #1E1E29;\n  display: inline-block;\n}\n.cp-sidebar-footer > div:hover {\n  background-color: #3d3c51;\n}\n.cp-sidebar-footer > div > a {\n  text-align: center;\n  color: #87878C;\n  font-size: 12px;\n}\n.cp-sidebar-footer > div > a:hover,\n.cp-sidebar-footer > div > a:focus,\n.cp-sidebar-footer > div > a:active {\n  text-decoration: none;\n}\n", ""]);
+exports.push([module.i, "\n.tooltip-inner {\n  width: 250px !important;\n  max-width: 250px;\n}\nul.footer-links {\n  position: absolute;\n  bottom: 0;\n  width: 100%;\n  font-size: 0;\n  margin-bottom: 0;\n  padding-left: 0;\n}\n", ""]);
 
 // exports
 
@@ -44142,26 +44131,23 @@ if (false) {
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', {
-    staticClass: "cp-sidebar-footer cp-wrap"
-  }, _vm._l((_vm.entries), function(entry) {
-    return _c('div', {
+  return _c('ul', {
+    staticClass: "cp-sidebar-footer cp-wrap footer-links"
+  }, _vm._l((_vm.entries), function(entry, ind) {
+    return _c('footerlink', {
+      key: ind,
+      staticClass: "footer-link",
       style: ({
         width: _vm.eachWidth + '%'
-      })
-    }, [(entry.href) ? _c('a', {
+      }),
       attrs: {
-        "href": entry.href
+        "route": entry.route,
+        "href": entry.href,
+        "title": entry.title,
+        "icon": entry.icon,
+        "tooltip": entry.tooltip
       }
-    }, [(entry.icon) ? _c('div', [_c('span', {
-      class: 'fa fa-' + entry.icon
-    })]) : _vm._e(), _vm._v(" "), (entry.title) ? _c('div', [_vm._v(_vm._s(entry.title))]) : _vm._e()]) : _vm._e(), _vm._v(" "), (entry.route) ? _c('router-link', {
-      attrs: {
-        "to": entry.route
-      }
-    }, [(entry.icon) ? _c('div', [_c('span', {
-      class: 'fa fa-' + entry.icon
-    })]) : _vm._e(), _vm._v(" "), (entry.title) ? _c('div', [_vm._v(_vm._s(entry.title))]) : _vm._e()]) : _vm._e()], 1)
+    })
   }))
 },staticRenderFns: []}
 module.exports.render._withStripped = true
@@ -44408,6 +44394,243 @@ if(false) {
 
 module.exports = __webpack_require__(208);
 
+
+/***/ }),
+/* 357 */,
+/* 358 */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+/* styles */
+__webpack_require__(361)
+
+var Component = __webpack_require__(0)(
+  /* script */
+  __webpack_require__(362),
+  /* template */
+  __webpack_require__(360),
+  /* scopeId */
+  null,
+  /* cssModules */
+  null
+)
+Component.options.__file = "/home/pille/www/scout-robot/resources/assets/js/lib/z-vue-sidebar/footerlink.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] footerlink.vue: functional components are not supported with templates, they should use render functions.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-362ab032", Component.options)
+  } else {
+    hotAPI.reload("data-v-362ab032", Component.options)
+  }
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 359 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(1)();
+// imports
+
+
+// module
+exports.push([module.i, "\n.tooltip-inner {\n  width: 250px !important;\n  max-width: 250px;\n}\n.footer-link {\n  background-color: #1E1E29;\n  display: inline-block;\n}\n.footer-link:hover {\n  background-color: #3d3c51;\n}\n.footer-link > a {\n  display: block;\n  text-align: center;\n  color: #87878C;\n  font-size: 12px;\n  padding: 10px;\n}\n.footer-link > a:hover,\n.footer-link > a:focus,\n.footer-link > a:active {\n  text-decoration: none;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 360 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('li', {
+    ref: "footerlink",
+    staticClass: "footer-link"
+  }, [(_vm.href) ? _c('a', {
+    attrs: {
+      "href": _vm.href,
+      "data-toggle": _vm.toggle,
+      "data-original-title": "",
+      "title": _vm.realTitle
+    }
+  }, [(_vm.icon) ? _c('div', [_c('span', {
+    class: 'fa fa-' + _vm.icon
+  })]) : _vm._e(), _vm._v(" "), (_vm.title) ? _c('div', [_vm._v(_vm._s(_vm.title))]) : _vm._e()]) : _vm._e(), _vm._v(" "), (_vm.route) ? _c('router-link', {
+    attrs: {
+      "to": {
+        'name': _vm.route
+      },
+      "data-toggle": _vm.toggle,
+      "data-original-title": "",
+      "title": _vm.realTitle
+    }
+  }, [(_vm.icon) ? _c('div', [_c('span', {
+    class: 'fa fa-' + _vm.icon
+  })]) : _vm._e(), _vm._v(" "), (_vm.title) ? _c('div', [_vm._v(_vm._s(_vm.entry.title))]) : _vm._e()]) : _vm._e()], 1)
+},staticRenderFns: []}
+module.exports.render._withStripped = true
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-362ab032", module.exports)
+  }
+}
+
+/***/ }),
+/* 361 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(359);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(2)("66f6c595", content, false);
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"id\":\"data-v-362ab032\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../node_modules/less-loader/index.js!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./footerlink.vue", function() {
+     var newContent = require("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"id\":\"data-v-362ab032\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../node_modules/less-loader/index.js!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./footerlink.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 362 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+	props: ['href', 'icon', 'title', 'route', 'tooltip'],
+	computed: {
+		toggle: function toggle() {
+			if (this.tooltip) {
+				return 'tooltip';
+			}
+			return '';
+		},
+		realTitle: function realTitle() {
+			if (this.tooltip) {
+				return this.tooltip;
+			}
+			return '';
+		},
+		tooltipClass: function tooltipClass() {
+			if (this.tooltip) {
+				return 'linkTooltip';
+			}
+			return '';
+		}
+	},
+	mounted: function mounted() {
+		$(this.$refs.footerlink).find('[data-toggle="tooltip"]').tooltip({ container: 'body' });
+	}
+});
+
+/***/ }),
+/* 363 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var Component = __webpack_require__(0)(
+  /* script */
+  null,
+  /* template */
+  __webpack_require__(364),
+  /* scopeId */
+  null,
+  /* cssModules */
+  null
+)
+Component.options.__file = "/home/pille/www/scout-robot/resources/assets/js/components/config/index.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] index.vue: functional components are not supported with templates, they should use render functions.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-367a8eb0", Component.options)
+  } else {
+    hotAPI.reload("data-v-367a8eb0", Component.options)
+  }
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 364 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    staticClass: "cp-wrap cp-config-index"
+  })
+},staticRenderFns: []}
+module.exports.render._withStripped = true
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-367a8eb0", module.exports)
+  }
+}
 
 /***/ })
 /******/ ]);
