@@ -3,12 +3,16 @@
 namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use \App\User;
 
 class LoginTest extends \Tests\TestCase {
 	use DatabaseMigrations;
 
 	public function setUp() {
 		parent::setUp();
+		(new \RightSeeder)->run();
+		(new \UsergroupSeeder)->run();
+		(new \UserSeeder)->run();
 	}
 
 	/** @test */
@@ -24,8 +28,8 @@ class LoginTest extends \Tests\TestCase {
 
 	/** @test */
 	public function it_loggs_in_successfully() {
-		$user = parent::createUser('passw');
-		$this->post('/login', ['email' => $user->email, 'password' => 'passw'])->assertRedirect('/');
+		$user = User::first();
+		$this->post('/login', ['email' => $user->email, 'password' => 'admin'])->assertRedirect('/');
 
 		$this->assertInstanceOf(\App\User::class, auth()->user());
 	}
