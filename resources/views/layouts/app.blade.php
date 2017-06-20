@@ -11,10 +11,8 @@
 	<title>{{ config('app.name', 'Laravel') }}</title>
 </head>
 <body>
-	<div id="app">
-		@yield('content')
-	</div>
+	@yield('content')
 
-	@yield('footer')
+	@yield('scripts')
 </body>
 </html>

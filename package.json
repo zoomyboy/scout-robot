@@ -17,10 +17,9 @@
     "vue": "^2.1.10"
   },
   "dependencies": {
-    "vue-router": "^2.6.0",
+    "vue-router": "^2.5.3",
     "z-fullpage": "^1.0.0",
     "z-ui": "^1.0.29",
-    "z-vue-sidebar": "^1.0.13",
-    "zoom-vue-session": "^1.0.2"
+    "z-vue-sidebar": "^1.0.13"
   }
 }

@@ -1,12 +1,14 @@
 @extends('layouts.app')
 
 @section('content')
-	<fullpage>
-
-	</fullpage>
-	email, password
+	<div id="app">
+		<fullpage backgroundcolor="#003c59">
+			<status-bar></status-bar>
+			<router-view></router-view>
+		</fullpage>
+	</div>
 @endsection
 
-@section('footer')
+@section('scripts')
 	<script src="/js/login.js"></script>
 @endsection
