@@ -34,4 +34,9 @@ class User extends Authenticatable
 	public function usergroup() {
 		return $this->belongsTo(\App\UserGroup::class);
 	}
+
+	//------------------------------------- UI --------------------------------------
+	public function hasRight($key) {
+		return $this->usergroup->rights()->where('key', $key)->first() != null;
+	}
 }

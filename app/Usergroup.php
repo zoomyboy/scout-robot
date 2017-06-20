@@ -13,4 +13,8 @@ class Usergroup extends Model
 	public function rights() {
 		return $this->belongsToMany(\App\Right::class);
 	}
+
+	public function hasRight($key) {
+		return $this->rights()->where('key', $key)->first() != null;
+	}
 }
