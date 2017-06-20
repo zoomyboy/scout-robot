@@ -14,9 +14,9 @@ let mix = require('laravel-mix');
 mix.webpackConfig({
 	resolve: {
 		alias: {
-			'sidebarStyle.less': path.resolve(__dirname, 'node_modules/z-vue-sidebar/style.less'),
-			'uiStyle.less': path.resolve(__dirname, 'node_modules/z-ui/style.less'),
-			'fullpageStyle.less': path.resolve(__dirname, 'node_modules/z-ui/style.less')
+			'sidebarStyle.less': path.resolve(__dirname, 'resources/assets/less/style.less'),
+			'uiStyle.less': path.resolve(__dirname, 'resources/assets/less/style.less'),
+			'fullpageStyle.less': path.resolve(__dirname, 'resources/assets/less/style.less')
 		}
 	}
 });
