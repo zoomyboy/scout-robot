@@ -7,6 +7,13 @@
 		<sidebarfooter :entries="entryfooter"></sidebarfooter>
 	</sidebar>
 	<comp>
+		<topbar>
+			<dropdown slot="right" :title="$user.name" align="right">
+				<dropdown-link route="profile.index" title="Profil bearbeiten" icon="user"></dropdown-link>
+				<dropdown-link route="profile.password" title="Passwort ändern" icon="shield"></dropdown-link>
+				<dropdown-link href="/logout" title="Ausloggen" icon="sign-out"></dropdown-link>
+			</dropdown>
+		</topbar>
 		<app-heading></app-heading>
 		<div class="container-fluid">
 			<status-bar></status-bar>

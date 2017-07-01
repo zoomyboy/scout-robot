@@ -13,6 +13,10 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+Route::get('/authuser', 'AuthuserController@show');
+Route::resource('profile', 'ProfileController');
+Route::resource('usergroup', 'UsergroupController');
+Route::resource('right', 'RightController');
+
+Route::patch('/user/password/{user}', 'UserController@password');
+Route::resource('user', 'UserController');

@@ -12,7 +12,7 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-		$user = factory(User::class)->make(['name' => 'Administrator', 'password' => bcrypt('admin'), 'email' => 'admin@example.com']);
+		$user = factory(User::class)->make(['name' => 'Administrator', 'password' => 'admin', 'email' => 'admin@example.com']);
 		$user->usergroup()->associate(\UsergroupSeeder::default());
 		$user->save();
     }

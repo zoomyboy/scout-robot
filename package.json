@@ -17,6 +17,7 @@
     "vue": "^2.1.10"
   },
   "dependencies": {
+    "moment": "^2.18.1",
     "vue-router": "^2.5.3",
     "z-fullpage": "^1.0.0",
     "z-ui": "^1.0.29",

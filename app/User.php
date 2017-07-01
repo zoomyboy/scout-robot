@@ -32,7 +32,17 @@ class User extends Authenticatable
 
 	//---------------------------------- Relations ----------------------------------
 	public function usergroup() {
-		return $this->belongsTo(\App\UserGroup::class);
+		return $this->belongsTo(\App\Usergroup::class);
+	}
+
+	//----------------------------------- Setters -----------------------------------
+	/**
+	 * Hash the User's Password on insertion
+	 *
+	 * @param string $password The unhashed password
+	 */
+	public function setPasswordAttribute($password) {
+		$this->attributes['password'] = bcrypt($password);
 	}
 
 	//------------------------------------- UI --------------------------------------

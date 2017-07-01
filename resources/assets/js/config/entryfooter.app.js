@@ -1,4 +1,5 @@
 module.exports = [
 	{route: 'config.index', tooltip: 'Konfiguration', icon: 'cogs'},
-	{href: '/logout', tooltip: 'Ausloggen', icon: 'sign-out'}
+	{route: 'usergroup.index', tooltip: 'Benutzergruppen', icon: 'users'},
+	{href: '/logout', tooltip: 'Ausloggen', icon: 'sign-out'},
 ];
