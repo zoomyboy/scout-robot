@@ -23,7 +23,7 @@ class UsergroupController extends Controller
 	}
 
 	public function update(Usergroup $usergroup, UsergroupUpdateRequest $request) {
-		$request->persist();
+		$request->persist($usergroup);
 	}
 
 	public function destroy(UsergroupDeleteRequest $request, Usergroup $usergroup) {
