@@ -16,7 +16,7 @@
 		</topbar>
 		<app-heading></app-heading>
 		<div class="container-fluid">
-			<status-bar></status-bar>
+			<status-bar layout="october"></status-bar>
 			<router-view></router-view>
 		</div>
 	</comp>
