@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Zoomyboy\BaseRequest\Request;
+use Illuminate\Validation\Rule;
 
 class UserUpdateRequest extends Request
 {
@@ -15,8 +16,17 @@ class UserUpdateRequest extends Request
      */
     public function rules()
     {
-        return [
-            'name' => 'required'
-        ];
+		$pwRules = ['confirmed'];
+		if ($this->input('password') || $this->input('password_confirmation')) {
+			$pwRules[] = 'min:6';
+		}
+
+		return [
+			'name' => 'required|min:3',
+			'email' => ['required', 'email', Rule::unique('users')->ignore($this->route()->parameter('user')->id)],
+			'usergroup' => 'required',
+			'password' => $pwRules
+		];
     }
 }
+

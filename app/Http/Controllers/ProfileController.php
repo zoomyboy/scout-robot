@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\ProfileUpdateRequest;
+use App\Http\Requests\ProfilePasswordUpdateRequest;
+use App\User;
 
 class ProfileController extends Controller
 {
@@ -11,7 +14,15 @@ class ProfileController extends Controller
 	 *
 	 * @return JSON
 	 */
-    public function show() {
-    	return response()->json(auth()->user()->toArray());
+    public function index() {
+    	return response()->json(auth()->user()->load('usergroup')->toArray());
     }
+
+	public function update(User $user, ProfileUpdateRequest $request) {
+		$request->persist($user);
+	}
+
+	public function updatePassword(User $user, ProfilePasswordUpdateRequest $request) {
+		$request->persist($user);
+	}
 }

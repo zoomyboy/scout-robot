@@ -4,8 +4,9 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ResetsPasswords;
+use Illuminate\Support\Facades\Password;
 
-class ResetPasswordController extends Controller
+class SetFirstPasswordController extends Controller
 {
     /*
     |--------------------------------------------------------------------------
@@ -37,7 +38,7 @@ class ResetPasswordController extends Controller
         $this->middleware('guest');
     }
 
-	public function first() {
-		
+	public function broker() {
+		return Password::broker('firstusers');
 	}
 }

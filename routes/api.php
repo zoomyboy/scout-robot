@@ -13,10 +13,16 @@ use Illuminate\Http\Request;
 |
 */
 
+Route::bind('profile', function ($id) {
+	return App\User::findOrFail($id);
+});
+
 Route::get('/authuser', 'AuthuserController@show');
 Route::resource('profile', 'ProfileController');
+Route::patch('/profile/{profile}/password', 'ProfileController@updatePassword');
+
 Route::resource('usergroup', 'UsergroupController');
+
 Route::resource('right', 'RightController');
 
-Route::patch('/user/password/{user}', 'UserController@password');
 Route::resource('user', 'UserController');

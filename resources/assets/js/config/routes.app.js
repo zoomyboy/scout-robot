@@ -8,4 +8,9 @@ module.exports = [
 	{path: '/usergroup', component: require('../components/usergroup/index.vue'), name: 'usergroup.index'},
 	{path: '/usergroup/add', component: require('../components/usergroup/add.vue'), name: 'usergroup.add'},
 	{path: '/usergroup/:id/edit', component: require('../components/usergroup/edit.vue'), name: 'usergroup.edit'},
+
+
+	{path: '/user', component: require('../components/user/index.vue'), name: 'user.index'},
+	{path: '/user/add', component: require('../components/user/add.vue'), name: 'user.add'},
+	{path: '/user/:id/edit', component: require('../components/user/edit.vue'), name: 'user.edit'},
 ];

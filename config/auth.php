@@ -97,6 +97,11 @@ return [
             'table' => 'password_resets',
             'expire' => 60,
         ],
+        'firstusers' => [
+            'provider' => 'users',
+            'table' => 'first_password_resets',
+            'expire' => 20160,	// = 14 days
+        ],
     ],
 
 ];

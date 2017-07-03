@@ -1,6 +1,6 @@
 module.exports = {
 	install: function(Vue, options) {
-		axios.get('/api/profile/view').then(function(ret) {
+		axios.get('/api/profile').then(function(ret) {
 			var User = new Vue({
 				data: function() {
 					return {
