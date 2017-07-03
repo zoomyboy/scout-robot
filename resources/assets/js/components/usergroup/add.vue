@@ -4,7 +4,7 @@
 
 		<vf-form action="/api/usergroup" method="post" redirect="usergroup.index" msg="Benutzergruppe angelegt!" ajax>
 			<vf-text name="title" label="Name"></vf-text>
-			<vf-checkboxes url="/api/right" label="Rechte" name="rights"></vf-checkboxes>
+			<vf-checkboxes url="/api/right" label="Rechte" name="rights" itemhelp="help"></vf-checkboxes>
 
 			<vf-submit></vf-submit>
 		</vf-form>

@@ -11,7 +11,10 @@ import {session, clearSession} from 'zoom-vue-session';
 Vue.use(session);
 
 window.globalFormOptions = {
-	submitLabel: 'Absenden'
+	submitLabel: 'Absenden',
+	texts: {
+		sending: false
+	}
 };
 
 import {table, form, heading, statusBar, link, tab, dropdown} from 'z-ui';

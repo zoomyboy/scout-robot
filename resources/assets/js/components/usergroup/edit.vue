@@ -4,7 +4,7 @@
 
 		<vf-form :action="'/api/usergroup/'+$route.params.id" method="patch" redirect="usergroup.index" msg="Benutzergruppe bearbeitet!" :url="'/api/usergroup/'+$route.params.id" ajax>
 			<vf-text name="title" label="Name"></vf-text>
-			<vf-checkboxes url="/api/right" label="Rechte" name="rights"></vf-checkboxes>
+			<vf-checkboxes url="/api/right" label="Rechte" name="rights" itemhelp="help"></vf-checkboxes>
 
 			<vf-submit></vf-submit>
 		</vf-form>
