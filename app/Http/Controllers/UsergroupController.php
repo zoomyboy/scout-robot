@@ -27,6 +27,6 @@ class UsergroupController extends Controller
 	}
 
 	public function destroy(UsergroupDeleteRequest $request, Usergroup $usergroup) {
-		//$request->persist($usergroup);
+		$request->persist($usergroup);
 	}
 }
