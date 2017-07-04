@@ -8,6 +8,7 @@ use Illuminate\Validation\Rule;
 class UserUpdateRequest extends Request
 {
 	public $model = \App\User::class;
+	public $right = 'user';
 
     /**
      * Get the validation rules that apply to the request.

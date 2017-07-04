@@ -7,6 +7,7 @@ use Zoomyboy\BaseRequest\Request;
 class UserStoreRequest extends Request
 {
 	public $model = \App\User::class;
+	public $right = 'user';
 
     /**
      * Get the validation rules that apply to the request.

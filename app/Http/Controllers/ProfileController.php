@@ -15,7 +15,7 @@ class ProfileController extends Controller
 	 * @return JSON
 	 */
     public function index() {
-    	return response()->json(auth()->user()->load('usergroup')->toArray());
+    	return response()->json(auth()->user()->load('usergroup.rights')->toArray());
     }
 
 	public function update(User $user, ProfileUpdateRequest $request) {

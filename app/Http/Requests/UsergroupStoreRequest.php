@@ -7,6 +7,7 @@ use Zoomyboy\BaseRequest\Request;
 class UsergroupStoreRequest extends Request
 {
 	public $model = \App\Usergroup::class;
+	public $right = 'usergroup';
 
     /**
      * Get the validation rules that apply to the request.

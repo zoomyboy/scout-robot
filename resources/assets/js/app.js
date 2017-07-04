@@ -13,7 +13,9 @@ Vue.use(session);
 window.globalFormOptions = {
 	submitLabel: 'Absenden',
 	texts: {
-		sending: false
+		sending: false,
+		unauthorized: 'Du bist nicht autorisiert das zu tun.',
+		notfound: 'Diese Resource wurde nicht gefunden.'
 	}
 };
 

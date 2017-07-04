@@ -7,6 +7,7 @@ use Zoomyboy\BaseRequest\Request;
 class UserDestroyRequest extends Request
 {
 	public $model = \App\User::class;
+	public $right = 'user';
 
 	public function customRules() {
 		if(auth()->user()->id == $this->input('id')) {
