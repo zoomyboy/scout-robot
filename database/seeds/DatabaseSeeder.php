@@ -14,5 +14,8 @@ class DatabaseSeeder extends Seeder
         $this->call(RightSeeder::class);
         $this->call(UsergroupSeeder::class);
         $this->call(UserSeeder::class);
+        $this->call(CountrySeeder::class);
+        $this->call(GenderSeeder::class);
+        $this->call(RegionSeeder::class);
     }
 }

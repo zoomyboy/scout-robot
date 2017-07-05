@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "c99367cfb784f43f28d0a57da797b191",
+    "content-hash": "8fd17f1ad476a8039687aeb4dc32b78d",
     "packages": [
         {
             "name": "dnoegel/php-xdg-base-dir",
@@ -2004,6 +2004,41 @@
             "description": "CssToInlineStyles is a class that enables you to convert HTML-pages/files into HTML-pages/files with inline styles. This is very useful when you're sending emails.",
             "homepage": "https://github.com/tijsverkoyen/CssToInlineStyles",
             "time": "2016-09-20T12:50:39+00:00"
+        },
+        {
+            "name": "umpirsky/country-list",
+            "version": "2.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/umpirsky/country-list.git",
+                "reference": "9d3e3cee31ba3ca77514f9fbfd6d775b138f66dd"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/umpirsky/country-list/zipball/9d3e3cee31ba3ca77514f9fbfd6d775b138f66dd",
+                "reference": "9d3e3cee31ba3ca77514f9fbfd6d775b138f66dd",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4"
+            },
+            "require-dev": {
+                "symfony/locale": "^2.7|^3.0",
+                "umpirsky/list-generator": "^1.1"
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Saša Stamenković",
+                    "email": "umpirsky@gmail.com"
+                }
+            ],
+            "description": "List of all countries with names and ISO 3166-1 codes in all languages and data formats.",
+            "time": "2016-03-26T08:11:40+00:00"
         },
         {
             "name": "vlucas/phpdotenv",
