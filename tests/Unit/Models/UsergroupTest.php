@@ -8,7 +8,7 @@ use App\Right;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
-class UserGroupTest extends TestCase
+class UsergroupTest extends TestCase
 {
 	use DatabaseMigrations;
 

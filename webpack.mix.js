@@ -16,7 +16,8 @@ mix.webpackConfig({
 		alias: {
 			'sidebarStyle.less': path.resolve(__dirname, 'resources/assets/less/style.less'),
 			'uiStyle.less': path.resolve(__dirname, 'resources/assets/less/style.less'),
-			'fullpageStyle.less': path.resolve(__dirname, 'resources/assets/less/style.less')
+			'fullpageStyle.less': path.resolve(__dirname, 'resources/assets/less/style.less'),
+			'inputmask.dependencyLib': 'vue-inputmask/3rd/inputmask.dependencyLib'
 		}
 	}
 });

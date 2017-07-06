@@ -26,3 +26,15 @@ Route::resource('usergroup', 'UsergroupController');
 Route::resource('right', 'RightController');
 
 Route::resource('user', 'UserController');
+
+Route::get('country/default', 'CountryController@default');
+Route::resource('country', 'CountryController');
+
+Route::get('region/default', 'RegionController@default');
+Route::resource('region', 'RegionController');
+
+Route::resource('region', 'RegionController');
+
+Route::resource('confession', 'ConfessionController');
+
+Route::resource('conf', 'ConfController');

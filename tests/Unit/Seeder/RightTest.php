@@ -13,8 +13,7 @@ class RightTest extends TestCase
 
 	/** @test */
 	public function it_seeds_a_right() {
-		$seeder = new \RightSeeder();
-		$seeder->run();
+		$seeder = (new \RightSeeder())->run();
 		$model = Model::where('key', 'login')->first();
 		$this->assertNotNull($model);
 		$this->assertEquals('Einloggen', $model->title);

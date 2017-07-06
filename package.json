@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "moment": "^2.18.1",
+    "to-case": "^2.0.0",
     "vue-router": "^2.5.3",
     "z-fullpage": "^1.0.0",
     "z-ui": "^1.0.29",

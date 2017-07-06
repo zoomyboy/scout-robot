@@ -13,7 +13,7 @@ class UsergroupSeeder extends Seeder
     public function run()
     {
         $usergroup = \App\Usergroup::create(['title' => 'Super-Administrator']);
-		$usergroup->rights()->sync(Right::get()->pluck('id'));
+		$usergroup->rights()->sync(Right::get()->pluck('id')->toArray());
     }
 
 	public static function default() {
