@@ -12,11 +12,11 @@ Vue.use(session);
 import VueRouter from 'vue-router';
 Vue.use(VueRouter);
 
-import {form, heading, link, statusBar} from 'z-ui';
+import {form, heading, link, statusbar} from 'z-ui';
 Vue.use(form);
 Vue.use(heading);
 Vue.use(link);
-Vue.use(statusBar);
+Vue.use(statusbar);
 
 import routes from './config/routes.login.js';
 const router = new VueRouter({

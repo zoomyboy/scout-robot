@@ -11,17 +11,15 @@
   },
   "devDependencies": {
     "axios": "^0.15.3",
-    "cross-env": "^5.0.1",
     "jquery": "^3.1.1",
-    "laravel-mix": "0.*",
-    "vue": "^2.1.10"
+    "laravel-mix": "latest",
+    "vue": "latest"
   },
   "dependencies": {
-    "moment": "^2.18.1",
-    "to-case": "^2.0.0",
-    "vue-router": "^2.5.3",
-    "z-fullpage": "^1.0.0",
-    "z-ui": "^1.0.29",
-    "z-vue-sidebar": "^1.0.13"
+    "less": "^2.7.2",
+    "vue-router": "latest",
+    "z-fullpage": "latest",
+    "z-ui": "latest",
+    "z-vue-sidebar": "latest"
   }
 }

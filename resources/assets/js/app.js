@@ -19,11 +19,11 @@ window.globalFormOptions = {
 	}
 };
 
-import {table, form, heading, statusBar, link, tab, dropdown} from 'z-ui';
+import {table, form, heading, statusbar, link, tab, dropdown} from 'z-ui';
 Vue.use(table);
 Vue.use(form);
 Vue.use(heading);
-Vue.use(statusBar);
+Vue.use(statusbar);
 Vue.use(link);
 Vue.use(tab);
 Vue.use(dropdown);
