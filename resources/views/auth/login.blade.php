@@ -3,8 +3,10 @@
 @section('content')
 	<div id="app">
 		<fullpage backgroundcolor="#003c59">
-			<status-bar layout="october"></status-bar>
-			<router-view></router-view>
+			<div slot="content">
+				<statusbar layout="october"></statusbar>
+				<router-view></router-view>
+			</div>
 		</fullpage>
 	</div>
 @endsection
