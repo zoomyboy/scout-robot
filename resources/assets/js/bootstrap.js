@@ -14,3 +14,9 @@ if (token) {
 	console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
 }
 
+window.globalFormOptions = {
+	texts: {
+		validationFailed: 'Deine eingegebenen Daten sind leider fehlerhaft.',
+		sending: 'Wird gesendet...'
+	}
+};
