@@ -107,6 +107,21 @@ img {
     text-align: center;
 }
 
+.header.header-danger {
+	background-color: #f2dede;
+	border-bottom: 2px solid #ebccd1;
+}
+.header.header-danger a {
+	color: #a94442;
+}
+.header.header-success {
+	background-color: #dff0d8;
+    border-bottom: 2px solid #d6e9c6;
+}
+.header.header-success a {
+    color: #3c763d;
+}
+
 .header a {
     color: #bbbfc3;
     font-size: 19px;
@@ -216,6 +231,11 @@ img {
     -webkit-text-size-adjust: none;
 }
 
+.button-sm {
+	font-size: 12px;
+	border-width: 5px 14px !important;
+}
+
 .button-blue {
     background-color: #3097D1;
     border-top: 10px solid #3097D1;
@@ -290,4 +310,8 @@ img {
 .promotion p {
     font-size: 15px;
     text-align: center;
+}
+
+.row {
+	padding: 8px 0;
 }

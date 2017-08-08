@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "8fd17f1ad476a8039687aeb4dc32b78d",
+    "content-hash": "efaad7c027aef2a0338289549883a96e",
     "packages": [
         {
             "name": "dnoegel/php-xdg-base-dir",
@@ -2126,6 +2126,36 @@
             ],
             "description": "Base Request for Laravel 5",
             "time": "2017-07-12T00:36:50+00:00"
+        },
+        {
+            "name": "zoomyboy/better-notifications",
+            "version": "0.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/zoomyboy/better-notifications.git",
+                "reference": "70727dfdf276a9751b6956d7d073819fc08d60c3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/zoomyboy/better-notifications/zipball/70727dfdf276a9751b6956d7d073819fc08d60c3",
+                "reference": "70727dfdf276a9751b6956d7d073819fc08d60c3",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Zoomyboy\\BetterNotifications\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "authors": [
+                {
+                    "name": "Philipp Lang",
+                    "email": "pille@zoomyboy.de"
+                }
+            ],
+            "description": "A little enhancement to the normal Notifications Library of Laravel 5.4",
+            "time": "2017-08-07T23:03:22+00:00"
         }
     ],
     "packages-dev": [

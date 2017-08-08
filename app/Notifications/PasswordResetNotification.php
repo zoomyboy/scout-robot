@@ -3,6 +3,7 @@
 namespace App\Notifications;
 
 use Illuminate\Notifications\Notification;
+use Zoomyboy\BetterNotifications\MailMessage;
 
 class PasswordResetNotification extends Notification
 {
@@ -12,6 +13,7 @@ class PasswordResetNotification extends Notification
      * @var string
      */
     public $token;
+	public $user;
 
     /**
      * Create a notification instance.
@@ -19,9 +21,10 @@ class PasswordResetNotification extends Notification
      * @param  string  $token
      * @return void
      */
-    public function __construct($token)
+    public function __construct($token, $user)
     {
         $this->token = $token;
+		$this->user = $user;
     }
 
     /**
@@ -43,10 +46,11 @@ class PasswordResetNotification extends Notification
      */
     public function toMail($notifiable)
     {
-        return (new MailNotification)
+        return (new MailMessage($this->user))
 			->subject('['.config('app.name').'] Ihre Anfrage zum zurücksetzen des Passworts')
-            ->line('Du bekommst diese E-Mail,  weil wir eine Anfrage zum zurücksetzen deines Passworts bekommen haben. Folge diesem Link, um dein Passwort zurückzusetzen:')
-            ->action('Passwort zurücksetzen', url(config('app.url').'/login#/reset-password/'.$this->token))
+			->line('Du bekommst diese E-Mail,  weil wir eine Anfrage zum zurücksetzen deines Passworts bekommen haben.')
+			->line('Folge diesem Link, um dein Passwort zurückzusetzen:')
+            ->action(url(config('app.url').'/login#/reset-password/'.$this->token), 'Passwort zurücksetzen')
             ->line('Wenn du keine Anfrage zum zurücksetzen deines Passworts gestellt hast, kannst du diese Nachricht ignorieren.');
     }
 }
