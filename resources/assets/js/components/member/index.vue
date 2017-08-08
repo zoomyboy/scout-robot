@@ -2,9 +2,9 @@
 	<div class="cp-member cp-wrap">
 		<heading title="Mitglieder"></heading>
 
-		<button-bar>
+		<buttonbar>
 			<v-link route="member.add" right="member.manage" add></v-link>
-		</button-bar>
+		</buttonbar>
 
 		<v-table delete-msg="Mitglied erfolgreich gelöscht">
 		

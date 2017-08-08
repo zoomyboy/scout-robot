@@ -14,9 +14,9 @@
 				<dropdown-link href="/logout" title="Ausloggen" icon="sign-out"></dropdown-link>
 			</dropdown>
 		</topbar>
-		<app-heading></app-heading>
+		<appheading></appheading>
 		<div class="container-fluid">
-			<status-bar layout="october"></status-bar>
+			<statusbar layout="october"></statusbar>
 			<router-view></router-view>
 		</div>
 	</comp>

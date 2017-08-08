@@ -2,9 +2,9 @@
 	<div class="cp-wrap cp-usergroup-index">
 		<heading title="Benutzergruppen"></heading>
 
-		<button-bar>
+		<buttonbar>
 			<v-link route="usergroup.add" add></v-link>
-		</button-bar>
+		</buttonbar>
 
 		<v-table :headings="[{title: 'Name', data: 'title'}]" url="/api/usergroup" deletemsg="Benutzergruppe erfolgreich gelöscht" controller="usergroup">
 		
