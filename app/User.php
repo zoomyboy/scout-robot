@@ -40,16 +40,6 @@ class User extends Authenticatable
 		return $this->belongsTo(\App\Usergroup::class);
 	}
 
-	//----------------------------------- Setters -----------------------------------
-	/**
-	 * Hash the User's Password on insertion
-	 *
-	 * @param string $password The unhashed password
-	 */
-	public function setPasswordAttribute($password) {
-		$this->attributes['password'] = bcrypt($password);
-	}
-
 	//------------------------------------- UI --------------------------------------
 	public function hasRight($key) {
 		return $this->usergroup->rights()->where('key', $key)->first() != null;

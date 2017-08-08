@@ -27,6 +27,6 @@ class ProfilePasswordUpdateRequest extends Request
 	 * @return $fill The new fillables - only password
 	 */
 	public function modifyFillables($fill) {
-		return array_only($fill, ['password']);
+		return ['password' => bcrypt($fill['password'])];
 	}
 }

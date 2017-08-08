@@ -29,5 +29,6 @@ class UserUpdateRequest extends Request
 			'password' => $pwRules
 		];
     }
+
 }
 
