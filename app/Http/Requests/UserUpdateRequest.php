@@ -24,11 +24,27 @@ class UserUpdateRequest extends Request
 
 		return [
 			'name' => 'required|min:3',
-			'email' => ['required', 'email', Rule::unique('users')->ignore($this->route()->parameter('user')->id)],
+			'email' => ['required', 'email', Rule::unique('users')->ignore($this->route('user')->id)],
 			'usergroup' => 'required',
 			'password' => $pwRules
 		];
     }
+
+	public function modifyFillables($fill) {
+		if (!$this->input('password')) {
+			return array_except($fill, ['password']);
+		}
+
+		$fill['password'] = bcrypt($fill['password']);
+		
+		return $fill;
+	}
+
+	public function messages() {
+		return [
+			'email.unique' => 'Diese E-Mail-Adresse gehört bereits einem anderen Benutzer.'
+		];
+	}
 
 }
 

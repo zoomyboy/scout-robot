@@ -1,32 +1,30 @@
 <?php
 
 /**
- * Sends a Password Notification to a user that has just been created
+ * Sends a Password Reset Notification to a user that has just been created
  * by an admin.
- * The user can see his new Password and login with that password
+ * That way, the new User can set his Password by himself.
  */
 
 namespace App\Notifications;
 
 use Illuminate\Notifications\Notification;
 use Zoomyboy\BetterNotifications\MailMessage;
-use App\User;
 
-class FirstUserPasswordNotification extends Notification
+class FirstUserTokenNotification extends Notification
 {
-    public $password;
+    public $token;
 	public $user;
 
     /**
      * Create a notification instance.
      *
-     * @param  string  $password
-	 * @param User $user
+     * @param  string  $token
      * @return void
      */
-    public function __construct($password, User $user)
+    public function __construct($token, $user)
     {
-        $this->password = $password;
+        $this->token = $token;
 		$this->user = $user;
     }
 
@@ -52,10 +50,7 @@ class FirstUserPasswordNotification extends Notification
         return (new MailMessage($this->user))
 			->subject('Herzlich Willkommen bei '.config('app.name'))
 			->line('Du bekommst diese E-Mail, weil ein neues Benutzerkonto für dich eingerichtet wurde.')
-			->line('Deine Logindaten lauten wie folgt:')
-			->line('<b>E-Mail-Adresse:</b> '.$this->user->email)
-			->line('<b>Passwort:</b> '.$this->password)
-			->line('Über den folgenden Link kannst du dich einloggen:')
-            ->action(url(config('app.url').'/login'), 'Zum login');
+			->line('Über den folgenden Link kannst du dein Passwort für deinen Account selber bestimmen:')
+            ->action(url(config('app.url').'/login#/first-password/'.$this->token), 'Passwort festlegen');
     }
 }

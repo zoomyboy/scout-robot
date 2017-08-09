@@ -11,6 +11,8 @@
 
 			<vf-password name="password" label="Passwort" help="Passwort für den Benutzer" v-if="!nopw"></vf-password>
 			<vf-password name="password_confirmation" label="Passwort widerholen" help="Passwort für den Benutzer bestätigen" v-if="!nopw"></vf-password>
+
+			<vf-checkbox name="sendemail" label="Sende dem Benutzer sein Passwort per E-Mail zu" :value="true" v-show="!nopw" ref="fieldsendemail"></vf-checkbox>
 			<vf-submit></vf-submit>
 		</vf-form>
 	</div>
@@ -26,9 +28,10 @@
 		mounted: function() {
 			var vm = this;
 
-			this.$events.listen('vf-checkbox-change', function(name, value) {
-				if (name == "nopw") {
-					vm.nopw = value;
+			this.$events.listen('vf-checkbox-change-nopw', function(value) {
+				vm.nopw = value;
+				if (value == false) {
+					vm.$refs.fieldsendemail.setValue(true);
 				}
 			});
 		}

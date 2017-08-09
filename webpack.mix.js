@@ -17,7 +17,8 @@ mix.webpackConfig({
 			'sidebarStyle.less': path.resolve(__dirname, 'resources/assets/less/style.less'),
 			'uiStyle.less': path.resolve(__dirname, 'resources/assets/less/style.less'),
 			'fullpageStyle.less': path.resolve(__dirname, 'resources/assets/less/style.less'),
-			'inputmask.dependencyLib': 'vue-inputmask/3rd/inputmask.dependencyLib'
+			'inputmask.dependencyLib': 'vue-inputmask/3rd/inputmask.dependencyLib',
+			'vuestrapStyle.less': path.resolve(__dirname, 'node_modules/z-vuestrap2/less/style.less')
 		}
 	}
 });

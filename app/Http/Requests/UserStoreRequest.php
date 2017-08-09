@@ -18,7 +18,7 @@ class UserStoreRequest extends Request
     {
 		$required = [
 			'name' => 'required|min:3',
-			'email' => 'required|email',
+			'email' => ['required', 'unique:users,email'],
 			'usergroup' => 'required'
 		];
 
@@ -39,10 +39,16 @@ class UserStoreRequest extends Request
 	 */
 	public function modifyFillables($fill) {
 		if ($this->input('nopw')) {
-			$fill['password'] = str_random(30);
+			$fill['password'] = str_random(30);	//Set random password that user can change afterwards
+		} else {
+			$fill['password'] = bcrypt($fill['password']);
 		}
 
 		return $fill;
+	}
+
+	public function messages() {
+		return ['email.unique' => 'Diese E-Mail-Adresse gibt es bereits'];
 	}
 
 	/**
@@ -51,8 +57,15 @@ class UserStoreRequest extends Request
 	 * @param User $model The inserted User model
 	 */
 	public function afterPersist($user) {
-		$tokens = app()->make('auth.password')->broker('firstusers')->getRepository();
+		if ($this->input('sendemail') && !$this->input('nopw')) {
+			//Passwort wurde von Admin gesetzt - sende User sein neues Passwort zu
+			$user->sendPasswordAfterCreationNotification($this->input('password'));
+			return;
+		}
 
-		$user->sendPasswordAfterCreationNotification($tokens->create($user));
+		if ($this->input('sendemail') && $this->input('nopw')) {
+			$tokens = app()->make('auth.password')->broker('firstusers')->getRepository();
+			$user->sendTokenAfterCreationNotification($tokens->create($user));
+		}
 	}
 }
