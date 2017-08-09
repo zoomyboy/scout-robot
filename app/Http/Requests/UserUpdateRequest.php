@@ -4,11 +4,15 @@ namespace App\Http\Requests;
 
 use Zoomyboy\BaseRequest\Request;
 use Illuminate\Validation\Rule;
+use App\User;
 
 class UserUpdateRequest extends Request
 {
 	public $model = \App\User::class;
-	public $right = 'user';
+
+	public function authorize() {
+		return auth()->guard('api')->user()->can('update', $this->route('user'));
+	}
 
     /**
      * Get the validation rules that apply to the request.

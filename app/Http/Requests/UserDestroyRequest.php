@@ -3,11 +3,15 @@
 namespace App\Http\Requests;
 
 use Zoomyboy\BaseRequest\Request;
+use App\User;
 
 class UserDestroyRequest extends Request
 {
 	public $model = \App\User::class;
-	public $right = 'user';
+
+	public function authorize() {
+		return auth()->guard('api')->user()->can('update', $this->route('user'));
+	}
 
 	public function customRules() {
 		if(auth()->user()->id == $this->input('id')) {

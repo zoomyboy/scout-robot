@@ -1,5 +1,8 @@
 <?php
 
+use Laravel\Passport\Passport;
+use Laravel\Passport\PassportServiceProvider;
+
 return [
 
     /*
@@ -176,7 +179,8 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-		Zoomyboy\BetterNotifications\ServiceProvider::class
+		Zoomyboy\BetterNotifications\ServiceProvider::class,
+		Laravel\Passport\PassportServiceProvider::class
 
     ],
 

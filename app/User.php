@@ -7,10 +7,12 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use App\Notifications\PasswordResetNotification;
 use App\Notifications\FirstUserPasswordNotification;
 use App\Notifications\FirstUserTokenNotification;
+use Laravel\Passport\HasApiTokens;
 
 class User extends Authenticatable
 {
 	use Notifiable;
+	use HasApiTokens;
 
 	//--------------------------------- Boilerplate ---------------------------------
 	protected $fillable = [

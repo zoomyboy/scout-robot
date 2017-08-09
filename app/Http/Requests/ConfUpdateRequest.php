@@ -7,7 +7,10 @@ use Zoomyboy\BaseRequest\Request;
 class ConfUpdateRequest extends Request
 {
 	public $model = \App\Conf::class;
-	public $right = 'user';
+
+	public function authorize() {
+		return auth()->guard('api')->user()->can('update', $this->route('conf'));
+	}
 
     /**
      * Get the validation rules that apply to the request.

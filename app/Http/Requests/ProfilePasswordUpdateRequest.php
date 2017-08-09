@@ -8,6 +8,10 @@ class ProfilePasswordUpdateRequest extends Request
 {
 	public $model = \App\User::class;
 
+	public function authorize() {
+		return auth()->guard('api')->user()->can('editOwnProfile', $this->route('profile'));
+	}
+
     /**
      * Get the validation rules that apply to the request.
      *

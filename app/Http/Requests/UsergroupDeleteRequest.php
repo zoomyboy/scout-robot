@@ -7,7 +7,10 @@ use Zoomyboy\BaseRequest\Request;
 class UsergroupDeleteRequest extends Request
 {
 	public $model = \App\Usergroup::class;
-	public $right = 'usergroup';
+
+	public function authorize() {
+		return auth()->guard('api')->user()->can('destroy', $this->route('usergroup'));
+	}
 
 	public function customRules() {
 		if($this->route()->parameter('usergroup')->users->count()) {

@@ -9,6 +9,10 @@ class UsergroupUpdateRequest extends Request
 	public $model = \App\Usergroup::class;
 	public $right = 'usergroup';
 
+	public function authorize() {
+		return auth()->guard('api')->user()->can('update', $this->route('usergroup'));
+	}
+
     /**
      * Get the validation rules that apply to the request.
      *

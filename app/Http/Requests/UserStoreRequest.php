@@ -3,11 +3,15 @@
 namespace App\Http\Requests;
 
 use Zoomyboy\BaseRequest\Request;
+use App\User;
 
 class UserStoreRequest extends Request
 {
 	public $model = \App\User::class;
-	public $right = 'user';
+		
+	public function authorize() {
+		return auth()->guard('api')->user()->can('store', User::class);
+	}
 
     /**
      * Get the validation rules that apply to the request.
