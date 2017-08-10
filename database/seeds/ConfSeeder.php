@@ -8,7 +8,8 @@ class ConfSeeder extends Seeder
 {
 	private $confs = [
 		'default_country_id',
-		'default_region_id'
+		'default_region_id',
+		'default_keepdata'
 	];
 
     /**

@@ -8,6 +8,10 @@ class Conf extends Model
 {
     public $guarded = [];
 
+	public $casts = [
+		'default_keepdata' => 'boolean'
+	];
+
 	public function defaultCountry() {
 		return $this->belongsTo(\App\Country::class);
 	}

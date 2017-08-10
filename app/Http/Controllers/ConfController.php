@@ -18,4 +18,8 @@ class ConfController extends Controller
 	public function update(Conf $conf, ConfUpdateRequest $request) {
 		$request->persist($conf);
 	}
+
+	public function index() {
+		return response()->json(Conf::with('defaultCountry', 'defaultRegion')->get()->toArray());
+	}
 }

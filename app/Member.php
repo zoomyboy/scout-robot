@@ -8,6 +8,8 @@ class Member extends Model
 {
 	public $fillable = ['firstname', 'lastname', 'nickname', 'other_country', 'birthday', 'joined_at', 'keepdata', 'sendnewspaper', 'address', 'further_address', 'zip', 'city', 'phone', 'mobile', 'business_phone', 'fax', 'email', 'email_parents'];
 
+	public $dates = ['joined_at', 'birthday'];
+
 	//---------------------------------- Relations ----------------------------------
 	public function country() {
 		return $this->belongsTo(\App\Country::class);

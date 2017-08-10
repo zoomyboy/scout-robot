@@ -38,3 +38,8 @@ Route::resource('region', 'RegionController');
 Route::resource('confession', 'ConfessionController');
 
 Route::resource('conf', 'ConfController');
+
+Route::resource('member', 'MemberController');
+
+Route::resource('gender', 'GenderController');
+
