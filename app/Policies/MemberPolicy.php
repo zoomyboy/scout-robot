@@ -23,7 +23,11 @@ class MemberPolicy
 		return $user->hasRight('member.manage');
 	}
 
-	public function index() {
-		return false;
+	public function index($user) {
+		return $user->hasRight('member.overview');
+	}
+
+	public function update($user, $model) {
+		return $user->hasRight('member.manage');
 	}
 }

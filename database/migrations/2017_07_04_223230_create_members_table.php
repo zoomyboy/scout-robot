@@ -37,6 +37,8 @@ class CreateMembersTable extends Migration
 			$table->string('fax')->nullable();
 			$table->string('email')->nullable();
 			$table->string('email_parents')->nullable();
+			$table->boolean('active')->default(1);
+			
             $table->timestamps();
         });
     }

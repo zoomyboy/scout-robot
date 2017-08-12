@@ -10,6 +10,12 @@ class Member extends Model
 
 	public $dates = ['joined_at', 'birthday'];
 
+	public $casts = [
+		'active' => 'boolean',
+		'keepdata' => 'boolean',
+		'sendnewspaper' => 'boolean'
+	];
+
 	//---------------------------------- Relations ----------------------------------
 	public function country() {
 		return $this->belongsTo(\App\Country::class);
@@ -25,5 +31,10 @@ class Member extends Model
 
 	public function confession() {
 		return $this->belongsTo(\App\Confession::class);
+	}
+
+	//----------------------------------- Scopes ------------------------------------
+	public function scopeActive($q) {
+		return $q->where('active', true);
 	}
 }

@@ -6,8 +6,21 @@
 			<v-link route="member.add" right="member.manage" add></v-link>
 		</buttonbar>
 
-		<v-table delete-msg="Mitglied erfolgreich gelöscht">
+		<v-table controller="member" :headings="headings" url="/api/member" delete-msg="Mitglied erfolgreich gelöscht">
 		
 		</v-table>
 	</div>
 </template>
+
+<script>
+	export default {
+		data: function() {
+			return {
+				headings: [
+					{title: 'Nachname', data: 'firstname'}
+				]
+			};
+		}
+	}
+</script>
+
