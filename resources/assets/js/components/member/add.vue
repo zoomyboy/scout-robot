@@ -43,7 +43,8 @@
 					<vf-text name="fax" label="Fax"></vf-text>
 					<vf-text name="email_parents" label="E-Mail-Adresse Erziehungsberechtigter"></vf-text>
 					<vf-select name="confession" label="Konfession" url="/api/confession" nullable></vf-select>
-					<vf-checkbox :value="$config.value('default_keepdata')" label="Datenweiterverwendung" name="keepdata" help="Wenn dieses Feld aaktiviert wird, wird ein Mitglied beim Löschen zu den abgemeldeten Mitgliedern hinzugefügt, sodass dessen Daten noch eingesehen werden können. Wird das Mitglied mit NaMi synchronisiert, wird der Status dort auf 'inaktiv' gesetzt und auch dort bleiben die Daten bestehen.<br>Ist dieses Feld deaktiviert, werden die Daten komplett gelösscht.<br>Der Standardwert kann allgemein unter der globalen Konfiguration eingestellt werden."></vf-checkbox>
+					<vf-checkbox :value="$config.value('default_keepdata')" label="Datenweiterverwendung" name="keepdata" help="Wenn dieses Feld aktiviert wird, wird ein Mitglied beim Löschen zu den abgemeldeten Mitgliedern hinzugefügt, sodass dessen Daten noch eingesehen werden können. Wird das Mitglied mit NaMi synchronisiert, wird der Status dort auf 'inaktiv' gesetzt und auch dort bleiben die Daten bestehen.<br>Ist dieses Feld deaktiviert, werden die Daten komplett gelöscht.<br>Der Standardwert kann allgemein unter der globalen Konfiguration eingestellt werden."></vf-checkbox>
+					<vf-checkbox :value="$config.value('default_sendnewspaper')" label="Zeitschriftenversand" name="sendnewspaper" help="Wenn dieses Feld aktiviert wird, bekommt ein Mitglied die Mittendrin-Zeitschrift zugesendet. Der Standardwert kann allgemein unter der globalen Konfiguration eingestellt werden."></vf-checkbox>
 				</tab>
 			</tabs>
 			

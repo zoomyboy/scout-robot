@@ -9,7 +9,8 @@ class Conf extends Model
     public $guarded = [];
 
 	public $casts = [
-		'default_keepdata' => 'boolean'
+		'default_keepdata' => 'boolean',
+		'default_sendnewspaper' => 'boolean',
 	];
 
 	public function defaultCountry() {
