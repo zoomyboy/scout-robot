@@ -30,4 +30,8 @@ class MemberPolicy
 	public function update($user, $model) {
 		return $user->hasRight('member.manage');
 	}
+
+	public function delete($user, $model) {
+		return $user->hasRight('member.manage');
+	}
 }

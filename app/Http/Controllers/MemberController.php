@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Member;
 use App\Http\Requests\Member\MemberStoreRequest;
 use App\Http\Requests\Member\MemberUpdateRequest;
+use App\Http\Requests\Member\MemberDeleteRequest;
 
 class MemberController extends Controller
 {
@@ -26,5 +27,9 @@ class MemberController extends Controller
 	public function show(Member $member) {
 		$this->authorize('index', Member::class);
 		return response()->json($member->load(['gender', 'region', 'country', 'confession'])->toArray());
+	}
+
+	public function destroy(Member $member, MemberDeleteRequest $request) {
+		$request->persist($member);
 	}
 }
