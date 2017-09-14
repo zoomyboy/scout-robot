@@ -6,41 +6,36 @@ use Tests\TestCase;
 use \App\User as Model;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Hash;
 
 class UserTest extends TestCase
 {
-	use DatabaseMigrations;
-
 	public function setUp() {
 		parent::setUp();
-		(new \RightSeeder)->run();
-		(new \UsergroupSeeder)->run();
 
-		$seeder = new \UserSeeder();
-		$seeder->run();
+		Config::set('seed.default_usergroup', 'SA');
+		Config::set('seed.default_username', 'Admin');
+		Config::set('seed.default_userpw', 'admin22');
+		Config::set('seed.default_usermail', 'admin@example.tz');
+
+		$this->runMigration('rights_table');
+		$this->runMigration('usergroups_table');
+		$this->runMigration('right_usergroup_table');
+		$this->runMigration('users_table');
+
+		$this->runSeeder(\RightSeeder::class);
+		$this->runSeeder(\UsergroupSeeder::class);
+		$this->runSeeder(\UserSeeder::class);
+
 	}
 
 	/** @test */
 	public function it_seeds_a_user_with_properties() {
-		$model = Model::where('name', 'Administrator')->first();
+		$model = Model::where('name', 'Admin')->first();
 		$this->assertNotNull($model);
-		$this->assertEquals('admin@example.com', $model->email);
-		$this->assertEquals('Administrator', $model->name);
-	}
-
-	/** @test */
-	public function it_seeds_a_user_and_loggs_in() {
-		$model = Model::where('name', 'Administrator')->first();
-
-		$this->assertTrue(auth()->attempt(['email' => $model->email, 'password' => 'admin']));
-	}
-
-	/** @test */
-	public function it_seeds_a_user_and_assigns_default_group() {
-		$model = Model::where('name', 'Administrator')->first();
-
-		$this->assertNotNull($model->usergroup);
-
-		$this->assertEquals('Super-Administrator', $model->usergroup->title);
+		$this->assertEquals('admin@example.tz', $model->email);
+		$this->assertTrue(Hash::check('admin22', $model->password));
+		$this->assertEquals('SA', $model->usergroup->title);
 	}
 }

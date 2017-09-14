@@ -3,44 +3,28 @@
 namespace Tests\Unit\Seeder;
 
 use Tests\TestCase;
-use \App\Usergroup as Model;
+use \App\Usergroup;
 use \App\Right;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Support\Facades\Config;
 
 class UsergroupTtest extends TestCase
 {
-	use DatabaseMigrations;
-
 	public function setUp() {
 		parent::setUp();
-		$seeder = new \RightSeeder();
-		$seeder->run();
-	}
-
-	/** @test */
-	public function it_seeds_a_default_user_group() {
-		$seeder = new \UsergroupSeeder();
-		$seeder->run();
-		$model = Model::where('title', 'Super-Administrator')->first();
-		$this->assertNotNull($model);
-	}
-
-	/** @test */
-	public function it_seeds_a_default_user_group_as_default() {
-		$seeder = new \UsergroupSeeder();
-		$seeder->run();
-
-		$this->assertNotNull(\UsergroupSeeder::default());
-		$this->assertEquals('Super-Administrator', \UsergroupSeeder::default()->title);
+		Config::set('seed.default_usergroup', 'SA');
+		$this->runMigration('rights_table');
+		$this->runSeeder(\RightSeeder::class);
+		$this->runMigration('usergroups_table');
+		$this->runMigration('right_usergroup_table');
+		$this->runSeeder(\UsergroupSeeder::class);
 	}
 
 	/** @test */
 	public function it_seeds_a_default_user_group_and_assigns_all_rights() {
-		$seeder = new \UsergroupSeeder();
-		$seeder->run();
-
-		$model = Model::where('title', 'Super-Administrator')->first();
+		$model = Usergroup::where('title', 'SA')->first();
+		$this->assertNotNull($model);
 
 		$this->assertEquals(Right::get()->count(), $model->rights->count());
 	}

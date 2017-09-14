@@ -3,20 +3,21 @@
 namespace Tests\Unit\Seeder;
 
 use Tests\TestCase;
-use \App\Right as Model;
+use \App\Right;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class RightTest extends TestCase
 {
-	use DatabaseMigrations;
-
 	/** @test */
-	public function it_seeds_a_right() {
-		$seeder = (new \RightSeeder())->run();
-		$model = Model::where('key', 'login')->first();
-		$this->assertNotNull($model);
-		$this->assertEquals('Einloggen', $model->title);
-		$this->assertEquals('In Scout Robot mit seinen eigenen Benutzerdaten einloggen', $model->help);
+	public function it_seeds_all_confs() {
+		$this->runMigration('rights_table');
+		$this->runSeeder(\RightSeeder::class);
+
+		$this->assertEquals(6, Right::count());
+		$this->assertEquals(
+			['login', 'user', 'usergroup', 'config', 'member.manage', 'member.overview'], 
+			Right::get()->pluck('key')->toArray()
+		);
 	}
 }

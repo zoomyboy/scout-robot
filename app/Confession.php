@@ -7,4 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 class Confession extends Model
 {
     public $fillable = ['title'];
+
+	public $timestamps = false;
 }
