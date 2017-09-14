@@ -21,7 +21,7 @@ class RegionSeeder extends Seeder
         \App\Region::create(['title' => 'Mecklenburg-Vorpommern']);
         \App\Region::create(['title' => 'Niedersachsen']);
         \App\Region::create(['title' => 'Nordrhein-Westfalen']);
-        \App\Region::create(['title' => 'Rheinland']);
+        \App\Region::create(['title' => 'Rheinland-Pfalz']);
         \App\Region::create(['title' => 'Saarland']);
         \App\Region::create(['title' => 'Sachsen']);
         \App\Region::create(['title' => 'Sachsen-Anhalt']);

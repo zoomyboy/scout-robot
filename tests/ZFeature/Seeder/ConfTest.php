@@ -3,22 +3,31 @@
 namespace Tests\Unit\Seeder;
 
 use Tests\TestCase;
-use \App\Conf as Model;
+use \App\Conf;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Support\Facades\Config;
 
 class ConfTest extends TestCase
 {
-	use DatabaseMigrations;
-
 	/** @test */
 	public function it_seeds_all_confs() {
-		$seeder = (new \CountrySeeder())->run();
-		$seeder = (new \ConfSeeder())->run();
-		$this->assertEquals(1, Model::get()->count());
+		Config::set('seed.default_country', 'GM');
 
-		$conf = Model::first();
+		$this->runMigration('regions_table');
+		$this->runSeeder(\RegionSeeder::class);
+		$this->runMigration('countries_table');
+		$this->runSeeder(\CountrySeeder::class);
+		$this->runMigration('confs_table');
+		$this->runSeeder(\ConfSeeder::class);
 
-		$this->assertEquals('Deutschland', $conf->defaultCountry->title);
+		$this->assertEquals(1, Conf::count());
+
+		$config = Conf::first();
+
+		$this->assertEquals(69, $config->defaultCountry->id);
+		$this->assertNull($config->defaultRegion);
+		$this->assertFalse($config->default_keepdata);
+		$this->assertFalse($config->default_sendnewspaper);
 	}
 }

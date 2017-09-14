@@ -15,7 +15,6 @@ class CreateConfsTable extends Migration
     {
         Schema::create('confs', function (Blueprint $table) {
             $table->increments('id');
-            $table->timestamps();
         });
     }
 

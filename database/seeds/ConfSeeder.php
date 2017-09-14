@@ -27,7 +27,10 @@ class ConfSeeder extends Seeder
 		});
 
 		Conf::create([
-			'default_country_id' => \App\Country::where('title', 'Deutschland')->first()->id
+			'default_country_id' => \App\Country::where('code', config('seed.default_country'))->first()->id,
+			'default_region_id' => null,
+			'default_keepdata' => false,
+			'default_sendnewspaper' => false
 		]);
     }
 }

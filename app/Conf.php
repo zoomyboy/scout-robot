@@ -8,6 +8,8 @@ class Conf extends Model
 {
     public $guarded = [];
 
+	public $timestamps = false;
+
 	public $casts = [
 		'default_keepdata' => 'boolean',
 		'default_sendnewspaper' => 'boolean',
