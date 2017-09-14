@@ -10,9 +10,9 @@ abstract class TestCase extends BaseTestCase
     use CreatesApplication;
 	use MigratesDb;
 
-	public function auth() {
-		$this->be(\App\User::first());
+	public function auth($guard = 'web') {
+		$this->be(\App\User::first(), $guard);
 
-		$this->assertInstanceOf(\App\User::class, auth()->user());
+		$this->assertInstanceOf(\App\User::class, auth()->guard($guard)->user());
 	}
 }

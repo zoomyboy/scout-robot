@@ -1,18 +1,25 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\ZFeature;
 
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use \App\User;
+use Illuminate\Support\Facades\Config;
 
 class LoginTest extends \Tests\TestCase {
 	use DatabaseMigrations;
 
 	public function setUp() {
 		parent::setUp();
-		(new \RightSeeder)->run();
-		(new \UsergroupSeeder)->run();
-		(new \UserSeeder)->run();
+
+		Config::set('seed.default_usergroup', 'SA');
+		Config::set('seed.default_username', 'Admin');
+		Config::set('seed.default_userpw', 'admin22');
+		Config::set('seed.default_usermail', 'admin@example.tz');
+
+		$this->runSeeder(\RightSeeder::class);
+		$this->runSeeder(\UsergroupSeeder::class);
+		$this->runSeeder(\UserSeeder::class);
 	}
 
 	/** @test */
@@ -22,15 +29,25 @@ class LoginTest extends \Tests\TestCase {
 
 	/** @test */
 	public function it_redirects_to_home_page_if_logged_in() {
-		parent::auth();
+		parent::auth('web');
 		$this->get('/login')->assertRedirect('/');
 	}
 
 	/** @test */
 	public function it_loggs_in_successfully() {
 		$user = User::first();
-		$this->post('/login', ['email' => $user->email, 'password' => 'admin'])->assertRedirect('/');
+		$this->post('/login', ['email' => config('seed.default_usermail'), 'password' => config('seed.default_userpw')])->assertRedirect('/');
 
 		$this->assertInstanceOf(\App\User::class, auth()->user());
+
+		$this->get('/')->assertStatus(200);
+	}
+
+	/** @test */
+	public function it_loggs_out() {
+		parent::auth('web');
+		$this->get('/logout')->assertRedirect('/');
+
+		$this->assertNull(auth()->guard('web')->user());
 	}
 }

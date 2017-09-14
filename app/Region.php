@@ -6,9 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Region extends Model
 {
-    public $fillable = ['title'];
+	public $timestamps = false;
 
-	public static function default() {
-		return conf()->defaultRegion;
-	}
+    public $fillable = ['title'];
 }
