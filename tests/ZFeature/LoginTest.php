@@ -36,7 +36,7 @@ class LoginTest extends \Tests\TestCase {
 	/** @test */
 	public function it_loggs_in_successfully() {
 		$user = User::first();
-		$this->post('/login', ['email' => config('seed.default_usermail'), 'password' => config('seed.default_userpw')])->assertRedirect('/');
+		$this->postJson('/login', ['email' => config('seed.default_usermail'), 'password' => config('seed.default_userpw')]);
 
 		$this->assertInstanceOf(\App\User::class, auth()->user());
 
@@ -49,5 +49,16 @@ class LoginTest extends \Tests\TestCase {
 		$this->get('/logout')->assertRedirect('/');
 
 		$this->assertNull(auth()->guard('web')->user());
+	}
+
+	/** @test */
+	public function it_validates_login() {
+		$user = User::first();
+
+		$this->postJson('/login', ['email' => config('seed.default_usermail').'A', 'password' => config('seed.default_userpw').'A'])
+			->assertStatus(422)
+			->assertJson(['email' => __('auth.failed')]);
+
+		$this->assertNull(auth()->user());
 	}
 }
