@@ -20,9 +20,16 @@ class ProfilePasswordUpdateRequest extends Request
     public function rules()
     {
         return [
-			'password' => 'required|confirmed|min:6'
+			'password' => 'required|confirmed|min:6',
+			'password_confirmation' => 'required|min:6'
         ];
     }
+
+	public function messages() {
+		return [
+			'password.confirmed' => 'Die beiden Passwörter stimmen nicht überein.'
+		];
+	}
 
 	/**
 	 * Prevent the User from changing e.g. its usergroup by setting the id in the POST data

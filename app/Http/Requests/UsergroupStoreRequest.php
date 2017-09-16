@@ -21,7 +21,14 @@ class UsergroupStoreRequest extends Request
     public function rules()
     {
         return [
-            'title' => 'required'
+			'title' => 'required',
+			'rights.*' => 'exists:rights,id'
         ];
     }
+
+	public function messages() {
+		return [
+			'rights.*' => 'Dieses Recht existiert nicht.'
+		];
+	}
 }
