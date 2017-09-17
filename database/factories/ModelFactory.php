@@ -15,6 +15,10 @@
 $factory->define(\App\User::class, function (Faker\Generator $faker) {
     static $password;
 
+	if (\App\Usergroup::get()->count() == 0) {
+		throw new \Exception('Error in factory: usergroup for user_factory not found - please call a usergroup_seeder before');
+	}
+
     return [
         'name' => $faker->name,
         'email' => $faker->unique()->safeEmail,

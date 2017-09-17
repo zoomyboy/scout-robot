@@ -15,11 +15,18 @@ abstract class TestCase extends BaseTestCase
 	use CreatesModels;
 
 	public function auth($guard = 'web') {
+		if (\App\User::first() == null) {
+			throw new \Exception('Login fehlgeschlagen - Kein User für TestLogin vorhanden. Bitte führen Sie zuerest einen Seeder aus.');
+		}
 		$this->be(\App\User::first(), $guard);
 
 		$this->assertInstanceOf(\App\User::class, auth()->guard($guard)->user());
 
 		return auth()->guard($guard)->user();
+	}
+
+	public function getApi($to, $data=[]) {
+		return $this->getJson('/api/'.$to, $data);
 	}
 
 	public function postApi($to, $data=[]) {

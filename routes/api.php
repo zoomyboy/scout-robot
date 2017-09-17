@@ -43,3 +43,4 @@ Route::resource('member', 'MemberController');
 
 Route::resource('gender', 'GenderController');
 
+Route::get('info', 'ProfileController@infoForCurrentUser');

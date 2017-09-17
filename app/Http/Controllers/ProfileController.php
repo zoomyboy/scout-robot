@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\ProfileUpdateRequest;
 use App\Http\Requests\ProfilePasswordUpdateRequest;
 use App\User;
+use App\Conf;
 
 class ProfileController extends Controller
 {
@@ -24,5 +25,12 @@ class ProfileController extends Controller
 
 	public function updatePassword(User $user, ProfilePasswordUpdateRequest $request) {
 		$request->persist($user);
+	}
+
+	public function infoForCurrentUser() {
+		return response()->json([
+			'conf' => Conf::with(['defaultCountry', 'defaultRegion'])->first()->toArray(),
+			'user' => auth()->guard('api')->user()->load(['usergroup.rights'])->toArray()
+		]);
 	}
 }
