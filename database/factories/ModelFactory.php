@@ -33,3 +33,30 @@ $factory->define(\App\Usergroup::class, function(Faker\Generator $faker) {
 		'title' => $faker->word
 	];
 });
+
+$factory->define(\App\Member::class, function(Faker\Generator $faker) {
+	return [
+		'firstname' => $faker->firstname,
+		'lastname' => $faker->lastname,
+		'nickname' => $faker->name,
+		'phone' => $faker->regexify('/\+49 [0-9]{3} [0-9]{5,7}/'),
+		'fax' => $faker->regexify('/\+49 [0-9]{3} [0-9]{5,7}/'),
+		'business_phone' => $faker->regexify('/\+49 [0-9]{3} [0-9]{5,7}/'),
+		'mobile' => $faker->regexify('/\+49 [0-9]{3} [0-9]{5,7}/'),
+		'gender_id' => \App\Gender::get()->random()->id,
+		'country_id' => \App\Country::get()->random()->id,
+		'other_country' => $faker->country,
+		'region_id' => \App\Region::get()->random()->id,
+		'confession_id' => \App\Confession::get()->random()->id,
+		'birthday' => $faker->date,
+		'further_address' => $faker->streetAddress,
+		'joined_at' => $faker->date,
+		'keepdata' => $faker->boolean,
+		'sendnewspaper' => $faker->boolean,
+		'address' => $faker->address,
+		'zip' => $faker->postcode,
+		'city' => $faker->city,
+		'email' => $faker->email,
+		'email_parents' => $faker->email,
+	];
+});

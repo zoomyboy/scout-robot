@@ -12,7 +12,8 @@ class ConfController extends Controller
 		return response()->json($conf
 			->load('defaultCountry')
 			->load('defaultRegion')
-			->toArray());
+			->toArray()
+		);
 	}
 
 	public function update(Conf $conf, ConfUpdateRequest $request) {

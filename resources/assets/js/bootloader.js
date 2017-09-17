@@ -2,11 +2,12 @@ module.exports = {
 	install: function(Vue, options) {
 		var loaded = [];
 
-		axios.get('/api/profile').then(function(ret) {
+		axios.get('/api/info').then(function(ret) {
+			//------------------------------- user --------------------------------
 			var User = new Vue({
 				data: function() {
 					return {
-						user: ret.data
+						user: ret.data.user
 					};
 				},
 				computed: {
@@ -21,26 +22,21 @@ module.exports = {
 					}
 				}
 			});
-
 			Object.defineProperty(Vue.prototype, '$user', {
 				get: function get() {
 					return User;
 				}
 			});
 
-			loaded = triggerMount(options, 'user', loaded);
-		});
-
-		axios.get('/api/conf').then(function(ret) {
 			var Config = new Vue({
 				data: function() {
 					return {
-						config: ret.data
+						config: ret.data.conf
 					};
 				},
 				methods: {
 					value: function(key) {
-						return this.config[0][key];
+						return this.config[key];
 					}
 				}
 			});
@@ -51,18 +47,7 @@ module.exports = {
 				}
 			});
 
-			loaded = triggerMount(options, 'config', loaded);
+			options.mount.$mount(options.to);
 		});
 	}
 };
-
-function triggerMount(options, loaded, alreadyLoaded) {
-	alreadyLoaded.push(loaded);
-
-	if (alreadyLoaded.indexOf('user') !== -1 &&  alreadyLoaded.indexOf('config') !== -1) {
-		options.mount.$mount(options.to);
-	}
-
-	return alreadyLoaded;
-}
-
