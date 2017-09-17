@@ -16,3 +16,4 @@ npm-debug.log
 /resources/assets/js/lib
 /public
 tags
+yarn.lock

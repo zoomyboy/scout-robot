@@ -13,9 +13,11 @@
     "axios": "^0.15.3",
     "jquery": "^3.1.1",
     "laravel-mix": "latest",
-    "vue": "latest"
+    "vue": "2.4.2"
   },
   "dependencies": {
+    "browser-sync": "^2.18.13",
+    "browser-sync-webpack-plugin": "^1.2.0",
     "less": "^2.7.2",
     "vue-router": "latest",
     "z-fullpage": "latest",
