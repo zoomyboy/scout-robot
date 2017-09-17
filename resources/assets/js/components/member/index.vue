@@ -17,7 +17,12 @@
 		data: function() {
 			return {
 				headings: [
-					{title: 'Nachname', data: 'firstname'}
+					{title: 'Nachname', data: 'lastname'},
+					{title: 'Vorname', data: 'firstname'},
+					{title: 'Adresse', data: 'address'},
+					{title: 'PLZ', data: 'zip'},
+					{title: 'Stadt', data: 'city'},
+					{title: 'Eintritt', data: 'joined_at', type: 'date'}
 				]
 			};
 		}
