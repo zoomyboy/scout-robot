@@ -53,7 +53,7 @@ $factory->define(\App\Member::class, function(Faker\Generator $faker) {
 		'joined_at' => $faker->date,
 		'keepdata' => $faker->boolean,
 		'sendnewspaper' => $faker->boolean,
-		'address' => $faker->address,
+		'address' => $faker->streetAddress,
 		'zip' => $faker->postcode,
 		'city' => $faker->city,
 		'email' => $faker->email,
