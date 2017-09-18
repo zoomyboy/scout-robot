@@ -16,6 +16,13 @@ class Member extends Model
 		'sendnewspaper' => 'boolean'
 	];
 
+	//----------------------------------- Getters -----------------------------------
+	public function getStrikesAttribute() {
+		return $this->paymentsNotPaid()->sum('amount');
+	}
+
+
+
 	//---------------------------------- Relations ----------------------------------
 	public function country() {
 		return $this->belongsTo(\App\Country::class);
@@ -35,6 +42,10 @@ class Member extends Model
 
 	public function payments() {
 		return $this->hasMany(\App\Payment::class);
+	}
+
+	public function paymentsNotPaid() {
+		return $this->payments()->whereIn('status_id', [1,2]);
 	}
 
 	//----------------------------------- Scopes ------------------------------------

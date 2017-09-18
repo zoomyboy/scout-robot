@@ -32,4 +32,14 @@ class MemberController extends Controller
 	public function destroy(Member $member, MemberDeleteRequest $request) {
 		$request->persist($member);
 	}
+
+	public function table() {
+		
+		return response()->json(Member::select([
+			'active', 'address', 'zip', 'city', 'firstname', 'id', 'joined_at', 'lastname'
+		])->get()->each(function($member) {
+			$member->append('strikes');
+		})->toArray());
+
+	}
 }

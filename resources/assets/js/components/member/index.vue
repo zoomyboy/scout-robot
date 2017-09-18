@@ -6,7 +6,7 @@
 			<v-link route="member.add" right="member.manage" add></v-link>
 		</buttonbar>
 
-		<v-table controller="member" :headings="headings" url="/api/member" delete-msg="Mitglied erfolgreich gelöscht">
+		<v-table controller="member" :headings="headings" url="/api/member/table" delete-msg="Mitglied erfolgreich gelöscht">
 		
 		</v-table>
 	</div>
@@ -22,9 +22,19 @@
 					{title: 'Adresse', data: 'address'},
 					{title: 'PLZ', data: 'zip'},
 					{title: 'Stadt', data: 'city'},
-					{title: 'Eintritt', data: 'joined_at', type: 'date'}
+					{title: 'Eintritt', data: 'joined_at', type: 'date'},
+					{title: 'Ausstände', type: 'callback', data: 'strikes'}
 				]
 			};
+		},
+		methods: {
+			getStrikesAttribute(value) {
+				if (value == 0) {
+					return '---';
+				}
+
+				return (value / 100).toFixed(2).replace('.', ',')+' €';
+			}
 		}
 	}
 </script>
