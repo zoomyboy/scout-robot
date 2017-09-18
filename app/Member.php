@@ -33,6 +33,10 @@ class Member extends Model
 		return $this->belongsTo(\App\Confession::class);
 	}
 
+	public function payments() {
+		return $this->hasMany(\App\Payment::class);
+	}
+
 	//----------------------------------- Scopes ------------------------------------
 	public function scopeActive($q) {
 		return $q->where('active', true);

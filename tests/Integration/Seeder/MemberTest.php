@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\Seeder;
+namespace Tests\Integration\Seeder;
 
 use Tests\TestCase;
 use \App\Member;
@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
 
-class UserTest extends TestCase
+class MemberTest extends TestCase
 {
 	public function setUp() {
 		parent::setUp();
@@ -20,6 +20,16 @@ class UserTest extends TestCase
 		Config::set('seed.default_userpw', 'admin22');
 		Config::set('seed.default_usermail', 'admin@example.tz');
 
+		$this->runMigration('genders_table');
+		$this->runMigration('countries_table');
+		$this->runMigration('regions_table');
+		$this->runMigration('confessions_table');
+		$this->runMigration('members_table');
+
+		$this->runSeeder(\GenderSeeder::class);
+		$this->runSeeder(\RegionSeeder::class);
+		$this->runSeeder(\ConfessionSeeder::class);
+		$this->runSeeder(\CountrySeeder::class);
 		$this->runSeeder(\MemberSeeder::class);
 
 	}

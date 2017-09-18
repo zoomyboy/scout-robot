@@ -18,9 +18,9 @@ class DatabaseSeeder extends Seeder
         $this->call(GenderSeeder::class);
         $this->call(RegionSeeder::class);
         $this->call(ConfessionSeeder::class);
-
+        $this->call(StatusSeeder::class);
         $this->call(ConfSeeder::class);
-
         $this->call(MemberSeeder::class);
+        $this->call(PaymentSeeder::class);
     }
 }

@@ -60,3 +60,11 @@ $factory->define(\App\Member::class, function(Faker\Generator $faker) {
 		'email_parents' => $faker->email,
 	];
 });
+
+$factory->define(\App\Payment::class, function(Faker\Generator $faker) {
+	return [
+		'amount' => $faker->numberBetween(1, 500),
+		'nr' => $faker->numberBetween(date('Y')-5, date('Y')),
+		'status_id' => \App\Status::get()->random()->id
+	];
+});

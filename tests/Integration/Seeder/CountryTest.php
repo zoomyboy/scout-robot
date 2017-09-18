@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\Seeder;
+namespace Tests\Integration\Seeder;
 
 use Tests\TestCase;
 use App\Country;
