@@ -6,19 +6,19 @@
 			<v-link route="member.add" right="member.manage" add></v-link>
 		</buttonbar>
 
-		<div class="row">
-			<div :class="{'col-md-7': member, 'col-md-12': !member}">
+		<div class="grid-2">
+			<article>
 				<panel title="Übersicht">
 					<v-table :border="false" v-on:info="openInfo" id="memberTable" controller="member" ref="table" :actions="actions" :headings="headings" url="/api/member/table" delete-msg="Mitglied erfolgreich gelöscht">
 				
 					</v-table>
 				</panel>
-			</div>
-			<div class="col-md-5" v-if="member">
+			</article>
+			<aside class="rows-3" v-if="member">
 				<panel ref="memberpanel" :title="'Zahlungen für '+member.firstname+' '+member.lastname" closeable v-on:close="member = false" smalltitle>
 					<payment ref="payment" :member="member"></payment>
 				</panel>
-			</div>
+			</aside>
 		</div>
 	</div>
 </template>
