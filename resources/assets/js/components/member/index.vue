@@ -27,6 +27,11 @@
 				]
 			};
 		},
+		components: {
+			vTable: function(resolve) {
+				require(['z-ui/table.vue'], resolve);
+			},
+		},
 		methods: {
 			getStrikesAttribute(value) {
 				if (value == 0) {

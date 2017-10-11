@@ -11,3 +11,13 @@
 		</v-table>
 	</div>
 </template>
+
+<script>
+	export default {
+		components: {
+			vTable: function(resolve) {
+				require(['z-ui/table.vue'], resolve);
+			}
+		}
+	}
+</script>
