@@ -1,6 +1,6 @@
 <template>
 	<div class="cp-wrap cp-member-payment">
-		<v-table v-if="payments" :url="url" :border="false" controller="member" :headings="[{title: 'Year', data: 'nr'}, {title: 'Status', 'data': 'status[title]'}]" :editaction="false" :deleteaction="false">
+		<v-table v-if="payments" :url="url" :border="false" controller="member" :headings="[{title: 'Year', data: 'nr'}, {title: 'Status', 'data': 'status[title]'}]" :editaction="false" :deleteaction="false" :actions="actions">
 			
 		</v-table>
 	</div>
@@ -16,7 +16,10 @@
 	export default {
 		data: function() {
 			return  {
-				payments: []
+				payments: [],
+				actions: [
+					{'icon': 'edit', 'event': 'edit'}
+				]
 			};
 		},
 		props: {
