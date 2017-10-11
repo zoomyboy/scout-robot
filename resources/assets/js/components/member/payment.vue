@@ -1,6 +1,6 @@
 <template>
 	<div class="cp-wrap cp-member-payment">
-		<v-table v-if="payments" :url="url" :border="false" controller="member" :headings="[{title: 'Year', data: 'nr'}, {title: 'Status', 'data': 'status[title]'}]" data="payments">
+		<v-table v-if="payments" :url="url" :border="false" controller="member" :headings="[{title: 'Year', data: 'nr'}, {title: 'Status', 'data': 'status[title]'}]">
 			
 		</v-table>
 	</div>
