@@ -6,9 +6,20 @@
 			<v-link route="member.add" right="member.manage" add></v-link>
 		</buttonbar>
 
-		<v-table controller="member" :headings="headings" url="/api/member/table" delete-msg="Mitglied erfolgreich gelöscht">
-		
-		</v-table>
+		<div class="row">
+			<div :class="{'col-md-7': member, 'col-md-12': !member}">
+				<panel title="Übersicht">
+					<v-table :border="false" v-on:info="openInfo" id="memberTable" controller="member" ref="table" :actions="actions" :headings="headings" url="/api/member/table" delete-msg="Mitglied erfolgreich gelöscht">
+				
+					</v-table>
+				</panel>
+			</div>
+			<div class="col-md-5" v-if="member">
+				<panel ref="memberpanel" :title="'Zahlungen für '+member.firstname+' '+member.lastname" closeable v-on:close="member = false" smalltitle>
+					<payment ref="payment" :member="member"></payment>
+				</panel>
+			</div>
+		</div>
 	</div>
 </template>
 
@@ -16,21 +27,40 @@
 	export default {
 		data: function() {
 			return {
-				headings: [
-					{title: 'Nachname', data: 'lastname'},
-					{title: 'Vorname', data: 'firstname'},
-					{title: 'Adresse', data: 'address'},
-					{title: 'PLZ', data: 'zip'},
-					{title: 'Stadt', data: 'city'},
-					{title: 'Eintritt', data: 'joined_at', type: 'date'},
-					{title: 'Ausstände', type: 'callback', data: 'strikes'}
-				]
+				actions: [
+					{icon: 'info', event: 'info'}
+				],
+				member: false,
+				payments: false
 			};
 		},
+		computed: {
+			headings: function() {
+				var h = [
+					{title: 'Nachname', data: 'lastname'},
+					{title: 'Vorname', data: 'firstname'},
+				];
+				if (!this.member) {
+					h.push({title: 'Adresse', data: 'address'});
+					h.push({title: 'Eintritt', data: 'joined_at', type: 'date'});
+					h.push({title: 'Stadt', data: 'city'});
+					h.push({title: 'PLZ', data: 'zip'});
+					h.push({title: 'Ausstände', type: 'callback', data: 'strikes'});
+				}
+				return h;
+			}
+		},
 		components: {
+			panel: function(resolve) {
+				require(['z-ui/panel.vue'], resolve);
+			},
 			vTable: function(resolve) {
 				require(['z-ui/table.vue'], resolve);
 			},
+
+			payment: function(resolve) {
+				require(['./payment.vue'], resolve);
+			}
 		},
 		methods: {
 			getStrikesAttribute(value) {
@@ -39,7 +69,13 @@
 				}
 
 				return (value / 100).toFixed(2).replace('.', ',')+' €';
+			},
+			openInfo: function(row, action) {
+				this.member = row;
 			}
+		},
+		mounted: function() {
+			var vm = this;
 		}
 	}
 </script>

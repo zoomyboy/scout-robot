@@ -45,3 +45,5 @@ Route::resource('member', 'MemberController');
 Route::resource('gender', 'GenderController');
 
 Route::get('info', 'ProfileController@infoForCurrentUser');
+
+Route::get('member/{member}/payments', 'PaymentController@index');

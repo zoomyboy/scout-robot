@@ -1,5 +1,5 @@
 module.exports = [
-	{path: '/member', component: require('../components/member/index.vue'), name: 'member.index'},
+	{path: '/member', component: function(resolve) {require(['../components/member/index.vue'], resolve)}, name: 'member.index'},
 	{path: '/config', component: require('../components/config/index.vue'), name: 'config.index'},
 	{path: '/profile', component: require('../components/profile/index.vue'), name: 'profile.index'},
 	{path: '/profile/password', component: require('../components/profile/password.vue'), name: 'profile.password'},
