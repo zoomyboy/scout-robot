@@ -6,10 +6,21 @@
 			<v-link route="member.add" right="member.manage" add></v-link>
 		</buttonbar>
 
-		<div class="grid-2">
+		<div class="grid grid-2">
 			<article>
 				<panel title="Übersicht">
-					<v-table :border="false" v-on:info="openInfo" id="memberTable" controller="member" ref="table" :actions="actions" :headings="headings" url="/api/member/table" delete-msg="Mitglied erfolgreich gelöscht">
+					<v-table
+						:border="false"
+						v-on:info="openInfo"
+						id="memberTable"
+						controller="member"
+						ref="table"
+						:actions="actions"
+						:headings="headings"
+						url="/api/member/table"
+						delete-msg="Mitglied erfolgreich gelöscht"
+	  					scrolling
+					>
 				
 					</v-table>
 				</panel>

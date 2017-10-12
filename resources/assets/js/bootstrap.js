@@ -3,6 +3,7 @@ window.Vue = require('vue');
 window.$ = window.jQuery = require('jquery');
 
 require('!style-loader!css-loader!less-loader!z-ui/less/bootstrap.less');
+require('!style-loader!css-loader!less-loader!../less/layout.less');
 
 window.axios = require('axios');
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
