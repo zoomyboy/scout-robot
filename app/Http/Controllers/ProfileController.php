@@ -29,7 +29,7 @@ class ProfileController extends Controller
 
 	public function infoForCurrentUser() {
 		return response()->json([
-			'conf' => Conf::with(['defaultCountry', 'defaultRegion'])->first()->toArray(),
+			'conf' => Conf::first()->toArray(),
 			'user' => auth()->guard('api')->user()->load(['usergroup.rights'])->toArray()
 		]);
 	}

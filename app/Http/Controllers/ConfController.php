@@ -17,7 +17,9 @@ class ConfController extends Controller
 	}
 
 	public function update(Conf $conf, ConfUpdateRequest $request) {
-		$request->persist($conf);
+		$model = $request->persist($conf);
+
+		return response()->json($model->toArray());
 	}
 
 	public function index() {

@@ -10,6 +10,8 @@ class Conf extends Model
 
 	public $timestamps = false;
 
+	public $with = ['defaultCountry', 'defaultRegion'];
+
 	public $casts = [
 		'default_keepdata' => 'boolean',
 		'default_sendnewspaper' => 'boolean',

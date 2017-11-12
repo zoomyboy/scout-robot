@@ -14,6 +14,10 @@ Vue.component('vfForm', require('z-ui/form/form.vue'));
 Vue.component('vfHidden', require('z-ui/form/fields/hidden.vue'));
 Vue.component('vfText', require('z-ui/form/fields/text.vue'));
 Vue.component('vfSubmit', require('z-ui/form/fields/submit.vue'));
+Vue.component('vfPassword', require('z-ui/form/fields/password.vue'));
+Vue.component('vfSelect', require('z-ui/form/fields/select.vue'));
+Vue.component('vfCheckbox', require('z-ui/form/fields/checkbox.vue'));
+Vue.component('vfCheckboxes', require('z-ui/form/fields/checkboxes.vue'));
 
 window.globalFormOptions = {
 	submitLabel: 'Absenden',

@@ -11,10 +11,13 @@ const Store = new Vuex.Store({
 	mutations: {
 		setinfo(state, data) {
 			state.user = data.user;
-			state.config = data.config;
+			state.config = data.conf;
 		},
 		updateuser(state, data) {
 			state.user = merge(state.user, data);
+		},
+		updateconfig(state, data) {
+			state.config = data;
 		}
 	},
 	actions: {

@@ -1,8 +1,6 @@
 <template>
 	<div class="cp-wrap cp-config-index">
-		<heading title="Globale Konfiguration"></heading>
-
-		<vf-form action="/api/conf/1" method="patch" url="/api/conf/1" msg="Konfiguration gespeichert">
+		<vf-form :getmodel="config" method="patch" action="/api/conf/1" msg="Konfiguration gespeichert" @afterpersist="updateconfig">
 			<vf-select name="defaultCountry" label="Land" url="/api/country" nullable></vf-select>
 			<vf-select name="defaultRegion" label="Bundesland" url="/api/region" nullable></vf-select>
 			<vf-checkbox name="default_keepdata" label="Datenweiterverwendung" help="Standardeinstellung für Datenweiterverwendung beim anlegen neuer Mitglieder"></vf-checkbox>
@@ -11,3 +9,16 @@
 		</vf-form>
 	</div>
 </template>
+
+<script>
+	import {mapState} from 'vuex';
+
+	export default {
+		computed: mapState(['config']),
+		methods: {
+			updateconfig(sended, response) {
+				this.$store.commit('updateconfig', response);
+			}
+		}
+	}
+</script>
