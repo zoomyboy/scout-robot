@@ -19,6 +19,7 @@
 			<statusbar layout="october"></statusbar>
 			<router-view></router-view>
 		</div>
+		<appfooter :height="37"></appfooter>
 	</comp>
 </div>
 @endsection

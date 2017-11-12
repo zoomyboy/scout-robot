@@ -6,7 +6,7 @@
 			<v-link route="member.add" right="member.manage" add></v-link>
 		</buttonbar>
 
-		<div class="grid grid-2">
+		<grid>
 			<article>
 				<panel title="Übersicht">
 					<v-table
@@ -30,7 +30,7 @@
 					<payment ref="payment" :member="member"></payment>
 				</panel>
 			</aside>
-		</div>
+		</grid>
 	</div>
 </template>
 
@@ -64,6 +64,9 @@
 		components: {
 			panel: function(resolve) {
 				require(['z-ui/panel.vue'], resolve);
+			},
+			grid: function(resolve) {
+				require(['z-ui/grid.vue'], resolve);
 			},
 			vTable: function(resolve) {
 				require(['z-ui/table.vue'], resolve);

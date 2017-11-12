@@ -1,6 +1,5 @@
 <template>
 	<div>
-		<heading title="Passwort zurücksetzen"></heading>
 		Gebe hier erneut deine hinterlegte E-Mail-Adrese ein, sowie zwei Mal dein neu gewähltes Passwort.
 		<br><br>
 		<vf-form action="/password/reset" redirect="login" method="post" msg="Dein Passwort wurde erfolgreich zurückgesetzt." ajax>

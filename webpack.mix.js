@@ -24,5 +24,5 @@ mix.webpackConfig({
 });
 
 mix.js('resources/assets/js/app.js', 'public/js')
-	.js('resources/assets/js/login.js', 'public/js')
+	.js('resources/assets/js/full.js', 'public/js')
 	.browserSync({proxy: 'http://scout-robot.dev'});

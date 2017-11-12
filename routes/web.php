@@ -10,6 +10,9 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
+Auth::routes();
 
+Route::get('/login', ['as' => 'login', 'uses' => 'Auth\LoginController@showLoginForm']);
 
-Route::get('/', 'HomeController@index');
+Route::get('/{vue}', 'HomeController@index')
+	->where('vue', '[a-zA-Z0-9\-\/\_]*');

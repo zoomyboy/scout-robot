@@ -69,4 +69,8 @@ class LoginController extends Controller
 
         return $this->sendFailedLoginResponse($request);
     }
+
+	public function showLoginForm() {
+		return view('full');
+	}
 }

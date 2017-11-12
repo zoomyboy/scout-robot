@@ -1,6 +1,5 @@
 <template>
 	<div>
-		<heading title="Zugang erstellen"></heading>
 		Gebe hier deine hinterlegte E-Mail-Adrese ein, sowie zwei Mal dein neu gewähltes Passwort.
 		<br><br>
 		<vf-form action="/password/first" redirect="login" method="post" msg="Dein Zugang wurde erfolgreich erstellt." ajax>

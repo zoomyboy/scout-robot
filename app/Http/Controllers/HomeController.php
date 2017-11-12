@@ -23,6 +23,10 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+		if (auth()->guard('web')->check()) {
+        	return view('home');
+		} else {
+        	return view('free');
+		}
     }
 }

@@ -21,3 +21,8 @@ window.globalFormOptions = {
 		sending: 'Wird gesendet...'
 	}
 };
+
+import InputMask from 'vue-inputmask';
+Vue.use(InputMask);
+
+require('font-awesome-webpack');

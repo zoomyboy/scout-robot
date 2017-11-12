@@ -27,15 +27,18 @@ Vue.use(link);
 Vue.use(tab);
 Vue.use(dropdown);
 
-import routes from './config/routes.app.js';
+import routes from './route/app.js';
 const router = new VueRouter({routes});
 
 const app = new Vue({
 	mixins: [clearSession],
 	data: {
-		entries: require('./config/entry.app.js'),
-		entryfooter: require('./config/entryfooter.app.js'),
+		entries: require('./entry/app.js'),
+		entryfooter: require('./entry/footer.js'),
 		$user: false
+	},
+	components: {
+		appfooter: require('z-ui/footer.vue')
 	},
 	router
 });
