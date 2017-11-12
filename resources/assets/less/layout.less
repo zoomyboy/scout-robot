@@ -4,27 +4,6 @@ html, body, #app {
 	height: 100% !important;
 }
 
-#app {
-	.main-component {
-		display: flex;
-		flex-direction: column;
-		height: 100%;
-		& > .container-fluid {
-			width: 100%;
-			flex-grow: 1;
-			display: flex;
-			flex-direction: column;
-			padding: 15px;
-			padding-top: 0;
-			& > .cp-wrap {
-				flex-grow: 1;
-				display: flex;
-				flex-direction: column;
-			}
-		}
-	}
-}
-
 .panel-body:before, .panel-body:after {
 	display: none;
 }

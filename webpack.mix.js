@@ -27,6 +27,22 @@ mix.webpackConfig({
 	}
 });
 
+if (mix.inProduction()) {
+    mix.version();
+    mix.webpackConfig({
+        module: {
+            rules: [{
+                test: /\.js?$/,
+                exclude: /(bower_components)/,
+                use: [{
+                    loader: 'babel-loader',
+                    options: mix.config.babel()
+                }]
+            }]
+        }
+    });
+}
+
 mix.js('resources/assets/js/app.js', 'public/js')
 	.js('resources/assets/js/full.js', 'public/js')
 	.browserSync({proxy: 'http://scout-robot.dev'});

@@ -1,17 +1,33 @@
+const heading = require('z-ui/heading/appheading.vue');
+
+const memberIndex = () => import('../components/member/index.vue');
+const configIndex = () => import('../components/config/index.vue');
+const profileIndex = () => import('../components/profile/index.vue');
+const profilePassword = () => import('../components/profile/password.vue');
+
 module.exports = [
-	{path: '/member', component: function(resolve) {require(['../components/member/index.vue'], resolve)}, name: 'member.index'},
-	{path: '/config', component: require('../components/config/index.vue'), name: 'config.index'},
-	{path: '/profile', component: require('../components/profile/index.vue'), name: 'profile.index'},
-	{path: '/profile/password', component: require('../components/profile/password.vue'), name: 'profile.password'},
-	{path: '/member/add', component: require('../components/member/add.vue'), name: 'member.add'},
-	{path: '/member/:id/edit', component: require('../components/member/edit.vue'), name: 'member.edit'},
-
-	{path: '/usergroup', component: require('../components/usergroup/index.vue'), name: 'usergroup.index'},
-	{path: '/usergroup/add', component: require('../components/usergroup/add.vue'), name: 'usergroup.add'},
-	{path: '/usergroup/:id/edit', component: require('../components/usergroup/edit.vue'), name: 'usergroup.edit'},
-
-
-	{path: '/user', component: require('../components/user/index.vue'), name: 'user.index'},
-	{path: '/user/add', component: require('../components/user/add.vue'), name: 'user.add'},
-	{path: '/user/:id/edit', component: require('../components/user/edit.vue'), name: 'user.edit'},
+	{
+		path: '/member',
+		name: 'member.index',
+		props: { heading: { title: 'Mitglieder-Übersicht' } },
+		components: { default: memberIndex, heading }
+	},
+	{
+		path: '/config',
+		name: 'config.index',
+		props: { heading: { title: 'Konfiguration' } },
+		components: { default: configIndex, heading }
+	},
+	{
+		path: '/profile',
+		name: 'profile.index',
+		props: { heading: { title: 'Eigenes Benutzerkonto' } },
+		components: { default: profileIndex, heading }
+	},
+	{
+		path: '/profile/password',
+		name: 'profile.password',
+		props: { heading: { title: 'Eigenes Passwort' } },
+		components: { default: profilePassword, heading }
+	}
 ];
