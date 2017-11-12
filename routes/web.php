@@ -13,6 +13,7 @@
 Auth::routes();
 
 Route::get('/login', ['as' => 'login', 'uses' => 'Auth\LoginController@showLoginForm']);
+Route::get('/logout', ['as' => 'logout', 'uses' => 'Auth\LoginController@logout']);
 
 Route::get('/{vue}', 'HomeController@index')
 	->where('vue', '[a-zA-Z0-9\-\/\_]*');

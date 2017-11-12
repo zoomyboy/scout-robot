@@ -50,7 +50,7 @@ class PasswordResetNotification extends Notification
 			->subject('['.config('app.name').'] Ihre Anfrage zum zurücksetzen des Passworts')
 			->line('Du bekommst diese E-Mail,  weil wir eine Anfrage zum zurücksetzen deines Passworts bekommen haben.')
 			->line('Folge diesem Link, um dein Passwort zurückzusetzen:')
-            ->action(url(config('app.url').'/login#/reset-password/'.$this->token), 'Passwort zurücksetzen')
+            ->action(url(config('app.url').'/password/reset/'.$this->token), 'Passwort zurücksetzen')
             ->line('Wenn du keine Anfrage zum zurücksetzen deines Passworts gestellt hast, kannst du diese Nachricht ignorieren.');
     }
 }

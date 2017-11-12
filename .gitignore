@@ -17,3 +17,4 @@ npm-debug.log
 /public
 tags
 yarn.lock
+packages/

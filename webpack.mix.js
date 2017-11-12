@@ -20,6 +20,10 @@ mix.webpackConfig({
 			'inputmask.dependencyLib': 'vue-inputmask/3rd/inputmask.dependencyLib',
 			'vuestrapStyle.less': path.resolve(__dirname, 'node_modules/z-vuestrap2/less/style.less')
 		}
+	},
+	output: {
+		path: path.resolve(__dirname, 'public/dist'),
+		publicPath: '/dist/'
 	}
 });
 

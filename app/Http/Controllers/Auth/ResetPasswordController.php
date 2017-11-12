@@ -37,7 +37,7 @@ class ResetPasswordController extends Controller
         $this->middleware('guest');
     }
 
-	public function first() {
-		
+	public function showResetForm() {
+		return view('full');
 	}
 }

@@ -53,6 +53,5 @@ class PaymentTest extends TestCase
 			$this->assertInstanceOf(\App\Status::class, $payment->status);	
 			$this->assertRegExp('/[0-9]{4}/', $payment->nr);
 		}
-
 	}
 }

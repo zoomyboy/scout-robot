@@ -3,6 +3,9 @@
     "description": "The Laravel Framework.",
     "keywords": ["framework", "laravel"],
     "license": "MIT",
+	"repositories": [
+		{"type": "path", "url": "./packages/tests", "options": {"symlink": true}}
+	],
     "type": "project",
     "require": {
         "php": ">=5.6.4",
@@ -16,7 +19,8 @@
     "require-dev": {
         "fzaninotto/faker": "~1.4",
         "mockery/mockery": "0.9.*",
-        "phpunit/phpunit": "~5.7"
+        "phpunit/phpunit": "~5.7",
+        "zoomyboy/tests": "dev-master"
     },
     "autoload": {
         "classmap": [

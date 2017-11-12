@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\ZFeature;
+namespace Tests\Feature;
 
 use Tests\TestCase;
 use App\User;

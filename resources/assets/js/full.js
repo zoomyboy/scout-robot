@@ -7,6 +7,10 @@ import VueRouter from 'vue-router';
 Vue.use(VueRouter);
 
 import routes from './route/full.js';
+
+import {session, clearSession} from 'zoom-vue-session';
+Vue.use(session);
+
 const router = new VueRouter({
 	routes,
 	mode: "history"
@@ -19,6 +23,7 @@ Vue.component('vfSubmit', require('z-ui/form/fields/submit.vue'));
 Vue.component('vLink', require('z-ui/link/link.vue'));
 
 const app = new Vue({
+	mixins: [clearSession],
 	components: {
 		fullpage: require('z-fullpage/fullpage.vue'),
 		statusbar: require('z-ui/statusbar.vue')

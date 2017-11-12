@@ -48,4 +48,8 @@ class ForgotPasswordController extends Controller
             $request->only('email')
         );
     }
+
+	public function showLinkRequestForm() {
+		return view('full');
+	}
 }

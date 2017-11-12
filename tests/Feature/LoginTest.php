@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\ZFeature;
+namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use \App\User;

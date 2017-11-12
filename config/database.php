@@ -55,10 +55,10 @@ return [
         ],
 
         'mysqltest' => [
-            'driver' => 'mysql',
+            'driver' => 'sqlite',
             'host' => '127.0.0.1',
             'port' => '3306',
-            'database' => env('DB_TEST_DATABASE'),
+            'database' => ':memory:',
             'username' => env('DB_TEST_USERNAME'),
             'password' => env('DB_TEST_PASSWORD'),
             'unix_socket' => env('DB_SOCKET', ''),
