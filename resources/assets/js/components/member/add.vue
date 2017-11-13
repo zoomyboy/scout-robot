@@ -22,10 +22,10 @@
 					</div>
 					<div class="row">
 						<div class="col-md-6">
-							<vf-select name="country" url="/api/country" label="Staatsangehörigkeit" :value="$config.value('default_country')"></vf-select>
+							<vf-select name="country" url="/api/country" label="Staatsangehörigkeit" :value="config.default_country"></vf-select>
 						</div>
 						<div class="col-md-6">
-							<vf-select name="region" url="/api/region" label="Bundesland" :value="$config.value('default_region')"></vf-select>
+							<vf-select name="region" url="/api/region" label="Bundesland" :value="config.default_region"></vf-select>
 						</div>
 					</div>
 					<div class="row">
@@ -41,8 +41,8 @@
 					<vf-text name="fax" label="Fax"></vf-text>
 					<vf-text name="email_parents" label="E-Mail-Adresse Erziehungsberechtigter"></vf-text>
 					<vf-select name="confession" label="Konfession" url="/api/confession" nullable></vf-select>
-					<vf-checkbox :value="$config.value('default_keepdata')" label="Datenweiterverwendung" name="keepdata" help="Wenn dieses Feld aktiviert wird, wird ein Mitglied beim Löschen zu den abgemeldeten Mitgliedern hinzugefügt, sodass dessen Daten noch eingesehen werden können. Wird das Mitglied mit NaMi synchronisiert, wird der Status dort auf 'inaktiv' gesetzt und auch dort bleiben die Daten bestehen.<br>Ist dieses Feld deaktiviert, werden die Daten komplett gelöscht.<br>Der Standardwert kann allgemein unter der globalen Konfiguration eingestellt werden."></vf-checkbox>
-					<vf-checkbox :value="$config.value('default_sendnewspaper')" label="Zeitschriftenversand" name="sendnewspaper" help="Wenn dieses Feld aktiviert wird, bekommt ein Mitglied die Mittendrin-Zeitschrift zugesendet. Der Standardwert kann allgemein unter der globalen Konfiguration eingestellt werden."></vf-checkbox>
+					<vf-checkbox :value="config.default_keepdata" label="Datenweiterverwendung" name="keepdata" help="Wenn dieses Feld aktiviert wird, wird ein Mitglied beim Löschen zu den abgemeldeten Mitgliedern hinzugefügt, sodass dessen Daten noch eingesehen werden können. Wird das Mitglied mit NaMi synchronisiert, wird der Status dort auf 'inaktiv' gesetzt und auch dort bleiben die Daten bestehen.<br>Ist dieses Feld deaktiviert, werden die Daten komplett gelöscht.<br>Der Standardwert kann allgemein unter der globalen Konfiguration eingestellt werden."></vf-checkbox>
+					<vf-checkbox :value="config.default_sendnewspaper" label="Zeitschriftenversand" name="sendnewspaper" help="Wenn dieses Feld aktiviert wird, bekommt ein Mitglied die Mittendrin-Zeitschrift zugesendet. Der Standardwert kann allgemein unter der globalen Konfiguration eingestellt werden."></vf-checkbox>
 				</tab>
 			</tabs>
 			
@@ -51,4 +51,15 @@
 	</div>
 </template>
 
+<script>
+	import {mapState} from 'vuex';
 
+	export default {
+		computed: mapState(['config']),
+		components: {
+			tabs: require('z-ui/tab/tabs.vue'),
+			tab: require('z-ui/tab/tab.vue'),
+			vfDate: require('z-ui/form/fields/date.vue')
+		}
+	}
+</script>
