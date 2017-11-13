@@ -50,6 +50,7 @@ const app = window.app = new Vue({
 		dropdown: require('z-ui/dropdown/dropdown.vue'),
 		dropdownlink: require('z-ui/dropdown/dropdownlink.vue'),
 		statusbar: require('z-ui/statusbar.vue'),
+		pagefooter: require('z-vue-sidebar/pagefooter.vue'),
 	},
 	computed: mapState(['user']),
 	router,

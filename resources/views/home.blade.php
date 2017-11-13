@@ -2,7 +2,7 @@
 
 @section('content')
 	<div id="app">
-		<comp v-if="user != false">
+		<comp v-if="user != false" footer>
 			<div slot="sidebar" class="sidebar-container">
 				<sidebar headerhref="/" headertitle="Scout Robot" subheadertitle="" closetitle="Sidebar schließen" footer>
 					<ul slot="footer">
@@ -27,6 +27,9 @@
 			<div slot="content">
 				<statusbar layout="october"></statusbar>
 				<router-view></router-view>
+			</div>
+			<div slot="footer" id="footer-container">
+				<pagefooter></pagefooter>
 			</div>
 		</comp>
 	</div>
