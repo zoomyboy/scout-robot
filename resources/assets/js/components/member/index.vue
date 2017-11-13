@@ -1,14 +1,11 @@
 <template>
 	<div class="cp-member cp-wrap">
-		<heading title="Mitglieder"></heading>
-
-		<buttonbar>
-			<v-link route="member.add" right="member.manage" add></v-link>
-		</buttonbar>
-
 		<grid>
 			<article>
 				<panel title="Übersicht">
+					<div slot="action">
+						<v-link route="member.add" right="member.manage" add size="sm"></v-link>
+					</div>
 					<v-table
 						:border="false"
 						v-on:info="openInfo"
@@ -63,7 +60,7 @@
 		},
 		components: {
 			panel: function(resolve) {
-				require(['z-ui/panel.vue'], resolve);
+				require(['z-ui/panel/panel.vue'], resolve);
 			},
 			grid: function(resolve) {
 				require(['z-ui/grid.vue'], resolve);
@@ -71,7 +68,6 @@
 			vTable: function(resolve) {
 				require(['z-ui/table.vue'], resolve);
 			},
-
 			payment: function(resolve) {
 				require(['./payment.vue'], resolve);
 			}

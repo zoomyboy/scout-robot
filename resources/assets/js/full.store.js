@@ -6,7 +6,8 @@ import merge from 'merge';
 const Store = new Vuex.Store({
 	state: {
 		user: false,
-		config: false
+		config: false,
+		actions: []
 	},
 	mutations: {
 		setinfo(state, data) {
@@ -18,6 +19,9 @@ const Store = new Vuex.Store({
 		},
 		updateconfig(state, data) {
 			state.config = data;
+		},
+		setactions(actions, data) {
+			state.actions = data;
 		}
 	},
 	actions: {

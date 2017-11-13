@@ -1,7 +1,5 @@
 <template>
 	<div class="cp-wrap cp-member-add">
-		<heading title="Mitglied bearbeiten"></heading>
-
 		<vf-form redirect="member.index" method="patch" :url="'/api/member/'+$route.params.id" :action="'/api/member/'+$route.params.id" msg="Mitglied erfolgreich bearbeitet">
 			<tabs>
 				<tab title="Stamdaten" active>

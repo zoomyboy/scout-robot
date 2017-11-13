@@ -5,6 +5,7 @@
 		<comp v-if="user != false" footer>
 			<div slot="sidebar" class="sidebar-container">
 				<sidebar headerhref="/" headertitle="Scout Robot" subheadertitle="" closetitle="Sidebar schließen" footer>
+					<s-menu title="Hauptmenü" :entries="entries"></s-menu>
 					<ul slot="footer">
 						<footerlink route="config.index" tooltip="Konfiguration" icon="cog"></footerlink>
 						<footerlink route="user.index" tooltip="Benutzer bearbeiten" icon="user"></footerlink>

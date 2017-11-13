@@ -1,7 +1,5 @@
 <template>
 	<div class="cp-wrap cp-member-add">
-		<heading title="Mitglied hinzufügen"></heading>
-
 		<vf-form redirect="member.index" method="post" action="/api/member"  msg="Mitglied erfolgreich hinzugefügt">
 			<tabs>
 				<tab title="Stamdaten" active>

@@ -10,6 +10,8 @@ Vue.use(sidebar);
 import {session, clearSession} from 'zoom-vue-session';
 Vue.use(session);
 
+Vue.component('vLink', require('z-ui/link/link.vue'));
+Vue.component('buttonbar', require('z-ui/link/buttonbar.vue'));
 Vue.component('vfForm', require('z-ui/form/form.vue'));
 Vue.component('vfHidden', require('z-ui/form/fields/hidden.vue'));
 Vue.component('vfText', require('z-ui/form/fields/text.vue'));
@@ -51,6 +53,7 @@ const app = window.app = new Vue({
 		dropdownlink: require('z-ui/dropdown/dropdownlink.vue'),
 		statusbar: require('z-ui/statusbar.vue'),
 		pagefooter: require('z-vue-sidebar/pagefooter.vue'),
+		sMenu: require('z-vue-sidebar/menu.vue'),
 	},
 	computed: mapState(['user']),
 	router,
