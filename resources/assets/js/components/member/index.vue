@@ -22,7 +22,7 @@
 					</v-table>
 				</panel>
 			</article>
-			<aside class="rows-3" v-if="member">
+			<aside class="rows-stretch" v-if="member">
 				<panel ref="memberpanel" :title="'Zahlungen für '+member.firstname+' '+member.lastname" closeable v-on:close="member = false" smalltitle>
 					<payment ref="payment" :member="member"></payment>
 				</panel>
@@ -63,7 +63,7 @@
 				require(['z-ui/panel/panel.vue'], resolve);
 			},
 			grid: function(resolve) {
-				require(['z-ui/grid.vue'], resolve);
+				require(['z-ui/grid/grid.vue'], resolve);
 			},
 			vTable: function(resolve) {
 				require(['z-ui/table.vue'], resolve);

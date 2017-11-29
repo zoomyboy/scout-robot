@@ -7,7 +7,12 @@ const Store = new Vuex.Store({
 	state: {
 		user: false,
 		config: false,
-		actions: []
+		actions: [],
+		tables: {
+			payment: {
+				adding: false
+			}
+		}
 	},
 	mutations: {
 		setinfo(state, data) {
@@ -22,6 +27,23 @@ const Store = new Vuex.Store({
 		},
 		setactions(actions, data) {
 			state.actions = data;
+		},
+		tableadd(state, table) {
+			state.tables[table].adding = true;	
+		},
+		addtable(state, name) {
+			state.tables[name] = {
+				adding: false
+			};
+		}
+	},
+	getters: {
+		gettable: (state, table) => {
+			if(state.tables) {
+				return state.tables[table];
+			} else {
+				return false;
+			}
 		}
 	},
 	actions: {

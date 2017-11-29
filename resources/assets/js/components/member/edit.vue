@@ -22,10 +22,10 @@
 					</div>
 					<div class="row">
 						<div class="col-md-6">
-							<vf-select name="country" url="/api/country" label="Staatsangehörigkeit" :value="$config.value('default_country')"></vf-select>
+							<vf-select name="country" url="/api/country" label="Staatsangehörigkeit" :value="config.default_country"></vf-select>
 						</div>
 						<div class="col-md-6">
-							<vf-select name="region" url="/api/region" label="Bundesland" :value="$config.value('default_region')"></vf-select>
+							<vf-select name="region" url="/api/region" label="Bundesland" :value="config.default_region"></vf-select>
 						</div>
 					</div>
 					<div class="row">
@@ -51,4 +51,15 @@
 	</div>
 </template>
 
+<script>
+	import {mapState} from 'vuex';
 
+	export default {
+		computed: mapState(['config']),
+		components: {
+			tabs: require('z-ui/tab/tabs.vue'),
+			tab: require('z-ui/tab/tab.vue'),
+			vfDate: require('z-ui/form/fields/date.vue')
+		}
+	}
+</script>

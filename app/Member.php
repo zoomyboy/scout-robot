@@ -41,7 +41,7 @@ class Member extends Model
 	}
 
 	public function payments() {
-		return $this->hasMany(\App\Payment::class);
+		return $this->hasMany(\App\Payment::class)->orderBy('nr');
 	}
 
 	public function paymentsNotPaid() {

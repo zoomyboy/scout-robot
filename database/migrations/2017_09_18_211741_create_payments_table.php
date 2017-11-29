@@ -14,11 +14,11 @@ class CreatePaymentsTable extends Migration
     public function up()
     {
         Schema::create('payments', function (Blueprint $table) {
+			$table->increments('id');
 			$table->integer('amount');
 			$table->integer('status_id');
 			$table->integer('member_id');
 			$table->string('nr');
-			$table->primary(['nr', 'member_id']);
             $table->timestamps();
         });
     }

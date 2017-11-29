@@ -21,7 +21,7 @@ module.exports = [
 		components: { default: memberAdd, heading }
 	},
 	{
-		path: '/member/edit/:id',
+		path: '/member/:id/edit',
 		name: 'member.edit',
 		props: { heading: { title: 'Miglied bearbeiten' } },
 		components: { default: memberEdit, heading }
@@ -42,6 +42,12 @@ module.exports = [
 		path: '/profile/password',
 		name: 'profile.password',
 		props: { heading: { title: 'Eigenes Passwort' } },
+		components: { default: profilePassword, heading }
+	},
+	{
+		path: '/user',
+		name: 'user.index',
+		props: { heading: { title: 'Benutzer-Übersicht' } },
 		components: { default: profilePassword, heading }
 	}
 ];
