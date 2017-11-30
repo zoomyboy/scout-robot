@@ -13,7 +13,7 @@ class MemberController extends Controller
 
 	public function index() {
 		$this->authorize('index', Member::class);
-		return response()->json(Member::active()->get()->toArray());
+		return response()->json(Member::orderBy('lastname, firstname')->active()->get()->toArray());
 	}
 
     public function store(MemberStoreRequest $request) {
@@ -35,7 +35,7 @@ class MemberController extends Controller
 
 	public function table() {
 		
-		return response()->json(Member::select([
+		return response()->json(Member::orderByRaw('lastname, firstname')->select([
 			'active', 'address', 'zip', 'city', 'firstname', 'id', 'joined_at', 'lastname'
 		])->get()->each(function($member) {
 			$member->append('strikes');
