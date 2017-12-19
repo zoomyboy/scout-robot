@@ -10,7 +10,11 @@ class ConfSeeder extends Seeder
 		'default_country_id',
 		'default_region_id',
 		'default_keepdata',
-		'default_sendnewspaper'
+		'default_sendnewspaper',
+		'letterKontoName',
+		'letterIban',
+		'letterBic',
+		'letterZweck'
 	];
 
     /**

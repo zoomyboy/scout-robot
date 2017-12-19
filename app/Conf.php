@@ -10,7 +10,7 @@ class Conf extends Model
 
 	public $timestamps = false;
 
-	public $with = ['defaultCountry', 'defaultRegion'];
+	public $with = ['defaultCountry', 'defaultRegion', 'files'];
 
 	public $casts = [
 		'default_keepdata' => 'boolean',
@@ -23,5 +23,9 @@ class Conf extends Model
 
 	public function defaultRegion() {
 		return $this->belongsTo(\App\Region::class);
+	}
+
+	public function files() {
+		return $this->morphMany(\Zoomyboy\Fileupload\Image::class, 'model');
 	}
 }

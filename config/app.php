@@ -181,8 +181,9 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 		Zoomyboy\BetterNotifications\ServiceProvider::class,
-		Laravel\Passport\PassportServiceProvider::class
-
+		Laravel\Passport\PassportServiceProvider::class,
+		Intervention\Image\ImageServiceProvider::class,
+	    Barryvdh\DomPDF\ServiceProvider::class,
     ],
 
     /*

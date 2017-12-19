@@ -15,5 +15,10 @@ Auth::routes();
 Route::get('/login', ['as' => 'login', 'uses' => 'Auth\LoginController@showLoginForm']);
 Route::get('/logout', ['as' => 'logout', 'uses' => 'Auth\LoginController@logout']);
 
+Route::get('/pdf/{member}/bill', 'PdfController@bill');
+
+Route::get('files/{file}', 'FileController@display')
+	->where('file', '[0-9a-zA-Z\/\.]+');
+
 Route::get('/{vue}', 'HomeController@index')
 	->where('vue', '[a-zA-Z0-9\-\/\_]*');

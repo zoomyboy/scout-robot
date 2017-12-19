@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
+use App\Conf;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -15,6 +16,13 @@ class AppServiceProvider extends ServiceProvider
 	public function boot()
 	{
 		Schema::defaultStringLength(191);
+
+		/**
+		 * @deprecated
+		 */
+		view()->composer('partials.pdf.letterSubBlock', function($v) {
+			$v->with('conf', Conf::first());
+		});
 	}
 
 	/**

@@ -2,6 +2,7 @@
 	<div class="cp-wrap cp-member-payment">
 		<buttonbar>
 			<v-link @click="isadd = true" size="sm" add></v-link>
+			<v-link :href="'/pdf/'+this.member.id+'/bill'" size="sm" target="_blank" icon="file-pdf-o">Rechnung anzeigen</v-link>
 		</buttonbar>
 		<legend v-if="label" v-text="label"></legend>
 		<vf-form v-if="isadd || isedit" :action="action" :getmodel="isedit" :method="method" @afterpersist="reloadMember" :msg="msg">

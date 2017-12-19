@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Zoomyboy\BaseRequest\Request;
+use Zoomyboy\Fileupload\Image;
 
 class ConfUpdateRequest extends Request
 {
@@ -21,4 +22,12 @@ class ConfUpdateRequest extends Request
     {
 		return [];
     }
+
+	public function afterPersist($model = null) {
+		foreach($this->input('files') as $file) {
+			$image = Image::find($file['id']);
+			$image->model()->associate($model);
+			$image->save();
+		}
+	}
 }

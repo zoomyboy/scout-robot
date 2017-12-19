@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Collections\OwnCollection;
 
 class Member extends Model
 {
@@ -15,6 +16,10 @@ class Member extends Model
 		'keepdata' => 'boolean',
 		'sendnewspaper' => 'boolean'
 	];
+
+	public function newCollection(array $models = []) {
+		return new OwnCollection($models);
+	}
 
 	//----------------------------------- Getters -----------------------------------
 	public function getStrikesAttribute() {
@@ -51,5 +56,42 @@ class Member extends Model
 	//----------------------------------- Scopes ------------------------------------
 	public function scopeActive($q) {
 		return $q->where('active', true);
+	}
+
+	/**
+	 * @deprecated
+	 */
+	public function beitragData() {
+		return $this->belongsTo('App\beitrag', 'beitrag_id', 'id');
+	}
+
+	/**
+	 * @deprecated
+	 */
+	public function zahlungData() {
+		return $this->hasMany('App\Payment')->with('state')->orderBy('year');
+	}
+
+	/**
+	 * @deprecated
+	 */
+	public function zahlungRawData() {
+		return $this->hasMany('App\Payment', 'userId', 'id');
+	}
+
+	/**
+	 * @deprecated
+	 */
+	public function zahlungRechnungData() {
+		return $this->hasMany('App\Payment')->where('status_id', '!=', 3)
+			->orderBy('nr');
+	}
+
+	/**
+	 * @deprecated
+	 */
+	public function zahlungErinnerungData() {
+		return $this->hasMany('App\zahlung', 'userId', 'id')->where('include', '=', 1)->where('status', '=', 2)
+					->orderBy('year');
 	}
 }

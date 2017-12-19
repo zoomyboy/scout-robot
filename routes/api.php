@@ -52,3 +52,5 @@ Route::patch('member/{member}/payments/{payment}', 'PaymentController@update');
 Route::delete('payment/{payment}', 'PaymentController@destroy');
 
 Route::get('/status', 'StatusController@index');
+
+Route::resource('file', 'FileController');

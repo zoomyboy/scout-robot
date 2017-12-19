@@ -4,17 +4,22 @@
     "keywords": ["framework", "laravel"],
     "license": "MIT",
 	"repositories": [
-		{"type": "path", "url": "./packages/tests", "options": {"symlink": true}}
+		{"type": "path", "url": "./packages/tests", "options": {"symlink": true}},
+		{"type": "path", "url": "./packages/fileupload", "options": {"symlink": true}}
 	],
     "type": "project",
     "require": {
         "php": ">=5.6.4",
+        "barryvdh/laravel-dompdf": "^0.8.1",
+        "intervention/image": "^2.4",
         "laravel/framework": "5.4.*",
         "laravel/passport": "^3.0",
         "laravel/tinker": "~1.0",
+        "setasign/fpdf": "^1.8",
         "umpirsky/country-list": "^2.0",
         "zoomyboy/base-request": "^1.0",
-        "zoomyboy/better-notifications": "^0.0.1"
+        "zoomyboy/better-notifications": "^0.0.1",
+        "zoomyboy/fileupload": "dev-master"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
@@ -29,7 +34,7 @@
         "psr-4": {
             "App\\": "app/"
         },
-		"files": []
+		"files": ["app/Helpers.php"]
     },
     "autoload-dev": {
         "psr-4": {

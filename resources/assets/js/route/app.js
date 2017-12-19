@@ -6,8 +6,15 @@ const memberEdit = () => import('../components/member/edit.vue');
 const configIndex = () => import('../components/config/index.vue');
 const profileIndex = () => import('../components/profile/index.vue');
 const profilePassword = () => import('../components/profile/password.vue');
+const welcome = () => import('../components/welcome/index.vue');
 
 module.exports = [
+	{
+		path: '/',
+		name: 'welcome',
+		props: { heading: { title: 'Willkommen' } },
+		components: { default: welcome, heading }
+	},
 	{
 		path: '/member',
 		name: 'member.index',
