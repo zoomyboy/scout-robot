@@ -24,13 +24,13 @@ module.exports = [
 	{
 		path: '/member/add',
 		name: 'member.add',
-		props: { heading: { title: 'Miglied hinzufügen' } },
+		props: { heading: { title: 'Mitglied hinzufügen' } },
 		components: { default: memberAdd, heading }
 	},
 	{
 		path: '/member/:id/edit',
 		name: 'member.edit',
-		props: { heading: { title: 'Miglied bearbeiten' } },
+		props: { heading: { title: 'Mitglied bearbeiten' } },
 		components: { default: memberEdit, heading }
 	},
 	{
