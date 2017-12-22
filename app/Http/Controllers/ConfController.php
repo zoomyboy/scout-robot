@@ -20,7 +20,7 @@ class ConfController extends Controller
 	public function update(Conf $conf, ConfUpdateRequest $request) {
 		$model = $request->persist($conf);
 
-		return response()->json($model->toArray());
+		return response()->json($model->load('files')->toArray());
 	}
 
 	public function index() {
