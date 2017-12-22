@@ -2,14 +2,14 @@
 
 namespace Tests\Feature;
 
-use Tests\TestCase;
+use Tests\FeatureTestCase;
 use App\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Support\Facades\Config;
 use App\Usergroup;
 use App\Right;
 
-class ClientInformationTest extends TestCase {
+class ClientInformationTest extends FeatureTestCase {
 
 	public function setUp() {
 		parent::setUp();
@@ -27,10 +27,11 @@ class ClientInformationTest extends TestCase {
 		$this->runMigration('confs_table');
 		$this->runMigration('countries_table');
 		$this->runMigration('regions_table');
+		$this->runMigration('images_table');
+		$this->runMigration('units_table');
 
 		$this->runSeeder(\RightSeeder::class);
 		$this->create('usergroup', ['title' => 'NewUserGroup'])->rights()->sync([2,3]);
-		$this->runSeeder(\UserSeeder::class);
 		$this->runSeeder(\CountrySeeder::class);
 		$this->runSeeder(\RegionSeeder::class);
 		$this->runSeeder(\ConfSeeder::class);
@@ -38,7 +39,7 @@ class ClientInformationTest extends TestCase {
 
 	/** @test */
 	public function it_can_get_client_info() {
-		$user = parent::auth('api');
+		$user = $this->authAsApi();
 
 		$this->getApi('info')
 			->assertSuccess()
@@ -52,9 +53,9 @@ class ClientInformationTest extends TestCase {
 				'default_region' => null,
 				'default_sendnewspaper' => false
 			], 'user' => [
-				'name' => 'Admin',
-				'email' => 'admin@example.tz',
 				'id' => 1,
+				'name' => auth()->user()->name, 
+				'email' => auth()->user()->email,
 				'usergroup' => [
 					'id' => 1,
 					'title' => 'NewUserGroup',
@@ -68,6 +69,8 @@ class ClientInformationTest extends TestCase {
 
 	/** @test */
 	public function it_shouldnt_be_a_guest() {
+		$this->withExceptionHandling();
+
 		$this->getApi('info')->assertUnauthorized();
 	}
 }

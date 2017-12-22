@@ -9,19 +9,16 @@
          processIsolation="false"
          stopOnFailure="true">
     <testsuites>
+        <testsuite name="Unit">
+            <directory suffix="Test.php">./tests/Unit</directory>
+        </testsuite>
+
         <testsuite name="Feature">
             <directory suffix="Test.php">./tests/Feature</directory>
         </testsuite>
 
         <testsuite name="Integration">
             <directory suffix="Test.php">./tests/Integration</directory>
-        </testsuite>
-
-        <testsuite name="Unit">
-            <directory suffix="Test.php">./tests/Unit</directory>
-        </testsuite>
-        <testsuite name="BaseRequest">
-			<directory suffix="Test.php">./vendor/zoomyboy/base-request/tests</directory>
         </testsuite>
     </testsuites>
     <filter>

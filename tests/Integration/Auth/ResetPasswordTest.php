@@ -15,6 +15,8 @@ class ResetPasswordTest extends IntegrationTestCase {
 		$this->runMigration('rights_table');
 		$this->runMigration('right_usergroup_table');
 		$this->runMigration('password_resets_table');
+		$this->runMigration('images_table');
+
 		$this->runSeeder('UsergroupSeeder');
 	}
 

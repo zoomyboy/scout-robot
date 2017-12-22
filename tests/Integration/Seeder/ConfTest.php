@@ -15,10 +15,13 @@ class ConfTest extends TestCase
 		Config::set('seed.default_country', 'GM');
 
 		$this->runMigration('regions_table');
-		$this->runSeeder(\RegionSeeder::class);
 		$this->runMigration('countries_table');
-		$this->runSeeder(\CountrySeeder::class);
 		$this->runMigration('confs_table');
+		$this->runMigration('images_table');
+		$this->runMigration('units_table');
+
+		$this->runSeeder(\RegionSeeder::class);
+		$this->runSeeder(\CountrySeeder::class);
 		$this->runSeeder(\ConfSeeder::class);
 
 		$this->assertEquals(1, Conf::count());
