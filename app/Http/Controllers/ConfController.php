@@ -13,6 +13,7 @@ class ConfController extends Controller
 			->load('defaultCountry')
 			->load('defaultRegion')
 			->load('files')
+			->load('deadlineunit')
 			->toArray()
 		);
 	}
@@ -24,6 +25,6 @@ class ConfController extends Controller
 	}
 
 	public function index() {
-		return response()->json(Conf::with('defaultCountry', 'defaultRegion', 'files')->get()->toArray());
+		return response()->json(Conf::with('defaultCountry', 'defaultRegion', 'files', 'deadlineunit')->get()->toArray());
 	}
 }

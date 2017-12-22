@@ -14,7 +14,10 @@ class ConfSeeder extends Seeder
 		'letterKontoName',
 		'letterIban',
 		'letterBic',
-		'letterZweck'
+		'letterZweck',
+		'includeFamilies',
+		'deadlinenr',
+		'deadlineunit_id'
 	];
 
     /**

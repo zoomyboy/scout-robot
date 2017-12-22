@@ -20,6 +20,12 @@
 							<vf-text name="letterIban" label="IBAN"></vf-text>
 							<vf-text name="letterBic" label="BIC"></vf-text>
 							<vf-text name="letterZweck" label="Verwendungszweck" :info="'Verwende [name] als Platzhalter für Mitglieds-Name'"></vf-text>
+							<vf-checkbox name="includeFamilies" label="Familien standardmäßig zusammenführen" :info="'Familienmitglieder, die in einem Haushalt leben, bekommen standardmäßig nur eine Rechnung'"></vf-checkbox>
+							<label>Standard-Deadline</label>
+							<div class="row">
+								<div class="col-md-6"><vf-text name="deadlinenr"></vf-text></div>
+								<div class="col-md-6"><vf-select name="deadlineunit" url="/api/unit/date"></vf-select></div>
+							</div>
 						</panelcontent>
 						<vf-submit></vf-submit>
 					</panel>

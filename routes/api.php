@@ -54,3 +54,5 @@ Route::delete('payment/{payment}', 'PaymentController@destroy');
 Route::get('/status', 'StatusController@index');
 
 Route::resource('file', 'FileController');
+
+Route::get('unit/{type}', 'UnitController@index');
