@@ -23,9 +23,7 @@
 				</panel>
 			</article>
 			<aside class="rows-stretch" v-if="member">
-				<panel ref="memberpanel" :title="'Zahlungen für '+member.firstname+' '+member.lastname" closeable v-on:close="member = false" smalltitle>
-					<payment ref="payment" :member="member"></payment>
-				</panel>
+				<payment ref="payment" :member="member"></payment>
 			</aside>
 		</grid>
 	</div>
