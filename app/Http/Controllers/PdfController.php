@@ -11,7 +11,7 @@ use App\Services\Pdf\Bill as PdfService;
 class PdfController extends Controller
 {
 	public function bill(Member $member) {
-		$members = request()->family ? Member::family($member)->get()->groupBy('lastname') : (new OwnCollection([$member]))->groupBy('lastname');
+		$members = request()->includeFamilies === "true" ? Member::family($member)->get()->groupBy('lastname') : (new OwnCollection([$member]))->groupBy('lastname');
 		$service = new PdfService($members, ['deadline' => request()->deadline]);
 
 		return $service->handle();
