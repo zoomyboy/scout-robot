@@ -1,15 +1,15 @@
 <template>
-	<panel ref="memberpanel" closeable v-on:close="member = false" smalltitle>
+	<panel ref="memberpanel" closeable v-on:close="$emit('closeinfo')" smalltitle>
 		<div slot="tabs" class="tabs">
 			<tab index="1" title="Zahlungen" active></tab>
-			<tab index="2" title="Rechnung erstellen"></tab>
+			<tab index="2" title="Rechnung erstellen" v-if="hasPayments([1])"></tab>
 		</div>
 		<panelcontent index="1" active>
 			<buttonbar>
 				<v-link @click="isadd = true" size="sm" add></v-link>
 			</buttonbar>
 			<legend v-if="label" v-text="label"></legend>
-			<vf-form v-if="isadd || isedit" :action="action" :getmodel="isedit" :method="method" @afterpersist="reloadMember" :msg="msg">
+			<vf-form v-if="isadd || isedit" :action="action" :getmodel="isedit" :method="method" @afterpersist="loadmember" :msg="msg">
 				<vf-number label="Jahr" size="sm" name="nr" ref="nrinput"></vf-number>
 				<vf-select size="sm" name="status" label="Status" ref="statusinput" url="/api/status"></vf-select>
 				<vf-text size="sm" name="amount" label="Betrag" :mask="{mask: '9{1,},99'}" ref="amountinput"></vf-text>
@@ -21,8 +21,8 @@
 				<hr>
 			</vf-form>
 			<v-table
-				v-if="payments"
-				:url="url"
+				v-if="payments.length > 0"
+				:collection="payments"
 				:actions="[{event: 'editpayment', icon: 'pencil'}]"
 				:border="false"
 				controller="payment"
@@ -30,10 +30,11 @@
 				:editaction="false"
 				ref="table"
 				@editpayment="editpayment"
+				@deleted="deletepayment"
 			>
 			</v-table>
 		</panelcontent>
-		<panelcontent index="2">
+		<panelcontent index="2" v-if="hasPayments([1])">
 			<vf-form :action="'/pdf/'+this.member.id+'/bill'" method="post" :ajax="false">
 				<vf-checkbox name="includeFamilies" :value="config.includeFamilies" label="Familien zusammenführen"></vf-checkbox>
 
@@ -59,9 +60,10 @@
 	export default {
 		data: function() {
 			return {
-				payments: [],
 				isadd: false,
-				isedit: false
+				isedit: false,
+				innermember: false,
+				payments: []
 			};
 		},
 		props: {
@@ -73,6 +75,20 @@
 		watch: {
 			member: function(newVal, oldVal) {
 				this.loadmember();
+			},
+			isadd: function(v) {
+				if (v) {
+					this.isedit = false;
+					this.$nextTick(function() {
+						this.$refs.amountinput.setValue('');
+						this.$refs.nrinput.setValue('');
+						this.$refs.statusinput.setValue('');
+						this.getmodel = false;
+					});
+				}
+			},
+			payments: function(val) {
+				this.$emit('changepayment', this.member);
 			}
 		},
 		components: {
@@ -85,23 +101,7 @@
 			tab: require('z-ui/panel/tab.vue'),
 			panelcontent: require('z-ui/panel/content.vue'),
 		},
-		watch: {
-			isadd: function(v) {
-				if (v) {
-					this.isedit = false;
-					this.$nextTick(function() {
-						this.$refs.amountinput.setValue('');
-						this.$refs.nrinput.setValue('');
-						this.$refs.statusinput.setValue('');
-						this.getmodel = false;
-					});
-				}
-			}
-		},
 		computed: {
-			url: function() {
-				return '/api/member/'+this.member.id+'/payments';
-			},
 			deadline: function() {
 				var now = moment();
 
@@ -158,16 +158,13 @@
 		},
 		methods: {
 			loadmember: function() {
-				this.add = {status: '', nr: ''};
-			},
-			reloadMember: function() {
 				var vm = this;
-				this.isedit = false;
-				this.isadd = false;
 
-				axios.get('/api/member/'+this.member.id+'/payments').then(function(ret) {
-					vm.member.payments = ret.data;
-					vm.$refs.table.reload();
+				vm.innermember = vm.member;
+
+				axios.get('/api/member/'+this.innermember.id+'/payments').then(function(ret) {
+					vm.payments = ret.data;
+					vm.isedit = false;
 					vm.isadd = false;
 				});
 			},
@@ -180,11 +177,17 @@
 				});
 			},
 			deletepayment: function(payment) {
-				this.$store.commit('confirm', function() {
-					// this.$nextTick(function() {
-					// 	this.$refs.amountinput.setValue(accounting.formatMoney(payment.amount / 100, "", 2, '.', ','));
-					// });
+				this.payments = this.payments.filter(function(p) {
+					return p.id != payment.id;
 				});
+			},
+			hasPayments: function(ids) {
+				if (!this.member) {return false;}
+				if (!this.payments) {return false;}
+
+				return this.payments.filter(function(p) {
+					return ids.indexOf(p.status_id) !== -1;
+				}).length > 0;
 			}
 		},
 		mounted: function() {

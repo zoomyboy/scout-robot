@@ -10,11 +10,12 @@
 						:border="false"
 						v-on:info="openInfo"
 						id="memberTable"
+						v-if="members !== false"
 						controller="member"
 						ref="table"
 						:actions="actions"
 						:headings="headings"
-						url="/api/member/table"
+						:collection="members"
 						delete-msg="Mitglied erfolgreich gelöscht"
 	  					scrolling
 					>
@@ -23,7 +24,7 @@
 				</panel>
 			</article>
 			<aside class="rows-stretch" v-if="member">
-				<payment ref="payment" :member="member"></payment>
+				<payment ref="payment" :member="member" @closeinfo="member = false" @changepayment="reloadmember"></payment>
 			</aside>
 		</grid>
 	</div>
@@ -37,6 +38,7 @@
 					{icon: 'info', event: 'info'}
 				],
 				member: false,
+				members: false,
 				payments: false
 			};
 		},
@@ -78,12 +80,27 @@
 
 				return (value / 100).toFixed(2).replace('.', ',')+' €';
 			},
+			reloadmember: function(member) {
+				var vm = this;
+			
+				axios.get('/api/member/'+member.id+'/table').then(function(data) {
+					vm.members = vm.members.map(function(m) {
+						if (m.id == data.data.id) {return data.data;}
+
+						return m;
+					});
+				});
+			},
 			openInfo: function(row, action) {
 				this.member = row;
 			}
 		},
 		mounted: function() {
 			var vm = this;
+
+			axios.get('/api/member/table').then(function(data) {
+				vm.members = data.data;
+			});
 		}
 	}
 </script>

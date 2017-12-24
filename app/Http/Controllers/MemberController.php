@@ -42,4 +42,8 @@ class MemberController extends Controller
 		})->toArray());
 
 	}
+
+	public function tableOne(Member $member) {
+		return response()->json(array_only($member->append('strikes')->toArray(), ['active', 'address', 'zip', 'city', 'firstname', 'id', 'joined_at', 'lastname', 'strikes']));
+	}
 }
