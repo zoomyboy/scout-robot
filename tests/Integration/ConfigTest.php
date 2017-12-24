@@ -42,7 +42,13 @@ class ConfigTest extends IntegrationTestCase {
 			'letterBic' => 'SOL',
 			'letterIban' => 'DE44 6666',
 			'letterKontoName' => 'Sparkasse',
-			'letterZweck' => 'Zweck'
+			'letterZweck' => 'Zweck',
+			'letterFrom' => 'Stamm',
+			'groupname' => 'Stammu2',
+			'personName' => 'Karl',
+			'personTel' => '+49 212 1366558',
+			'personMail' => 'admin@example.net',
+			'personFunction' => 'Kassenwart Stamm AAA'
 		]);
 
 		$this->getApi('info')->assertJson(['conf' => [
@@ -57,7 +63,13 @@ class ConfigTest extends IntegrationTestCase {
 			'letterBic' => 'SOL',
 			'letterIban' => 'DE44 6666',
 			'letterKontoName' => 'Sparkasse',
-			'letterZweck' => 'Zweck'
+			'letterZweck' => 'Zweck',
+			'letterFrom' => 'Stamm',
+			'groupname' => 'Stammu2',
+			'personName' => 'Karl',
+			'personTel' => '+49 212 1366558',
+			'personMail' => 'admin@example.net',
+			'personFunction' => 'Kassenwart Stamm AAA'
 		]]);
 	}
 
@@ -80,7 +92,8 @@ class ConfigTest extends IntegrationTestCase {
 			'letterBic' => 'SOL',
 			'letterIban' => 'DE44 6666',
 			'letterKontoName' => 'Sparkasse',
-			'letterZweck' => 'Zweck'
+			'letterZweck' => 'Zweck',
+			'groupname' => 'Stammu2'
 		])->assertForbidden();
 	}
 }

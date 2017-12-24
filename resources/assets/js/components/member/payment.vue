@@ -34,12 +34,12 @@
 			</v-table>
 		</panelcontent>
 		<panelcontent index="2">
-			<vf-form :action="'/pdf/'+this.member.id+'/bill'" method="post">
+			<vf-form :action="'/pdf/'+this.member.id+'/bill'" method="post" :ajax="false">
 				<vf-checkbox name="includeFamilies" :value="config.includeFamilies" label="Familien zusammenführen"></vf-checkbox>
 
 				<vf-date name="deadline" :value="deadline" label="Deadline"></vf-date>
 
-				<vf-submit>Rehnung anzeigen</vf-submit>
+				<vf-submit>Rechnung anzeigen</vf-submit>
 			</vf-form>
 		</panelcontent>
 	</panel>
@@ -104,6 +104,10 @@
 			},
 			deadline: function() {
 				var now = moment();
+
+				if (!this.config.deadlineunit) {
+					return '';
+				}
 
 				var units = ['', 'days', 'weeks', 'months', 'years'];
 

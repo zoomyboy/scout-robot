@@ -14,7 +14,11 @@ class Member extends Model
 	public $casts = [
 		'active' => 'boolean',
 		'keepdata' => 'boolean',
-		'sendnewspaper' => 'boolean'
+		'sendnewspaper' => 'boolean',
+		'gender_id' => 'integer',
+		'country_id' => 'integer',
+		'region_id' => 'integer',
+		'confession_id' => 'integer',
 	];
 
 	public function newCollection(array $models = []) {
@@ -25,8 +29,6 @@ class Member extends Model
 	public function getStrikesAttribute() {
 		return $this->paymentsNotPaid()->sum('amount');
 	}
-
-
 
 	//---------------------------------- Relations ----------------------------------
 	public function country() {
@@ -54,44 +56,11 @@ class Member extends Model
 	}
 
 	//----------------------------------- Scopes ------------------------------------
-	public function scopeActive($q) {
-		return $q->where('active', true);
-	}
-
-	/**
-	 * @deprecated
-	 */
-	public function beitragData() {
-		return $this->belongsTo('App\beitrag', 'beitrag_id', 'id');
-	}
-
-	/**
-	 * @deprecated
-	 */
-	public function zahlungData() {
-		return $this->hasMany('App\Payment')->with('state')->orderBy('year');
-	}
-
-	/**
-	 * @deprecated
-	 */
-	public function zahlungRawData() {
-		return $this->hasMany('App\Payment', 'userId', 'id');
-	}
-
-	/**
-	 * @deprecated
-	 */
-	public function zahlungRechnungData() {
-		return $this->hasMany('App\Payment')->where('status_id', '!=', 3)
-			->orderBy('nr');
-	}
-
-	/**
-	 * @deprecated
-	 */
-	public function zahlungErinnerungData() {
-		return $this->hasMany('App\zahlung', 'userId', 'id')->where('include', '=', 1)->where('status', '=', 2)
-					->orderBy('year');
+	public function scopeFamily($q, $member) {
+		return $q
+			->where('lastname', $member->lastname)
+			->where('zip', $member->zip)
+			->where('city', $member->city)
+			->where('address', $member->address);
 	}
 }

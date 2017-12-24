@@ -17,7 +17,17 @@ class ConfSeeder extends Seeder
 		'letterZweck',
 		'includeFamilies',
 		'deadlinenr',
-		'deadlineunit_id'
+		'deadlineunit_id',
+		'letterFrom',
+		'groupname',
+		'personName',
+		'personTel',
+		'personMail',
+		'personFunction',
+		'personAddress',
+		'personZip',
+		'personCity',
+		'website'
 	];
 
     /**

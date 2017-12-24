@@ -100,4 +100,25 @@ class MemberTest extends TestCase {
 		$this->getApi('member/table')
 			->assertUnauthorized();
 	}
+
+	/** @test */
+	public function it_gets_all_family_members() {
+		$atts = [
+			'firstname' => 'John',
+			'lastname' => 'Doe',
+			'address' => 'Str 1',
+			'zip' => '67777',
+			'city' => 'City'
+		];
+
+		$members = collect([
+			$this->create('Member', $atts),
+			$this->create('Member', array_merge($atts, ['firstname' => 'Jane'])),
+			$this->create('Member', array_merge($atts, ['firstname' => 'Jane', 'zip' => '77885'])),
+			$this->create('Member', array_merge($atts, ['firstname' => 'Jane', 'address' => 'Neuerst'])),
+			$this->create('Member', array_merge($atts, ['firstname' => 'Jane', 'city' => 'City2']))
+		]);
+
+		$this->assertEquals($members->slice(0, 2)->toArray(), Member::family($members[0])->get()->toArray());
+	}
 }

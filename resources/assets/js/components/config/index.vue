@@ -5,22 +5,35 @@
 				<article>
 					<panel>
 						<div slot="tabs" class="tabs">
-							<paneltab title="Mitgliederverwaltung" index="0" active></paneltab>
-							<paneltab title="PDF-Erstellung" index="1"></paneltab>
+							<paneltab title="Allgemein" index="0" active></paneltab>
+							<paneltab title="Mitgliederverwaltung" index="1"></paneltab>
+							<paneltab title="PDF-Erstellung" index="2"></paneltab>
 						</div>
 						<panelcontent index="0" active>
+							<vf-text name="groupname" label="Gruppenname"></vf-text>
+							<vf-text name="website" label="Webseite"></vf-text>
+						</panelcontent>
+						<panelcontent index="1">
 							<vf-select name="defaultCountry" label="Land" url="/api/country" nullable></vf-select>
 							<vf-select name="defaultRegion" label="Bundesland" url="/api/region" nullable></vf-select>
 							<vf-checkbox name="default_keepdata" label="Datenweiterverwendung" help="Standardeinstellung für Datenweiterverwendung beim anlegen neuer Mitglieder"></vf-checkbox>
 							<vf-checkbox name="default_sendnewspaper" label="Zeitschriftenversand" help="Standardeinstellung für Zeitschriftenversand beim anlegen neuer Mitglieder"></vf-checkbox>
 						</panelcontent>
-						<panelcontent index="1">
+						<panelcontent index="2">
 							<vf-files name="files" label="Logo im Header" uploadurl="/api/file"></vf-files>
 							<vf-text name="letterKontoName" value="Kontoinhaber"></vf-text>
 							<vf-text name="letterIban" label="IBAN"></vf-text>
 							<vf-text name="letterBic" label="BIC"></vf-text>
+							<vf-text name="letterFrom" label="Absender in Rechnungen"></vf-text>
 							<vf-text name="letterZweck" label="Verwendungszweck" :info="'Verwende [name] als Platzhalter für Mitglieds-Name'"></vf-text>
 							<vf-checkbox name="includeFamilies" label="Familien standardmäßig zusammenführen" :info="'Familienmitglieder, die in einem Haushalt leben, bekommen standardmäßig nur eine Rechnung'"></vf-checkbox>
+							<vf-text name="personName" label="Ansprechpartner Name"></vf-text>
+							<vf-text name="personMail" label="Ansprechpartner E-Mail-Adresse"></vf-text>
+							<vf-text name="personTel" label="Ansprechpartner Tel"></vf-text>
+							<vf-text name="personFunction" label="Ansprechpartner Funktion"></vf-text>
+							<vf-text name="personAddress" label="Ansprechpartner Adresse"></vf-text>
+							<vf-text name="personZip" label="Ansprechpartner PLZ"></vf-text>
+							<vf-text name="personCity" label="Ansprechpartner Ort"></vf-text>
 							<label>Standard-Deadline</label>
 							<div class="row">
 								<div class="col-md-6"><vf-text name="deadlinenr"></vf-text></div>

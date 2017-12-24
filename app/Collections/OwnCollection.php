@@ -19,11 +19,9 @@ class OwnCollection extends \Illuminate\Database\Eloquent\Collection {
 		$totalSum = $this->reduce(function($carry, $item) use ($statusIds) {
 			$carry = $carry ?: 0;
 
-			$sumForCurrentPayment = $item->payments->reduce(function($zCarry, $zItem) use ($carry, $statusIds) {
+			$sumForCurrentPayment = $item->payments()->whereIn('status_id', $statusIds)->get()->reduce(function($zCarry, $zItem) use ($carry) {
 				$zCarry = $zCarry ?: 0;
-				if (in_array($zItem->status->id, $statusIds)) {
-					return $zCarry + $zItem->amount;
-				}
+				return $zCarry + $zItem->amount;
 			});
 
 			return $carry + $sumForCurrentPayment;
@@ -37,7 +35,14 @@ class OwnCollection extends \Illuminate\Database\Eloquent\Collection {
 	}
 
 	public function enumNames() {
-		return '';
+		switch($this->count()) {
+			case 0; return '';
+			case 1: return $this->items[0]->firstname.' '.$this->items[0]->lastname;
+			default:
+				$items = $this->items;
+				$last = array_pop($items);
+				return implode(', ', array_map(function($item) { return $item->firstname.' '.$item->lastname; }, $items)).' und '.$last->firstname.' '.$last->lastname;
+		}
 	}
 
 	public function pluckRec($plucker, $return = false) {
