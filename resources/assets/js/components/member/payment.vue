@@ -35,7 +35,7 @@
 			</v-table>
 		</panelcontent>
 		<panelcontent index="2" v-if="hasPayments([1])">
-			<vf-form :action="'/pdf/'+this.member.id+'/bill'" method="post" :ajax="false">
+			<vf-form :action="'/pdf/'+this.member.id+'/bill'" method="post" :ajax="false" target="_blank">
 				<vf-checkbox name="includeFamilies" :value="config.includeFamilies" label="Familien zusammenführen"></vf-checkbox>
 
 				<vf-date name="deadline" :value="deadline" label="Deadline"></vf-date>
