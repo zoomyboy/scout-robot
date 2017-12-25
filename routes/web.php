@@ -16,6 +16,7 @@ Route::get('/login', ['as' => 'login', 'uses' => 'Auth\LoginController@showLogin
 Route::get('/logout', ['as' => 'logout', 'uses' => 'Auth\LoginController@logout']);
 
 Route::post('/pdf/{member}/bill', 'PdfController@bill');
+Route::post('/pdf/{member}/remember', 'PdfController@remember');
 
 Route::get('files/{file}', 'FileController@display')
 	->where('file', '[0-9a-zA-Z\/\.]+');

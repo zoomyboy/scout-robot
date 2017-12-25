@@ -3,6 +3,7 @@
 		<div slot="tabs" class="tabs">
 			<tab index="1" title="Zahlungen" active></tab>
 			<tab index="2" title="Rechnung erstellen" v-if="hasPayments([1])"></tab>
+			<tab index="3" title="Erinnerung erstellen" v-if="hasPayments([2])"></tab>
 		</div>
 		<panelcontent index="1" active>
 			<buttonbar>
@@ -41,6 +42,15 @@
 				<vf-date name="deadline" :value="deadline" label="Deadline"></vf-date>
 
 				<vf-submit>Rechnung anzeigen</vf-submit>
+			</vf-form>
+		</panelcontent>
+		<panelcontent index="3" v-if="hasPayments([2])">
+			<vf-form :action="'/pdf/'+this.member.id+'/remember'" method="post" :ajax="false" target="_blank">
+				<vf-checkbox name="includeFamilies" :value="config.includeFamilies" label="Familien zusammenführen"></vf-checkbox>
+
+				<vf-date name="deadline" :value="deadline" label="Deadline"></vf-date>
+
+				<vf-submit>Zahlungserinnerung anzeigen</vf-submit>
 			</vf-form>
 		</panelcontent>
 	</panel>
