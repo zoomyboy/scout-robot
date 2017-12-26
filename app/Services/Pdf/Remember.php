@@ -16,7 +16,7 @@ class Remember extends GlobalPdf {
 		$this->deadline = $atts['deadline'] ? Carbon::parse($atts['deadline'])->format('d.m.Y') : '';
 	}
 
-	public function handle() {
+	public function handle($filename) {
 		foreach($this->members as $member) {
 			$this->pdf->AddPage();
 			$this->header($member[0]);
@@ -103,7 +103,6 @@ class Remember extends GlobalPdf {
 			$this->sidebar();
 		}
 
-		return response($this->pdf->output('S', 'Rechnung für '.$member[0]->lastname.'.pdf', true))
-			->header('content-type', 'application/pdf');
+		return $this->save($filename);
 	}
 }

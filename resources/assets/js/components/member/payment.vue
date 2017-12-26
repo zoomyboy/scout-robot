@@ -36,7 +36,7 @@
 		</panelcontent>
 		<panelcontent index="2" v-if="hasPayments([1,2])">
 			<legend v-if="hasPayments([1])">Rechnung</legend>
-			<vf-form :action="'/pdf/'+this.member.id+'/bill'" method="post" :ajax="false" target="_blank"
+			<vf-form :action="'/pdf/'+this.member.id+'/bill'" method="post" @afterpersist="displaypdf"
 				v-if="hasPayments([1])"	
 			>
 				<vf-checkbox name="includeFamilies" :value="config.includeFamilies" label="Familien zusammenführen"></vf-checkbox>
@@ -46,7 +46,7 @@
 				<vf-submit>Rechnung anzeigen</vf-submit>
 			</vf-form>
 			<legend v-if="hasPayments([2])">Erinnerung</legend>
-			<vf-form :action="'/pdf/'+this.member.id+'/remember'" method="post" :ajax="false" target="_blank"
+			<vf-form :action="'/pdf/'+this.member.id+'/remember'" method="post" @afterpersist="displaypdf"
 				v-if="hasPayments([2])"	
 			>
 				<vf-checkbox name="includeFamilies" :value="config.includeFamilies" label="Familien zusammenführen"></vf-checkbox>
@@ -187,6 +187,9 @@
 				return this.payments.filter(function(p) {
 					return ids.indexOf(p.status_id) !== -1;
 				}).length > 0;
+			},
+			displaypdf: function(params, ret) {
+				window.open(ret);
 			}
 		},
 		mounted: function() {

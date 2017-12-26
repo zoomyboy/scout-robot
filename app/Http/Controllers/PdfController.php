@@ -17,7 +17,7 @@ class PdfController extends Controller
 		$members = request()->includeFamilies === "true" ? Member::family($member)->get()->groupBy('lastname') : (new OwnCollection([$member]))->groupBy('lastname');
 		$service = new BillPdfService($members, ['deadline' => request()->deadline]);
 
-		return $service->handle();
+		return $service->handle(str_slug('Rechnung für '.$member->lastname).'.pdf');
     }
 
 	public function allBill(Member $member) {
@@ -34,7 +34,7 @@ class PdfController extends Controller
 		$members = (new BillPdfQuery())->handle($ways)->get()->groupBy($groupBy);
 		$service = new BillPdfService($members, ['deadline' => request()->deadline]);
 
-		return $service->handle();
+		return $service->handle('Alle-Rechnungen.pdf');
     }
 
 
@@ -42,7 +42,7 @@ class PdfController extends Controller
 		$members = request()->includeFamilies === "true" ? Member::family($member)->get()->groupBy('lastname') : (new OwnCollection([$member]))->groupBy('lastname');
 		$service = new RememberPdfService($members, ['deadline' => request()->deadline]);
 
-		return $service->handle();
+		return $service->handle(str_slug('Erinnerung für '.$member->lastname).'.pdf');
     }
 
 	public function allRemember(Member $member) {
@@ -59,6 +59,6 @@ class PdfController extends Controller
 		$members = (new RememberPdfQuery())->handle($ways)->get()->groupBy($groupBy);
 		$service = new RememberPdfService($members, ['deadline' => request()->deadline]);
 
-		return $service->handle();
+		return $service->handle('Alle-Erinnerungen.pdf');
     }
 }

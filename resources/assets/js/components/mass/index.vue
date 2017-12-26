@@ -9,7 +9,7 @@
 				<div class="row">
 					<div class="col-md-6">
 						<legend>Massen-Rechnung</legend>
-						<vf-form action="/pdf/bill" method="post" :ajax="false" target="_blank">
+						<vf-form action="/pdf/bill" method="post" @afterpersist="displaypdf">
 							<vf-checkbox name="includeFamilies" :value="config.includeFamilies" label="Familien zusammenführen"></vf-checkbox>
 						
 							<vf-checkbox name="wayPost" label="Post-Wege einbeziehen" :value="true"></vf-checkbox>
@@ -23,7 +23,7 @@
 
 					<div class="col-md-6">
 						<legend>Massen-Erinnerung</legend>
-						<vf-form action="/pdf/remember" method="post" :ajax="false" target="_blank">
+						<vf-form action="/pdf/remember" method="post" @afterpersist="displaypdf">
 							<vf-checkbox name="includeFamilies" :value="config.includeFamilies" label="Familien zusammenführen"></vf-checkbox>
 						
 							<vf-checkbox name="wayPost" label="Post-Wege einbeziehen" :value="true"></vf-checkbox>
@@ -100,6 +100,11 @@
 			vfDate: require('z-ui/form/fields/date.vue'),
 			tab: require('z-ui/panel/tab.vue'),
 			panelcontent: require('z-ui/panel/content.vue')
+		},
+		methods: {
+			displaypdf: function(data, ret) {
+				window.open(ret);
+			}
 		},
 		mounted: function() {
 

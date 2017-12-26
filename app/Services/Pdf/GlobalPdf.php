@@ -65,4 +65,10 @@ class GlobalPdf {
 		$this->pdf->Cell(0,5,utf8_decode($this->config->personMail), 0, 1);
 		$this->pdf->Cell(0,5,utf8_decode($this->config->website), 0, 1);
 	}
+
+	public function save($filename) {
+		$this->pdf->output('F', public_path('pdf/'.$filename));
+
+		return url('pdf/'.$filename);
+	}
 }
