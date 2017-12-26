@@ -25,13 +25,14 @@ class MemberTest extends TestCase
 		$this->runMigration('regions_table');
 		$this->runMigration('confessions_table');
 		$this->runMigration('members_table');
+		$this->runMigration('ways_table');
 
 		$this->runSeeder(\GenderSeeder::class);
 		$this->runSeeder(\RegionSeeder::class);
 		$this->runSeeder(\ConfessionSeeder::class);
 		$this->runSeeder(\CountrySeeder::class);
+		$this->runSeeder(\WaySeeder::class);
 		$this->runSeeder(\MemberSeeder::class);
-
 	}
 
 	/** @test */
@@ -44,6 +45,7 @@ class MemberTest extends TestCase
 		$this->assertNotNull(\App\Gender::find($member->gender->id));
 		$this->assertNotNull(\App\Region::find($member->region->id));
 		$this->assertNotNull(\App\Confession::find($member->confession->id));
+		$this->assertNotNull(\App\Way::find($member->way->id));
 		$this->assertDate($member->birthday);
 		$this->assertDateBefore(Carbon::now(), $member->birthday);
 		$this->assertDate($member->joined_at);

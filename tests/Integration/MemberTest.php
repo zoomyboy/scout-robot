@@ -22,13 +22,14 @@ class MemberTest extends TestCase {
 		$this->runMigration('users_table');
 		$this->runMigration('members_table');
 		$this->runMigration('payments_table');
+		$this->runMigration('ways_table');
 
 		$this->runSeeder(\StatusSeeder::class);
 		$this->runSeeder(\GenderSeeder::class);
 		$this->runSeeder(\CountrySeeder::class);
 		$this->runSeeder(\RegionSeeder::class);
 		$this->runSeeder(\ConfessionSeeder::class);
-		
+		$this->runSeeder('WaySeeder');
 		$this->runSeeder(\UsergroupSeeder::class);
 		$this->runSeeder(\UserSeeder::class);
 
