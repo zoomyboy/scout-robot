@@ -4,7 +4,9 @@
 			<article>
 				<panel title="Übersicht">
 					<div slot="action">
+						<buttonbar>
 						<v-link route="member.add" right="member.manage" add size="sm"></v-link>
+						</buttonbar>
 					</div>
 					<v-table
 						:border="false"
