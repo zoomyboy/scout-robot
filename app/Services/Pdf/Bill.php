@@ -94,11 +94,12 @@ class Bill extends GlobalPdf {
 				$this->pdf->Cell(0, 5, utf8_decode($this->config->personName), 0, 1, 'L');
 				$this->pdf->Cell(0, 5, utf8_decode($this->config->personFunction), 0, 1, 'L');
 			}
+
+			$this->pdf->Image(resource_path('img/end.png'), 154, $this->pdf->GetY() - 10, 4);
+
+			$this->sidebar();
 		}
 
-		$this->pdf->Image(resource_path('img/end.png'), 154, $this->pdf->GetY() - 10, 4);
-
-		$this->sidebar();
 
 		return response($this->pdf->output('S', 'Rechnung für '.$member[0]->lastname.'.pdf', true))
 			->header('content-type', 'application/pdf');
