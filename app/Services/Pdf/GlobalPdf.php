@@ -22,6 +22,7 @@ class GlobalPdf {
 			$this->pdf->Image(storage_path('app/'.$this->config->files->first()->filename), $this->pdf->GetPageWidth() - 45, 5, 40);
 		}
 
+		$this->pdf->SetTextColor(0,0,0);
 		$this->pdf->AddFont('OpenSans', '', 'OpenSans.php');
 		$this->pdf->AddFont('OpenSans', 'B', 'OpenSans-Bold.php');
 		$this->pdf->AddFont('Arvo', '', 'Arvo-Regular.php');
