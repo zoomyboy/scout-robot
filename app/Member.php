@@ -16,6 +16,7 @@ class Member extends Model
 		'keepdata' => 'boolean',
 		'sendnewspaper' => 'boolean',
 		'gender_id' => 'integer',
+		'way_id' => 'integer',
 		'country_id' => 'integer',
 		'region_id' => 'integer',
 		'confession_id' => 'integer',
@@ -53,6 +54,10 @@ class Member extends Model
 
 	public function paymentsNotPaid() {
 		return $this->payments()->whereIn('status_id', [1,2]);
+	}
+
+	public function way() {
+		return $this->belongsTo(Way::class);
 	}
 
 	//----------------------------------- Scopes ------------------------------------

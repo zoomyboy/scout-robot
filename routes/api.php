@@ -57,3 +57,5 @@ Route::get('/status', 'StatusController@index');
 Route::resource('file', 'FileController');
 
 Route::get('unit/{type}', 'UnitController@index');
+
+Route::get('/way', 'WayController@index');

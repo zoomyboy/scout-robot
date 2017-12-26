@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
         $this->call(ConfessionSeeder::class);
         $this->call(StatusSeeder::class);
         $this->call(ConfSeeder::class);
+        $this->call(WaySeeder::class);
         $this->call(MemberSeeder::class);
         $this->call(PaymentSeeder::class);
         $this->call(UnitSeeder::class);

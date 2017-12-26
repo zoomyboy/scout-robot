@@ -35,6 +35,7 @@ class CreateMembersTable extends Migration
 			$table->string('mobile')->nullable();
 			$table->string('business_phone')->nullable();
 			$table->string('fax')->nullable();
+			$table->integer('way_id');
 			$table->string('email')->nullable();
 			$table->string('email_parents')->nullable();
 			$table->boolean('active')->default(1);

@@ -28,6 +28,7 @@ class MemberUpdateRequest extends Request
 			'city' => 'required',
 			'country' => 'required|exists:countries,id',
 			'region' => 'required|exists:regions,id',
+			'way' => 'required|exists:ways,id',
 		];
 
 		if ($this->input('email')) {

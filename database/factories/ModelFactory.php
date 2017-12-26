@@ -48,6 +48,7 @@ $factory->define(\App\Member::class, function(Faker\Generator $faker) {
 		'other_country' => $faker->country,
 		'region_id' => \App\Region::get()->random()->id,
 		'confession_id' => \App\Confession::get()->random()->id,
+		'way_id' => \App\Way::get()->random()->id,
 		'birthday' => $faker->date,
 		'further_address' => $faker->streetAddress,
 		'joined_at' => $faker->date,
