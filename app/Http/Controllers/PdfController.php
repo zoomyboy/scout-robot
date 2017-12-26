@@ -8,6 +8,8 @@ use App\Member;
 use App\Collections\OwnCollection;
 use App\Services\Pdf\Bill as BillPdfService;
 use App\Services\Pdf\Remember as RememberPdfService;
+use App\Queries\BillPdfQuery;
+use App\Queries\RememberPdfQuery;
 
 class PdfController extends Controller
 {
@@ -18,8 +20,43 @@ class PdfController extends Controller
 		return $service->handle();
     }
 
+	public function allBill(Member $member) {
+		$ways = array_filter([
+			request()->wayEmail == "true" ? 1 : false,
+			request()->wayPost == "true" ? 2 : false
+		]);
+
+		$groupBy = request()->includeFamilies === "true"
+			? function($m) {return $m->lastname.$m->plz.$m->city.$m->address;}
+			: function($m) {return $m->firstname.$m->lastname.$m->plz.$m->city.$m->address;}
+		;
+
+		$members = (new BillPdfQuery())->handle($ways)->get()->groupBy($groupBy);
+		$service = new BillPdfService($members, ['deadline' => request()->deadline]);
+
+		return $service->handle();
+    }
+
+
 	public function remember(Member $member) {
 		$members = request()->includeFamilies === "true" ? Member::family($member)->get()->groupBy('lastname') : (new OwnCollection([$member]))->groupBy('lastname');
+		$service = new RememberPdfService($members, ['deadline' => request()->deadline]);
+
+		return $service->handle();
+    }
+
+	public function allRemember(Member $member) {
+		$ways = array_filter([
+			request()->wayEmail == "true" ? 1 : false,
+			request()->wayPost == "true" ? 2 : false
+		]);
+
+		$groupBy = request()->includeFamilies === "true"
+			? function($m) {return $m->lastname.$m->plz.$m->city.$m->address;}
+			: function($m) {return $m->firstname.$m->lastname.$m->plz.$m->city.$m->address;}
+		;
+
+		$members = (new RememberPdfQuery())->handle($ways)->get()->groupBy($groupBy);
 		$service = new RememberPdfService($members, ['deadline' => request()->deadline]);
 
 		return $service->handle();

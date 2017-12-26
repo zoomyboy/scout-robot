@@ -7,6 +7,7 @@ const configIndex = () => import('../components/config/index.vue');
 const profileIndex = () => import('../components/profile/index.vue');
 const profilePassword = () => import('../components/profile/password.vue');
 const welcome = () => import('../components/welcome/index.vue');
+const mass = () => import('../components/mass/index.vue');
 
 module.exports = [
 	{
@@ -20,6 +21,12 @@ module.exports = [
 		name: 'member.index',
 		props: { heading: { title: 'Mitglieder-Übersicht' } },
 		components: { default: memberIndex, heading }
+	},
+	{
+		path: '/mass',
+		name: 'mass.index',
+		props: { heading: { title: 'Massenversand' } },
+		components: { default: mass, heading }
 	},
 	{
 		path: '/member/add',
