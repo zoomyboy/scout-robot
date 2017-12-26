@@ -2,8 +2,7 @@
 	<panel ref="memberpanel" closeable v-on:close="$emit('closeinfo')" smalltitle>
 		<div slot="tabs" class="tabs">
 			<tab index="1" title="Zahlungen" active></tab>
-			<tab index="2" title="Rechnung erstellen" v-if="hasPayments([1])"></tab>
-			<tab index="3" title="Erinnerung erstellen" v-if="hasPayments([2])"></tab>
+			<tab index="2" title="PDF anzeigen" v-if="hasPayments([1,2])"></tab>
 		</div>
 		<panelcontent index="1" active>
 			<buttonbar>
@@ -35,17 +34,21 @@
 			>
 			</v-table>
 		</panelcontent>
-		<panelcontent index="2" v-if="hasPayments([1])">
-			<vf-form :action="'/pdf/'+this.member.id+'/bill'" method="post" :ajax="false" target="_blank">
+		<panelcontent index="2" v-if="hasPayments([1,2])">
+			<legend v-if="hasPayments([1])">Rechnung</legend>
+			<vf-form :action="'/pdf/'+this.member.id+'/bill'" method="post" :ajax="false" target="_blank"
+				v-if="hasPayments([1])"	
+			>
 				<vf-checkbox name="includeFamilies" :value="config.includeFamilies" label="Familien zusammenführen"></vf-checkbox>
 
 				<vf-date name="deadline" :value="deadline" label="Deadline"></vf-date>
 
 				<vf-submit>Rechnung anzeigen</vf-submit>
 			</vf-form>
-		</panelcontent>
-		<panelcontent index="3" v-if="hasPayments([2])">
-			<vf-form :action="'/pdf/'+this.member.id+'/remember'" method="post" :ajax="false" target="_blank">
+			<legend v-if="hasPayments([2])">Erinnerung</legend>
+			<vf-form :action="'/pdf/'+this.member.id+'/remember'" method="post" :ajax="false" target="_blank"
+				v-if="hasPayments([2])"	
+			>
 				<vf-checkbox name="includeFamilies" :value="config.includeFamilies" label="Familien zusammenführen"></vf-checkbox>
 
 				<vf-date name="deadline" :value="deadline" label="Deadline"></vf-date>
