@@ -25,8 +25,8 @@
 					</v-table>
 				</panel>
 			</article>
-			<aside class="rows-stretch" v-if="member">
-				<payment ref="payment" :member="member" @closeinfo="member = false" @changepayment="reloadmember"></payment>
+			<aside class="rows-stretch" v-if="member || side !== false">
+				<payment ref="payment" :member="member" v-if="member" @closeinfo="member = false; side = false" @changepayment="reloadmember"></payment>
 			</aside>
 		</grid>
 	</div>
@@ -41,7 +41,8 @@
 				],
 				member: false,
 				members: false,
-				payments: false
+				payments: false,
+				side: false
 			};
 		},
 		computed: {
@@ -50,7 +51,7 @@
 					{title: 'Nachname', data: 'lastname'},
 					{title: 'Vorname', data: 'firstname'},
 				];
-				if (!this.member) {
+				if (!this.member && !this.side) {
 					h.push({title: 'Adresse', data: 'address'});
 					h.push({title: 'Eintritt', data: 'joined_at', type: 'date'});
 					h.push({title: 'Stadt', data: 'city'});
