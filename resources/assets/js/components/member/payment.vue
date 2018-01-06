@@ -105,7 +105,7 @@
 			}
 		},
 		components: {
-			vTable: require('z-ui/table.vue'),
+			vTable: require('z-ui/table/table.vue'),
 			vfNumber: require('z-ui/form/fields/number.vue'),
 			vfSelect: require('z-ui/form/fields/select.vue'),
 			vfDate: require('z-ui/form/fields/date.vue'),

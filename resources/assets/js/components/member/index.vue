@@ -69,7 +69,7 @@
 				require(['z-ui/grid/grid.vue'], resolve);
 			},
 			vTable: function(resolve) {
-				require(['z-ui/table.vue'], resolve);
+				require(['z-ui/table/table.vue'], resolve);
 			},
 			payment: function(resolve) {
 				require(['./payment.vue'], resolve);
