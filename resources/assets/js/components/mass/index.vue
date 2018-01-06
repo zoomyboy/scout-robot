@@ -27,7 +27,7 @@
 							<vf-checkbox name="includeFamilies" :value="config.includeFamilies" label="Familien zusammenführen"></vf-checkbox>
 						
 							<vf-checkbox name="wayPost" label="Post-Wege einbeziehen" :value="true"></vf-checkbox>
-							<vf-checkbox name="wayEmail" label="E-Mail-Wege einbeziehen" :value="true"></vf-checkbox>
+							<vf-checkbox name="wayEmail" label="E-Mail-Wege einbeziehen"></vf-checkbox>
 						
 							<vf-date name="deadline" :value="deadline" label="Deadline"></vf-date>
 						
@@ -43,8 +43,8 @@
 						<vf-form action="/pdf/bill" method="post" :ajax="false" target="_blank">
 							<vf-checkbox name="includeFamilies" :value="config.includeFamilies" label="Familien zusammenführen"></vf-checkbox>
 						
-							<vf-checkbox name="wayPost" label="Post-Wege einbeziehen" :value="true"></vf-checkbox>
-							<vf-checkbox name="wayEmail" label="E-Mail-Wege einbeziehen"></vf-checkbox>
+							<vf-checkbox name="wayPost" label="Post-Wege einbeziehen"></vf-checkbox>
+							<vf-checkbox name="wayEmail" label="E-Mail-Wege einbeziehen" :value="true"></vf-checkbox>
 							<vf-checkbox name="updatePayments" label="Betroffene Zahlungen nach dem Senden in 'Rechnung ausgestellt' umwandeln"></vf-checkbox>
 						
 							<vf-date name="deadline" :value="deadline" label="Deadline"></vf-date>
@@ -58,7 +58,7 @@
 						<vf-form action="/pdf/remember" method="post" :ajax="false" target="_blank">
 							<vf-checkbox name="includeFamilies" :value="config.includeFamilies" label="Familien zusammenführen"></vf-checkbox>
 						
-							<vf-checkbox name="wayPost" label="Post-Wege einbeziehen" :value="true"></vf-checkbox>
+							<vf-checkbox name="wayPost" label="Post-Wege einbeziehen"></vf-checkbox>
 							<vf-checkbox name="wayEmail" label="E-Mail-Wege einbeziehen" :value="true"></vf-checkbox>
 						
 							<vf-date name="deadline" :value="deadline" label="Deadline"></vf-date>
