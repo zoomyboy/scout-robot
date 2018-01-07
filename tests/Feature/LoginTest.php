@@ -5,8 +5,9 @@ namespace Tests\Feature;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use \App\User;
 use Illuminate\Support\Facades\Config;
+use Tests\FeatureTestCase;
 
-class LoginTest extends \Tests\TestCase {
+class LoginTest extends FeatureTestCase {
 	use DatabaseMigrations;
 
 	public function setUp() {
@@ -24,12 +25,14 @@ class LoginTest extends \Tests\TestCase {
 
 	/** @test */
 	public function it_redirects_to_login_page_if_not_logged_in() {
+		$this->withExceptionHandling();
+
 		$this->get('/')->assertRedirect('/login');
 	}
 
 	/** @test */
 	public function it_redirects_to_home_page_if_logged_in() {
-		parent::auth('web');
+		$this->auth();
 		$this->get('/login')->assertRedirect('/');
 	}
 
@@ -45,7 +48,7 @@ class LoginTest extends \Tests\TestCase {
 
 	/** @test */
 	public function it_loggs_out() {
-		parent::auth('web');
+		$this->auth();
 		$this->get('/logout')->assertRedirect('/');
 
 		$this->assertNull(auth()->guard('web')->user());

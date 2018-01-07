@@ -35,6 +35,12 @@ $factory->define(\App\Usergroup::class, function(Faker\Generator $faker) {
 });
 
 $factory->define(\App\Member::class, function(Faker\Generator $faker) {
+	if (\App\Gender::get()->count() == 0) {abort(404, 'Error in Factory: No Genders');}
+	if (\App\Country::get()->count() == 0) {abort(404, 'Error in Factory: No Countries');}
+	if (\App\Region::get()->count() == 0) {abort(404, 'Error in Factory: No Regions');}
+	if (\App\Confession::get()->count() == 0) {abort(404, 'Error in Factory: No Confessions');}
+	if (\App\Way::get()->count() == 0) {abort(404, 'Error in Factory: No Ways');}
+
 	return [
 		'firstname' => $faker->firstname,
 		'lastname' => $faker->lastname,

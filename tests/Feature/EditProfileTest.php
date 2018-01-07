@@ -2,12 +2,12 @@
 
 namespace Tests\Feature;
 
-use Tests\TestCase;
+use Tests\FeatureTestCase;
 use App\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Support\Facades\Config;
 
-class EditProfileTest extends TestCase {
+class EditProfileTest extends FeatureTestCase {
 
 	public function setUp() {
 		parent::setUp();
@@ -29,8 +29,9 @@ class EditProfileTest extends TestCase {
 
 	/** @test */
 	public function a_user_can_edit_his_name_and_email() {
-		$user = parent::auth('api');
-		$this->patchApi('profile/'.$user->id, [
+		$this->be(\App\User::first(), 'api');
+
+		$this->patchApi('profile/'.auth()->user()->id, [
 			'name' => 'Admin2',
 			'email' => 'admin2@example.com'
 		])->assertSuccess();
@@ -43,7 +44,10 @@ class EditProfileTest extends TestCase {
 
 	/** @test */
 	public function it_cannot_edit_a_user_that_doesnt_exist() {
-		parent::auth('api');
+		$this->withExceptionHandling();
+
+		$this->be(\App\User::first(), 'api');
+
 		$this->patchApi('profile/5', [
 			'name' => 'Admin2',
 			'email' => 'admin2@example.com'
@@ -54,8 +58,11 @@ class EditProfileTest extends TestCase {
 
 	/** @test */
 	public function it_can_only_edit_his_own_profile() {
-		$user = parent::auth('api');
+		$this->withExceptionHandling();
 
+		$this->be(\App\User::first(), 'api');
+
+		$user = User::first();
 		$otherUser = $this->create('user');
 
 		$this->patchApi('profile/'.$otherUser->id, [
@@ -68,6 +75,8 @@ class EditProfileTest extends TestCase {
 
 	/** @test */
 	public function it_shouldnt_be_a_guest() {
+		$this->withExceptionHandling();
+
 		$user = User::first();
 
 		$this->patchApi('profile/'.$user->id, [
@@ -80,33 +89,45 @@ class EditProfileTest extends TestCase {
 
 	/** @test */
 	public function it_has_to_enter_a_valid_email_address() {
-		$user = parent::auth('api');
+		$this->withExceptionHandling();
 
-		$this->patchApi('profile/'.$user->id, [
+		$user = User::first();
+
+		$this->be(\App\User::first(), 'api');
+
+		$this->patchApi('profile/'.auth()->user()->id, [
 			'name' => 'Admin3',
 			'email' => 'notaemail'
-		])->assertValidationFailedWith('email', 'Das hier muss eine richtige E-Mail-Adresse sein.');
+		])->assertValidationFailedWith('email');
 
 		$this->assertUserHasntChanged($user);
 	}
 
 	/** @test */
 	public function it_has_to_enter_a_name_and_an_email_address() {
-		$user = parent::auth('api');
+		$this->withExceptionHandling();
 
-		$this->patchApi('profile/'.$user->id, [
+		$user = User::first();
+
+		$this->be(\App\User::first(), 'api');
+
+		$this->patchApi('profile/'.auth()->user()->id, [
 			'name' => '',
 			'email' => ''
-		])->assertValidationFailedWith('email', 'Dieses Feld muss ausgefüllt werden.')->assertValidationFailedWith('name', 'Dieses Feld muss ausgefüllt werden.');
+		])
+			->assertValidationFailedWith('email')
+			->assertValidationFailedWith('name');
 
 		$this->assertUserHasntChanged($user);
 	}
 
 	/** @test */
 	public function it_cannot_edit_his_password() {
-		$user = parent::auth('api');
+		$this->withExceptionHandling();
 
-		$this->patchApi('profile/'.$user->id, [
+		$this->be(\App\User::first(), 'api');
+
+		$this->patchApi('profile/'.auth()->user()->id, [
 			'name' => 'Test',
 			'email' => 'test@example.com',
 			'password' => 'abcdef',
@@ -119,9 +140,11 @@ class EditProfileTest extends TestCase {
 
 	/** @test */
 	public function it_cannot_edit_his_usergroup() {
-		$user = parent::auth('api');
+		$this->withExceptionHandling();
 
-		$this->patchApi('profile/'.$user->id, [
+		$this->be(\App\User::first(), 'api');
+
+		$this->patchApi('profile/'.auth()->user()->id, [
 			'name' => 'Test',
 			'email' => 'test@example.com',
 			'usergroup' => '2',

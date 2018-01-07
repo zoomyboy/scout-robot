@@ -8,8 +8,9 @@ use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Support\Facades\Config;
 use App\Usergroup;
 use App\Right;
+use Tests\FeatureTestCase;
 
-class UsergroupCreateTest extends TestCase {
+class UsergroupCreateTest extends FeatureTestCase {
 
 	public function setUp() {
 		parent::setUp();
@@ -31,7 +32,9 @@ class UsergroupCreateTest extends TestCase {
 
 	/** @test */
 	public function it_can_create_a_usergroup() {
-		$user = parent::auth('api');
+		$this->withExceptionHandling();
+		$this->authAsApi();
+
 		$this->postApi('usergroup', [
 			'title' => 'abcdefg',
 			'rights' => [2, 3]
@@ -53,9 +56,10 @@ class UsergroupCreateTest extends TestCase {
 
 	/** @test */
 	public function it_can_only_create_usergroups_if_it_has_permission() {
-		$user = parent::auth('api');
+		$this->withExceptionHandling();
+		$this->authAsApi();
 
-		$user->usergroup->rights()->detach(Right::where('key', 'usergroup')->first());
+		auth()->user()->usergroup->rights()->detach(Right::where('key', 'usergroup')->first());
 
 		$this->postApi('usergroup', [
 			'title' => 'abcdefg',
@@ -65,6 +69,8 @@ class UsergroupCreateTest extends TestCase {
 
 	/** @test */
 	public function it_shouldnt_be_a_guest() {
+		$this->withExceptionHandling();
+
 		$user = User::first();
 
 		$this->postApi('usergroup', [
@@ -75,19 +81,23 @@ class UsergroupCreateTest extends TestCase {
 
 	/** @test */
 	public function it_has_to_enter_a_name() {
-		$user = parent::auth('api');
+		$this->withExceptionHandling();
+		$this->authAsApi();
+
 		$this->postApi('usergroup', [
 			'title' => '',
 			'rights' => [2, 3]
-		])->assertValidationFailedWith('title', 'Dieses Feld muss ausgefüllt werden.');
+		])->assertValidationFailedWith('title');
 	}
 
 	/** @test */
 	public function it_has_to_enter_a_valid_right() {
-		$user = parent::auth('api');
+		$this->withExceptionHandling();
+		$this->authAsApi();
+
 		$this->postApi('usergroup', [
 			'title' => 'Abc',
 			'rights' => [3, 999]
-		])->assertValidationFailedWith('rights.1', 'Dieses Recht existiert nicht.');
+		])->assertValidationFailedWith('rights.1');
 	}
 }

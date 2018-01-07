@@ -6,8 +6,9 @@ use Tests\TestCase;
 use App\Status;
 use App\Payment;
 use App\Member;
+use Tests\IntegrationTestCase;
 
-class MemberTest extends TestCase {
+class MemberTest extends IntegrationTestCase {
 	public function setUp() {
 		parent::setUp();
 
@@ -79,7 +80,8 @@ class MemberTest extends TestCase {
 
 	/** @test */
 	public function it_gets_all_members_and_appends_its_strikes() {
-		parent::auth('api');
+		$this->withExceptionHandling();
+		$this->authAsApi();
 		
 		$this->getApi('member/table')
 			->assertSuccess()
@@ -98,6 +100,8 @@ class MemberTest extends TestCase {
 
 	/** @test */
 	public function it_gets_no_members_when_not_authed() {
+		$this->withExceptionHandling();
+
 		$this->getApi('member/table')
 			->assertUnauthorized();
 	}

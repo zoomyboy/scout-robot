@@ -6,8 +6,9 @@ use Tests\TestCase;
 use App\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Support\Facades\Config;
+use Tests\FeatureTestCase;
 
-class EditProfilePasswordTest extends TestCase {
+class EditProfilePasswordTest extends FeatureTestCase {
 
 	public function setUp() {
 		parent::setUp();
@@ -29,8 +30,9 @@ class EditProfilePasswordTest extends TestCase {
 
 	/** @test */
 	public function a_user_can_edit_his_password() {
-		$user = parent::auth('api');
-		$this->patchApi('profile/'.$user->id.'/password', [
+		$this->be(\App\User::first(), 'api');
+
+		$this->patchApi('profile/'.auth()->user()->id.'/password', [
 			'password' => 'abcdefg',
 			'password_confirmation' => 'abcdefg'
 		])->assertSuccess();
@@ -40,7 +42,10 @@ class EditProfilePasswordTest extends TestCase {
 
 	/** @test */
 	public function it_cannot_edit_a_user_that_doesnt_exist() {
-		parent::auth('api');
+		$this->withExceptionHandling();
+
+		$this->be(\App\User::first(), 'api');
+		
 		$this->patchApi('profile/5/password', [
 			'password' => 'abcdefg',
 			'password_confirmation' => 'abcdefg'
@@ -51,7 +56,9 @@ class EditProfilePasswordTest extends TestCase {
 
 	/** @test */
 	public function it_can_only_edit_his_own_profile() {
-		$user = parent::auth('api');
+		$this->withExceptionHandling();
+
+		$this->be(\App\User::first(), 'api');
 
 		$otherUser = $this->create('user');
 		$oldUserPassword = $otherUser->password;
@@ -67,6 +74,8 @@ class EditProfilePasswordTest extends TestCase {
 
 	/** @test */
 	public function it_shouldnt_be_a_guest() {
+		$this->withExceptionHandling();
+
 		$user = User::first();
 
 		$this->patchApi('profile/'.$user->id.'/password', [
@@ -79,47 +88,51 @@ class EditProfilePasswordTest extends TestCase {
 
 	/** @test */
 	public function it_has_to_enter_a_valid_password() {
-		$user = parent::auth('api');
+		$this->withExceptionHandling();
 
-		$this->patchApi('profile/'.$user->id.'/password', [
+		$this->be(\App\User::first(), 'api');
+
+		$this->patchApi('profile/'.auth()->user()->id.'/password', [
 			'password' => '',
 			'password_confirmation' => ''
 		])
-			->assertValidationFailedWith('password', 'Dieses Feld muss ausgefüllt werden.')
-			->assertValidationFailedWith('password_confirmation', 'Dieses Feld muss ausgefüllt werden.');
+			->assertValidationFailedWith('password')
+			->assertValidationFailedWith('password_confirmation');
 
-		$this->patchApi('profile/'.$user->id.'/password', [
+		$this->patchApi('profile/'.auth()->user()->id.'/password', [
 			'password' => 'abccdefg',
 			'password_confirmation' => ''
 		])
-			->assertValidationFailedWith('password_confirmation', 'Dieses Feld muss ausgefüllt werden.');
+			->assertValidationFailedWith('password_confirmation');
 
-		$this->patchApi('profile/'.$user->id.'/password', [
+		$this->patchApi('profile/'.auth()->user()->id.'/password', [
 			'password' => '',
 			'password_confirmation' => 'abcdefg'
 		])
-			->assertValidationFailedWith('password', 'Dieses Feld muss ausgefüllt werden.');
+			->assertValidationFailedWith('password');
 
-		$this->patchApi('profile/'.$user->id.'/password', [
+		$this->patchApi('profile/'.auth()->user()->id.'/password', [
 			'password' => 'abcsvdsvdsv',
 			'password_confirmation' => 'abcdef'
 		])
-			->assertValidationFailedWith('password', 'Die beiden Passwörter stimmen nicht überein.');
+			->assertValidationFailedWith('password');
 
-		$this->patchApi('profile/'.$user->id.'/password', [
+		$this->patchApi('profile/'.auth()->user()->id.'/password', [
 			'password' => 'abc',
 			'password_confirmation' => 'abc'
 		])
-			->assertValidationFailedWith('password', 'Hier müssen mindestens 6 Zeichen eingegeben werden.');
+			->assertValidationFailedWith('password');
 
-		$this->assertUserHasntChanged($user);
+		$this->assertUserHasntChanged(auth()->user());
 	}
 
 	/** @test */
 	public function it_cannot_edit_his_email() {
-		$user = parent::auth('api');
+		$this->withExceptionHandling();
 
-		$this->patchApi('profile/'.$user->id.'/password', [
+		$this->be(\App\User::first(), 'api');
+
+		$this->patchApi('profile/'.auth()->user()->id.'/password', [
 			'name' => 'Test',
 			'email' => 'test@example.com',
 			'password' => 'abcdefg',
@@ -130,7 +143,7 @@ class EditProfilePasswordTest extends TestCase {
 
 		$this->assertCanLogin('admin@example.tz', 'abcdefg');
 
-		$user = User::find($user->id);
+		$user = User::find(auth()->user()->id);
 		$this->assertEquals('Admin', $user->name);
 		$this->assertEquals(1, $user->usergroup->id);
 

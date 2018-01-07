@@ -15,33 +15,6 @@ abstract class TestCase extends BaseTestCase
 	use MigratesDb;
 	use CreatesModels;
 
-	public function auth($guard = 'web') {
-		if (\App\User::first() == null) {
-			throw new \Exception('Login fehlgeschlagen - Kein User für TestLogin vorhanden. Bitte führen Sie zuerest einen Seeder aus.');
-		}
-		$this->be(\App\User::first(), $guard);
-
-		$this->assertInstanceOf(\App\User::class, auth()->guard($guard)->user());
-
-		return auth()->guard($guard)->user();
-	}
-
-	public function getApi($to, $data=[]) {
-		return $this->getJson('/api/'.$to, $data);
-	}
-
-	public function postApi($to, $data=[]) {
-		return $this->postJson('/api/'.$to, $data);
-	}
-
-	public function deleteApi($to, $data=[]) {
-		return $this->deleteJson('/api/'.$to, $data);
-	}
-
-	public function patchApi($to, $data) {
-		return $this->postJson('/api/'.$to, array_merge($data, ['_method' => 'patch']));
-	}
-
 	public function assertCanLogin($email, $password, $guard = 'web') {
 		$this->assertTrue(Auth::guard($guard)->attempt(['email' => $email, 'password' => $password]));
 	}
@@ -49,17 +22,6 @@ abstract class TestCase extends BaseTestCase
 	public function assertCannotLogin($email, $password, $guard = 'web') {
 		$this->assertFalse(Auth::guard($guard)->attempt(['email' => $email, 'password' => $password]));
 	}
-
-    /**
-     * Create the test response instance from the given response.
-     *
-     * @param  \Illuminate\Http\Response  $response
-     * @return \Illuminate\Foundation\Testing\TestResponse
-     */
-    protected function createTestResponse($response)
-    {
-        return Response::fromBaseResponse($response);
-    }
 
 	public function assertDate($date) {
 		return $this->assertInstanceOf(Carbon::class, $date);
