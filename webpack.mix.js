@@ -11,6 +11,8 @@ let mix = require('laravel-mix');
  |
  */
 
+mix.config.resourceRoot = 'dist/';
+
 mix.webpackConfig({
 	resolve: {
 		alias: {
