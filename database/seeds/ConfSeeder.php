@@ -9,13 +9,13 @@ class ConfSeeder extends Seeder
 	private $confs = [
 		'default_country_id',
 		'default_region_id',
-		'default_keepdata',
-		'default_sendnewspaper',
+		'default_keepdata' => false,
+		'default_sendnewspaper' => false,
 		'letterKontoName',
 		'letterIban',
 		'letterBic',
 		'letterZweck',
-		'includeFamilies',
+		'includeFamilies' => false,
 		'deadlinenr',
 		'deadlineunit_id',
 		'letterFrom',
@@ -38,8 +38,12 @@ class ConfSeeder extends Seeder
     public function run()
     {
 		Schema::table('confs', function(Blueprint $table) {
-			foreach($this->confs as $key) {
-				$table->string($key)->nullable();
+			foreach($this->confs as $key => $v) {
+				if (is_integer($key)) {
+					$table->string($v)->nullable();
+				} else {
+					$table->string($key)->nullable()->default($v);
+				}
 			}
 		});
 
