@@ -70,7 +70,7 @@ class EmailBillNotification extends Notification
 			->heading(Conf::first()->emailHeading ?: '');
 
 		$members = $this->family === "true"
-			? Member::family($this->member)->get()->groupBy('lastname')
+			? $this->members->groupBy('lastname')
 			: (new OwnCollection([$this->member]))->groupBy('lastname');
 
 		$filename = ($this->family)
