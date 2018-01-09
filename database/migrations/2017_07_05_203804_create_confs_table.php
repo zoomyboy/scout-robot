@@ -15,6 +15,9 @@ class CreateConfsTable extends Migration
     {
         Schema::create('confs', function (Blueprint $table) {
             $table->increments('id');
+			$table->text('emailBillText');
+			$table->text('emailRememberText');
+			$table->text('emailGreeting');
         });
     }
 

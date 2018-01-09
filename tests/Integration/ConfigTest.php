@@ -48,7 +48,11 @@ class ConfigTest extends IntegrationTestCase {
 			'personName' => 'Karl',
 			'personTel' => '+49 212 1366558',
 			'personMail' => 'admin@example.net',
-			'personFunction' => 'Kassenwart Stamm AAA'
+			'personFunction' => 'Kassenwart Stamm AAA',
+			'emailHeading' => 'Head',
+			'emailBillText' => 'Im Anhang dieser Mail befindet sich die Jahresrechnung für {{ firstname }} {{ lastname }}. Bitte begleiche diese bis zum angegebenen Datum.',
+			'emailRememberText' => 'Leider haben wir bisher für die ausstehenden Beträge keinen Zahlungseingang feststellen können. Daher senden wir dir mit dieser E-Mail eine Zahlungserinnerung im Anhang. Bitte begleiche diese bis zum angegebenen Datum.',
+			'emailGreeting' => 'Gut Pfad | {{ groupname }}'
 		]);
 
 		$this->getApi('info')->assertJson(['conf' => [
@@ -69,7 +73,11 @@ class ConfigTest extends IntegrationTestCase {
 			'personName' => 'Karl',
 			'personTel' => '+49 212 1366558',
 			'personMail' => 'admin@example.net',
-			'personFunction' => 'Kassenwart Stamm AAA'
+			'personFunction' => 'Kassenwart Stamm AAA',
+			'emailHeading' => 'Head',
+			'emailBillText' => 'Im Anhang dieser Mail befindet sich die Jahresrechnung für {{ firstname }} {{ lastname }}. Bitte begleiche diese bis zum angegebenen Datum.',
+			'emailRememberText' => 'Leider haben wir bisher für die ausstehenden Beträge keinen Zahlungseingang feststellen können. Daher senden wir dir mit dieser E-Mail eine Zahlungserinnerung im Anhang. Bitte begleiche diese bis zum angegebenen Datum.',
+			'emailGreeting' => 'Gut Pfad | {{ groupname }}'
 		]]);
 	}
 

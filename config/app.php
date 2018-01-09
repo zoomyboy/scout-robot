@@ -183,6 +183,7 @@ return [
 		Laravel\Passport\PassportServiceProvider::class,
 		Intervention\Image\ImageServiceProvider::class,
 	    Barryvdh\DomPDF\ServiceProvider::class,
+		Zoomyboy\BetterNotifications\ServiceProvider::class
     ],
 
     /*

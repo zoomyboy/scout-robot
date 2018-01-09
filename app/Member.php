@@ -72,4 +72,10 @@ class Member extends Model
 			->where('city', $member->city)
 			->where('address', $member->address);
 	}
+
+	public function scopeHasNotPaidPayments($q) {
+		return $q->whereHas('payments', function($q) {
+			return $q->whereIn('status_id', [1])->where('amount', '>', 0);
+		});
+	}
 }

@@ -1,4 +1,7 @@
-@component('BetterNotifications::message', ['level' => $level])
+@component('BetterNotifications::views.message', [
+	'level' => $level,
+	'heading' => $heading
+])
 {{-- Greeting --}}
 @if (! empty($greeting))
 # {{ $greeting }}
@@ -13,14 +16,14 @@
 {!! $element['content'] !!}
 @endif
 @if($element['type'] == 'action')
-@component('BetterNotifications::button', ['element' => $element])
+@component('BetterNotifications::views.button', ['element' => $element])
 {!! $element['content'] !!}
 @endcomponent
 @endif
 @if($element['type'] == 'row')
 <table width="100%" cellpadding="0" cellspacing="0" border="0"> <tr> <td align="center">
 @foreach($element['elements'] as $subelement)
-@component('BetterNotifications::subbutton', ['element' => $subelement])
+@component('BetterNotifications::views.subbutton', ['element' => $subelement])
 {!! $subelement['action'] !!}
 @endcomponent
 @endforeach
@@ -37,7 +40,7 @@
 @endif
 
 @if ($subcopy)
-@component('BetterNotifications::subcopy')
+@component('BetterNotifications::views.subcopy')
 {!! $subcopy !!}
 @endcomponent
 @endif

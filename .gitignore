@@ -18,3 +18,4 @@ npm-debug.log
 tags
 yarn.lock
 packages/
+/resources/views/temp

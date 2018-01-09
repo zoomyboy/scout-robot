@@ -40,7 +40,7 @@
 				<div class="row">
 					<div class="col-md-6">
 						<legend>Massen-Rechnung</legend>
-						<vf-form action="/api/mass/email/bill" method="post" target="_blank" @beforepersist="alert('I');">
+						<vf-form action="/api/mass/email/bill" method="post" target="_blank" @beforepersist="alert('I');" ref="emailBillForm">
 							<vf-checkbox name="includeFamilies" :value="config.includeFamilies" label="Familien zusammenführen"></vf-checkbox>
 						
 							<vf-checkbox name="wayPost" label="Post-Wege einbeziehen"></vf-checkbox>
@@ -49,7 +49,7 @@
 						
 							<vf-date name="deadline" :value="deadline" label="Deadline"></vf-date>
 						
-							<vf-submit>E-Mail versenden</vf-submit>
+							<v-link @click="submitEmailBill">Rechnung versenden</v-link>
 						</vf-form>
 					</div>
 
@@ -80,11 +80,12 @@
 
 <script>
 	import {mapState} from 'vuex';
+	import swal from 'sweetalert2';
 
 	export default {
 		data: function() {
 			return  {
-
+			
 			};
 		},
 		computed: {
@@ -104,6 +105,43 @@
 		methods: {
 			displaypdf: function(data, ret) {
 				window.open(ret);
+			},
+			submitEmailBill: function() {
+				var vm = this;
+				var check = true;
+				var texts = [];
+
+				if (!this.config.emailHeading || !this.config.emailHeading.length) {
+					check = false;
+					texts.push('Du solltest unter der <a href="/config">Konfiguration - E-Mails</a> eine E-Mail-Überschrift angeben.');
+				}
+
+				if (!this.config.groupname || !this.config.groupname.length) {
+					check = false;
+					texts.push('Du solltest unter der <a href="/config">Konfiguration - Allgemein</a> einen Gruppennamen angeben. Dieser wird im Betreff der E-Mail genutzt.');
+				}
+
+				if (check) {
+					vm.$refs.emailBillForm.submit();
+
+					return;
+				}
+
+				swal({
+					title: 'Warnung: Daten unvollständig!',
+					type: 'warning',
+					html: texts.join('<hr>'),
+					showCancelButton: true,
+					confirmButtonColor: '#3085d6',
+					confirmButtonText: 'E-Mail trotzdem senden',
+					confirmButtonClass: 'btn btn-success no-right-border-radius',
+					cancelButtonClass: 'btn btn-danger no-left-border-radius',
+					buttonsStyling: false
+				}).then(function(result) {
+					if (result != undefined && result.value == true) {
+						vm.$refs.emailBillForm.submit();
+					}
+				});
 			}
 		},
 		mounted: function() {

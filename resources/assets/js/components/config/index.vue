@@ -7,7 +7,9 @@
 						<div slot="tabs" class="tabs">
 							<paneltab title="Allgemein" index="0" active></paneltab>
 							<paneltab title="Mitgliederverwaltung" index="1"></paneltab>
-							<paneltab title="PDF-Erstellung" index="2"></paneltab>
+							<paneltab title="Ansprechpartner" index="2"></paneltab>
+							<paneltab title="PDF-Erstellung" index="3"></paneltab>
+							<paneltab title="E-Mails" index="4"></paneltab>
 						</div>
 						<panelcontent index="0" active>
 							<vf-text name="groupname" label="Gruppenname"></vf-text>
@@ -20,13 +22,6 @@
 							<vf-checkbox name="default_sendnewspaper" label="Zeitschriftenversand" help="Standardeinstellung für Zeitschriftenversand beim anlegen neuer Mitglieder"></vf-checkbox>
 						</panelcontent>
 						<panelcontent index="2">
-							<vf-files name="files" label="Logo im Header" uploadurl="/api/file"></vf-files>
-							<vf-text name="letterKontoName" value="Kontoinhaber"></vf-text>
-							<vf-text name="letterIban" label="IBAN"></vf-text>
-							<vf-text name="letterBic" label="BIC"></vf-text>
-							<vf-text name="letterFrom" label="Absender in Rechnungen"></vf-text>
-							<vf-text name="letterZweck" label="Verwendungszweck" :info="'Verwende [name] als Platzhalter für Mitglieds-Name'"></vf-text>
-							<vf-checkbox name="includeFamilies" label="Familien standardmäßig zusammenführen" :info="'Familienmitglieder, die in einem Haushalt leben, bekommen standardmäßig nur eine Rechnung'"></vf-checkbox>
 							<vf-text name="personName" label="Ansprechpartner Name"></vf-text>
 							<vf-text name="personMail" label="Ansprechpartner E-Mail-Adresse"></vf-text>
 							<vf-text name="personTel" label="Ansprechpartner Tel"></vf-text>
@@ -34,11 +29,26 @@
 							<vf-text name="personAddress" label="Ansprechpartner Adresse"></vf-text>
 							<vf-text name="personZip" label="Ansprechpartner PLZ"></vf-text>
 							<vf-text name="personCity" label="Ansprechpartner Ort"></vf-text>
+						</panelcontent>
+						<panelcontent index="3">
+							<vf-files name="files" label="Logo im Header" uploadurl="/api/file"></vf-files>
+							<vf-text name="letterKontoName" value="Kontoinhaber"></vf-text>
+							<vf-text name="letterIban" label="IBAN"></vf-text>
+							<vf-text name="letterBic" label="BIC"></vf-text>
+							<vf-text name="letterFrom" label="Absender in Rechnungen"></vf-text>
+							<vf-text name="letterZweck" label="Verwendungszweck" :info="'Verwende [name] als Platzhalter für Mitglieds-Name'"></vf-text>
+							<vf-checkbox name="includeFamilies" label="Familien standardmäßig zusammenführen" :info="'Familienmitglieder, die in einem Haushalt leben, bekommen standardmäßig nur eine Rechnung'"></vf-checkbox>
 							<label>Standard-Deadline</label>
 							<div class="row">
 								<div class="col-md-6"><vf-text name="deadlinenr"></vf-text></div>
 								<div class="col-md-6"><vf-select name="deadlineunit" url="/api/unit/date"></vf-select></div>
 							</div>
+						</panelcontent>
+						<panelcontent index="4">
+							<vf-text name="emailHeading" label="Überschrift"></vf-text>
+							<vf-text name="emailBillText" label="Text für Rechnungen" :help="billRememberHelp"></vf-text>
+							<vf-text name="emailRememberText" label="Text für Zahlungserinnerungen" :help="billBodyHelp"></vf-text>
+							<vf-text name="emailGreeting" label="Grußwort" :help="greetingHelp"></vf-text>
 						</panelcontent>
 						<vf-submit></vf-submit>
 					</panel>
@@ -58,7 +68,18 @@
 	import {mapState} from 'vuex';
 
 	export default {
-		computed: mapState(['config']),
+		computed: {
+			greetingHelp: function() {
+				return 'Du kannst {{ $groupname }} für den Namen deiner Gruppe (unter Allgemein festzulegen) angeben.';
+			},
+			billBodyHelp: function() {
+				return 'Du kannst {{ $members }} für den/die Namen des/r Mitglieds/er angeben.';
+			},
+			billRememberHelp: function() {
+				return 'Du kannst {{ $members }} für den Namen des Mitglieds angeben.';
+			},
+			...mapState(['config']),
+		},
 		components: {
 			grid: require('z-ui/grid/grid.vue'),
 			panel: require('z-ui/panel/panel.vue'),

@@ -2,7 +2,7 @@
     {{-- Header --}}
     @slot('header')
         @component('mail::header', ['url' => config('app.url'), 'class' => ($level) ?: 'default'])
-            {{ config('app.name') }}
+            {{ $heading }}
         @endcomponent
     @endslot
 

@@ -31,10 +31,26 @@ class EmailBillRequest extends Request
 		if ($this->wayEmail) {$ways[] = 1;}
 		if ($this->wayPost) {$ways[] = 2;}
 
-		$query = Member::whereIn('way_id', $ways);
+		$query = Member::whereIn('way_id', $ways)->hasNotPaidPayments();
+
+		if ($this->includeFamilies) {
+			$members = $query->get()->groupBy(function($m) {
+				return $m->lastname.$m->zip.$m->city.$m->email;
+			});
+
+			$membersThatGetBill = $query->get()->groupBy(function($m) {
+				return $m->lastname.$m->zip.$m->city;
+			});
+
+			foreach($members as $member) {
+				$member->first()->notify(new EmailBillNotification($member->first(), $this->includeFamilies, $this->deadline, $membersThatGetBill[$member[0]->lastname.$member[0]->zip.$member[0]->city]));
+			}
+
+			return;
+		}
 
 		foreach($query->get() as $member) {
-			$member->notify(new EmailBillNotification($member));
+			$member->notify(new EmailBillNotification($member, $this->includeFamilies, $this->deadline, collect([$member])));
 		}
 	}
 }

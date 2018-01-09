@@ -27,7 +27,8 @@ class ConfSeeder extends Seeder
 		'personAddress',
 		'personZip',
 		'personCity',
-		'website'
+		'website',
+		'emailHeading',
 	];
 
     /**
@@ -55,7 +56,10 @@ class ConfSeeder extends Seeder
 			'default_country_id' => \App\Country::where('code', config('seed.default_country'))->first()->id,
 			'default_region_id' => null,
 			'default_keepdata' => false,
-			'default_sendnewspaper' => false
+			'default_sendnewspaper' => false,
+			'emailBillText' => 'Im Anhang dieser Mail befindet sich die Jahresrechnung für {{ $members }}. Bitte begleiche diese bis zum angegebenen Datum.',
+			'emailRememberText' => 'Leider haben wir bisher für die ausstehenden Beträge keinen Zahlungseingang feststellen können. Daher senden wir dir mit dieser E-Mail eine Zahlungserinnerung im Anhang. Bitte begleiche diese bis zum angegebenen Datum.',
+			'emailGreeting' => 'Gut Pfad | {{ $groupname }}'
 		]);
     }
 }
