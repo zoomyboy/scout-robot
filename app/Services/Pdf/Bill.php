@@ -3,8 +3,12 @@
 namespace App\Services\Pdf;
 
 use Carbon\Carbon;
+use App\Traits\GeneratesBlade;
+use App\Conf;
 
 class Bill extends GlobalPdf {
+
+	use GeneratesBlade;
 
 	public $members;
 	public $deadline;
@@ -17,6 +21,7 @@ class Bill extends GlobalPdf {
 	}
 
 	public function handle($filename) {
+		$datestring = $this->generateView(Conf::first()->letterDate, ['date' => date('d.m.Y')]);
 		foreach($this->members as $member) {
 			$this->pdf->AddPage();
 			$this->header($member[0]);
@@ -28,7 +33,7 @@ class Bill extends GlobalPdf {
 
 			$this->pdf->SetFont('OpenSans', '', 8);
 			$this->pdf->SetTextColor(0, 0, 0);
-			$this->pdf->Cell(0, 12, utf8_decode('Solingen, den '.date('d.m.Y')), 0, 1, 'R');
+			$this->pdf->Cell(0, 12, utf8_decode($datestring), 0, 1, 'R');
 
 			$this->pdf->SetFont('OpenSans', '', 10);
 			$this->pdf->SetTextColor(0, 0, 0);

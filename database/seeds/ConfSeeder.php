@@ -29,6 +29,7 @@ class ConfSeeder extends Seeder
 		'personCity',
 		'website',
 		'emailHeading',
+		'letterDate'
 	];
 
     /**
@@ -59,7 +60,8 @@ class ConfSeeder extends Seeder
 			'default_sendnewspaper' => false,
 			'emailBillText' => 'Im Anhang dieser Mail befindet sich die Jahresrechnung für {{ $members }}. Bitte begleiche diese bis zum angegebenen Datum.',
 			'emailRememberText' => 'Leider haben wir bisher für die ausstehenden Beträge keinen Zahlungseingang feststellen können. Daher senden wir dir mit dieser E-Mail eine Zahlungserinnerung im Anhang. Bitte begleiche diese bis zum angegebenen Datum.',
-			'emailGreeting' => 'Gut Pfad | {{ $groupname }}'
+			'emailGreeting' => 'Gut Pfad | {{ $groupname }}',
+			'letterDate' => 'Solingen, den {{ $date }}'
 		]);
     }
 }

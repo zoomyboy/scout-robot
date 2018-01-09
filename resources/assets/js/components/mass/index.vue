@@ -121,6 +121,40 @@
 					texts.push('Du solltest unter der <a href="/config">Konfiguration - Allgemein</a> einen Gruppennamen angeben. Dieser wird im Betreff der E-Mail genutzt.');
 				}
 
+				if (!this.config.letterIban || !this.config.letterIban.length
+				  || !this.config.letterBic || !this.config.letterBic.length
+				) {
+					check = false;
+					texts.push('Du solltest unter der <a href="/config">Konfiguration - PDF-Erstellung</a> deine Kontodaten hinterlegen.');
+				}
+
+				if (
+				  !this.config.personName || !this.config.personName.length
+				  || !this.config.personTel || !this.config.personTel.length
+				  || !this.config.personMail || !this.config.personMail.length
+				  || !this.config.personAddress || !this.config.personAddress.length
+				  || !this.config.personZip || !this.config.personZip.length
+				  || !this.config.personCity || !this.config.personCity.length
+				) {
+					check = false;
+					texts.push('Du solltest unter der <a href="/config">Konfiguration - Ansprechpartner</a> einen Ansprechpartner mit Kontaktdaten angeben.');
+				}
+
+				if ( !this.config.personFunction || !this.config.personFunction.length) {
+					check = false;
+					texts.push('Der Ansprechpartner unter <a href="/config">Konfiguration - Ansprechpartner</a> hat keine Funktion');
+				}
+
+				if ( !this.config.website || !this.config.website.length) {
+					check = false;
+					texts.push('Du solltest unter der <a href="/config">Konfiguration - Allgemein</a> eine Webseite angeben.');
+				}
+
+				if ( !this.config.letterFrom || !this.config.letterFrom.length) {
+					check = false;
+					texts.push('Du solltest unter der <a href="/config">Konfiguration - PDF-Erstellung</a> einen Absender angeben.');
+				}
+
 				if (check) {
 					vm.$refs.emailBillForm.submit();
 

@@ -7,6 +7,7 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Zoomyboy\BetterNotifications\MailMessage;
 use App\Member;
+use App\Traits\GeneratesBlade;
 use App\Services\Pdf\Bill as BillPdfService;
 use App\Collections\OwnCollection;
 use App\Conf;
@@ -15,6 +16,7 @@ use Illuminate\Support\Facades\Blade;
 class EmailBillNotification extends Notification
 {
 	use Queueable;
+	use GeneratesBlade;
 
 	public $member;
 	public $family;
@@ -63,7 +65,8 @@ class EmailBillNotification extends Notification
 			->greeting($greeting)
             ->line($body)
 			->subject('Rechnung von '.Conf::first()->groupname)
-			->salutation('Viele Grüße und gut Pfad Der Stammesvorstand')
+			->salutation('Viele Grüße und gut Pfad')
+			->subcopy('Der Stammesvorstand')
 			->heading(Conf::first()->emailHeading ?: '');
 
 		$members = $this->family === "true"
@@ -93,11 +96,6 @@ class EmailBillNotification extends Notification
 		return implode(', ', $members->map(function($m) {return $m->firstname.' '.$m->lastname;})->toArray())
 			.(($members->count()) ? ' und ' : '')
 			.$last->firstname.' '.$last->lastname;
-	}
-
-	private function generateView($str, $params) {
-		file_put_contents(resource_path('views/temp/string.blade.php'), $str);
-		return (string) view()->make('temp.string', $params);
 	}
 
     /**

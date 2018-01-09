@@ -40,7 +40,7 @@ class GlobalPdf {
 
 		$this->pdf->Image(resource_path('img/start.png'), 12, 70, 7);
 
-		$this->pdf->setFont('OpenSans', '', 15);
+		$this->pdf->setFont('OpenSans', '', 12);
 		$this->pdf->SetX(165);
 		$this->pdf->Cell(0, 5, utf8_decode($this->config->groupname), 0, 1);
 

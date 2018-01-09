@@ -37,6 +37,7 @@
 							<vf-text name="letterBic" label="BIC"></vf-text>
 							<vf-text name="letterFrom" label="Absender in Rechnungen"></vf-text>
 							<vf-text name="letterZweck" label="Verwendungszweck" :info="'Verwende [name] als Platzhalter für Mitglieds-Name'"></vf-text>
+							<vf-text name="letterDate" label="Datumsangabe" :info="'Verwende {{ $date }} als Platzhalter für aktuelles Datum'"></vf-text>
 							<vf-checkbox name="includeFamilies" label="Familien standardmäßig zusammenführen" :info="'Familienmitglieder, die in einem Haushalt leben, bekommen standardmäßig nur eine Rechnung'"></vf-checkbox>
 							<label>Standard-Deadline</label>
 							<div class="row">
