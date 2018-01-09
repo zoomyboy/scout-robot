@@ -106,6 +106,25 @@
 			displaypdf: function(data, ret) {
 				window.open(ret);
 			},
+			confirm: function(confirmed) {
+				swal({
+					title: 'E-Mail senden',
+					type: 'info',
+					html: 'Bitte bestätige das Senden dieser E-Mails. Alle Mitglieder kriegen E-Mails, die Zahlungen mit Status "nicht bezahlt" haben.',
+					showCancelButton: true,
+					confirmButtonColor: '#3085d6',
+					confirmButtonText: 'E-Mail senden',
+					cancelButtonText: 'Doch nicht',
+					confirmButtonClass: 'btn btn-success no-right-border-radius',
+					cancelButtonClass: 'btn btn-danger no-left-border-radius',
+					buttonsStyling: false
+				}).then(function(result) {
+					if (result != undefined && result.value == true) {
+						confirmed();
+					}
+				});
+				return;
+			},
 			submitEmailBill: function() {
 				var vm = this;
 				var check = true;
@@ -156,10 +175,13 @@
 				}
 
 				if (check) {
-					vm.$refs.emailBillForm.submit();
-
+					vm.confirm(function() {
+						vm.$refs.emailBillForm.submit();
+					});
 					return;
 				}
+
+
 
 				swal({
 					title: 'Warnung: Daten unvollständig!',
@@ -173,7 +195,9 @@
 					buttonsStyling: false
 				}).then(function(result) {
 					if (result != undefined && result.value == true) {
-						vm.$refs.emailBillForm.submit();
+						vm.confirm(function() {
+							vm.$refs.emailBillForm.submit();
+						});
 					}
 				});
 			}
