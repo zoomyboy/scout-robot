@@ -28,7 +28,7 @@ class BillTest extends FeatureTestCase {
 		$this->runSeeder('StatusSeeder');
 
 		Conf::first()->update(['groupname' => 'Bla']);
-		$this->subject = 'Rechnung für Bla';
+		$this->subject = 'Rechnung von Bla';
 
 		$this->clearMailtrap();
 	}
