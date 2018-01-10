@@ -40,7 +40,7 @@
 				<div class="row">
 					<div class="col-md-6">
 						<legend>Massen-Rechnung</legend>
-						<vf-form action="/api/mass/email/bill" method="post" target="_blank" ref="emailBillForm">
+						<vf-form action="/api/mass/email/bill" method="post" target="_blank" msg="Senden erfolgreich" ref="emailBillForm">
 							<vf-checkbox name="includeFamilies" :value="config.includeFamilies" label="Familien zusammenführen"></vf-checkbox>
 						
 							<vf-checkbox name="wayPost" label="Post-Wege einbeziehen"></vf-checkbox>
@@ -55,7 +55,7 @@
 
 					<div class="col-md-6">
 						<legend>Massen-Erinnerung</legend>
-						<vf-form action="/api/mass/email/remember" method="post" target="_blank" ref="emailRememberForm">
+						<vf-form action="/api/mass/email/remember" method="post" target="_blank" msg="Senden erfolgreich" ref="emailRememberForm">
 							<vf-checkbox name="includeFamilies" :value="config.includeFamilies" label="Familien zusammenführen"></vf-checkbox>
 						
 							<vf-checkbox name="wayPost" label="Post-Wege einbeziehen"></vf-checkbox>
