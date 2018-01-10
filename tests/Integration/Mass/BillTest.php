@@ -222,6 +222,58 @@ class BillTest extends IntegrationTestCase {
 	 * @test
 	 * @dataProvider senderProvider
 	 */
+	public function it_updates_payments_after_notifications_when_requested($members, $families, $email, $post) {
+		$this->authAsApi();
+
+		$expectedMembers = [];
+
+		$members = array_map(function($member) {
+			$myMember = $this->create('Member', $member[0]);
+			$payment = new Payment(['amount' => '1000', 'nr' => '2015']);
+			$payment->status()->associate(Status::find(1));
+			$payment->member()->associate($myMember);
+			$payment->save();
+
+			$member[0] = $myMember;
+
+			return $member;
+		}, $members);
+
+		foreach($members as $member) {
+			$expectedMembers = array_merge($expectedMembers, isset($member[2]) ? array_column(array_only($members, $member[2]), 0) : []);
+		}
+
+		$this->postApi('mass/email/bill', [
+			'deadline' => '2018-02-02',
+			'includeFamilies' => $families,
+			'wayEmail' => $email,
+			'wayPost' => $post,
+			'updatePayments' => true
+		])
+			->assertSuccess();
+
+		$this->checkPayments(array_column($expectedMembers, 'id'));
+	}
+
+	private function checkPayments($members) {
+		foreach(Member::whereIn('id', $members)->get() as $m) {
+			foreach($m->payments as $p) {
+				$this->assertEquals(2, $p->status_id);
+			}
+		}
+
+		foreach(Member::whereNotIn('id', $members)->get() as $m) {
+			foreach($m->payments as $p) {
+				$this->assertEquals(1, $p->status_id);
+			}
+		}
+
+	}
+
+	/**
+	 * @test
+	 * @dataProvider senderProvider
+	 */
 	public function it_doesnt_send_notifications_when_no_payments($members, $families, $email, $post) {
 		$this->authAsApi();
 
