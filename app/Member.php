@@ -78,4 +78,10 @@ class Member extends Model
 			return $q->whereIn('status_id', [1])->where('amount', '>', 0);
 		});
 	}
+
+	public function scopeHasReceivedPayments($q) {
+		return $q->whereHas('payments', function($q) {
+			return $q->whereIn('status_id', [2])->where('amount', '>', 0);
+		});
+	}
 }

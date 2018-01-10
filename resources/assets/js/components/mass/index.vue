@@ -9,7 +9,7 @@
 				<div class="row">
 					<div class="col-md-6">
 						<legend>Massen-Rechnung</legend>
-						<vf-form action="/pdf/bill" method="post" @afterpersist="displaypdf">
+						<vf-form action="/pdf/bill" method="post" @afterpersist="displaypdf" ref="postBillForm">
 							<vf-checkbox name="includeFamilies" :value="config.includeFamilies" label="Familien zusammenführen"></vf-checkbox>
 						
 							<vf-checkbox name="wayPost" label="Post-Wege einbeziehen" :value="true"></vf-checkbox>
@@ -17,13 +17,13 @@
 						
 							<vf-date name="deadline" :value="deadline" label="Deadline"></vf-date>
 						
-							<vf-submit>Alle Rechnungen erstellen</vf-submit>
+							<v-link @click="submitPostBill">Alle Rechnungen anzeigen</v-link>
 						</vf-form>
 					</div>
 
 					<div class="col-md-6">
 						<legend>Massen-Erinnerung</legend>
-						<vf-form action="/pdf/remember" method="post" @afterpersist="displaypdf">
+						<vf-form action="/pdf/remember" method="post" @afterpersist="displaypdf" ref="postRememberForm">
 							<vf-checkbox name="includeFamilies" :value="config.includeFamilies" label="Familien zusammenführen"></vf-checkbox>
 						
 							<vf-checkbox name="wayPost" label="Post-Wege einbeziehen" :value="true"></vf-checkbox>
@@ -31,7 +31,7 @@
 						
 							<vf-date name="deadline" :value="deadline" label="Deadline"></vf-date>
 						
-							<vf-submit>Alle Erinnerungen erstellen</vf-submit>
+							<v-link @click="submitPostRemember">Alle Erinnerungen anzeigen</v-link>
 						</vf-form>
 					</div>
 				</div>
@@ -40,7 +40,7 @@
 				<div class="row">
 					<div class="col-md-6">
 						<legend>Massen-Rechnung</legend>
-						<vf-form action="/api/mass/email/bill" method="post" target="_blank" @beforepersist="alert('I');" ref="emailBillForm">
+						<vf-form action="/api/mass/email/bill" method="post" target="_blank" ref="emailBillForm">
 							<vf-checkbox name="includeFamilies" :value="config.includeFamilies" label="Familien zusammenführen"></vf-checkbox>
 						
 							<vf-checkbox name="wayPost" label="Post-Wege einbeziehen"></vf-checkbox>
@@ -55,7 +55,7 @@
 
 					<div class="col-md-6">
 						<legend>Massen-Erinnerung</legend>
-						<vf-form action="/api/mass/email/remember" method="post" target="_blank">
+						<vf-form action="/api/mass/email/remember" method="post" target="_blank" ref="emailRememberForm">
 							<vf-checkbox name="includeFamilies" :value="config.includeFamilies" label="Familien zusammenführen"></vf-checkbox>
 						
 							<vf-checkbox name="wayPost" label="Post-Wege einbeziehen"></vf-checkbox>
@@ -63,7 +63,7 @@
 						
 							<vf-date name="deadline" :value="deadline" label="Deadline"></vf-date>
 						
-							<vf-submit>E-Mail versenden</vf-submit>
+							<v-link @click="submitEmailRemember">Zahlungserinnerung versenden</v-link>
 						</vf-form>
 					</div>
 				</div>
@@ -93,6 +93,29 @@
 			...mapState({
 				config: state => state.config
 			}),
+			validations: function() {
+				var forPerson = 'Du solltest unter der <a href="/config">Konfiguration - Ansprechpartner</a> einen Ansprechpartner mit Kontaktdaten angeben.';
+
+				return {
+					email: {
+						emailHeading: 'Du solltest unter der <a href="/config">Konfiguration - E-Mails</a> eine E-Mail-Überschrift angeben.',
+						groupname: 'Du solltest unter der <a href="/config">Konfiguration - Allgemein</a> einen Gruppennamen angeben. Dieser wird im Betreff der E-Mail genutzt.'
+					},
+					pdf: {
+						letterIban: 'Du solltest unter der <a href="/config">Konfiguration - PDF-Erstellung</a> deine Kontodaten hinterlegen.',
+						letterBic: 'Du solltest unter der <a href="/config">Konfiguration - PDF-Erstellung</a> deine Kontodaten hinterlegen.',
+						personName: forPerson,
+						personTel: forPerson,
+						personAddress: forPerson,
+						personMail: forPerson,
+						personZip: forPerson,
+						personCity: forPerson,
+						personFunction: 'Der Ansprechpartner unter <a href="/config">Konfiguration - Ansprechpartner</a> hat keine Funktion',
+						website: 'Du solltest unter der <a href="/config">Konfiguration - Allgemein</a> eine Webseite angeben.',
+						letterFrom: 'Du solltest unter der <a href="/config">Konfiguration - PDF-Erstellung</a> einen Absender angeben.'
+					}
+				};
+			}
 		},
 		components: {
 			panel: function(resolve) {
@@ -106,14 +129,27 @@
 			displaypdf: function(data, ret) {
 				window.open(ret);
 			},
-			confirm: function(confirmed) {
+			validate(validations) {
+				var texts = [];
+
+				validations.forEach((validationCollection) => {
+					Object.keys(validationCollection).forEach((v) => {
+						if (!this.config[v] || !this.config[v].length) {
+							texts.push(validationCollection[v]);
+						}
+					});
+				});
+
+				return texts;
+			},
+			swal: function(title, html, confirm, type, confirmed, aborted) {
 				swal({
-					title: 'E-Mail senden',
-					type: 'info',
-					html: 'Bitte bestätige das Senden dieser E-Mails. Alle Mitglieder kriegen E-Mails, die Zahlungen mit Status "nicht bezahlt" haben.',
+					title: title,
+					type: type,
+					html: html,
 					showCancelButton: true,
 					confirmButtonColor: '#3085d6',
-					confirmButtonText: 'E-Mail senden',
+					confirmButtonText: confirm,
 					cancelButtonText: 'Doch nicht',
 					confirmButtonClass: 'btn btn-success no-right-border-radius',
 					cancelButtonClass: 'btn btn-danger no-left-border-radius',
@@ -121,84 +157,64 @@
 				}).then(function(result) {
 					if (result != undefined && result.value == true) {
 						confirmed();
+					} else {
+						aborted();
 					}
 				});
-				return;
 			},
-			submitEmailBill: function() {
+			confirm: function(confirmed) {
+				var vm = this;
+
+				this.swal('E-Mail senden', 'Bitte bestätige das Senden dieser E-Mails. Alle Mitglieder kriegen E-Mails, die Zahlungen mit Status "nicht bezahlt" haben.', 'E-Mail senden', 'warning', function() {
+					confirmed();
+				}, function() {});
+			},
+			triggerSubmit: function(validations, confirmText, confirmed) {
 				var vm = this;
 				var check = true;
-				var texts = [];
 
-				if (!this.config.emailHeading || !this.config.emailHeading.length) {
-					check = false;
-					texts.push('Du solltest unter der <a href="/config">Konfiguration - E-Mails</a> eine E-Mail-Überschrift angeben.');
-				}
+				var texts = this.validate(validations);
 
-				if (!this.config.groupname || !this.config.groupname.length) {
-					check = false;
-					texts.push('Du solltest unter der <a href="/config">Konfiguration - Allgemein</a> einen Gruppennamen angeben. Dieser wird im Betreff der E-Mail genutzt.');
-				}
+				if (texts.length) {
+					this.swal('Warnung: Daten unvollständig!', texts.join('<hr>'), confirmText, 'warning', function() {
+						confirmed();
+					}, function() {});
 
-				if (!this.config.letterIban || !this.config.letterIban.length
-				  || !this.config.letterBic || !this.config.letterBic.length
-				) {
-					check = false;
-					texts.push('Du solltest unter der <a href="/config">Konfiguration - PDF-Erstellung</a> deine Kontodaten hinterlegen.');
-				}
-
-				if (
-				  !this.config.personName || !this.config.personName.length
-				  || !this.config.personTel || !this.config.personTel.length
-				  || !this.config.personMail || !this.config.personMail.length
-				  || !this.config.personAddress || !this.config.personAddress.length
-				  || !this.config.personZip || !this.config.personZip.length
-				  || !this.config.personCity || !this.config.personCity.length
-				) {
-					check = false;
-					texts.push('Du solltest unter der <a href="/config">Konfiguration - Ansprechpartner</a> einen Ansprechpartner mit Kontaktdaten angeben.');
-				}
-
-				if ( !this.config.personFunction || !this.config.personFunction.length) {
-					check = false;
-					texts.push('Der Ansprechpartner unter <a href="/config">Konfiguration - Ansprechpartner</a> hat keine Funktion');
-				}
-
-				if ( !this.config.website || !this.config.website.length) {
-					check = false;
-					texts.push('Du solltest unter der <a href="/config">Konfiguration - Allgemein</a> eine Webseite angeben.');
-				}
-
-				if ( !this.config.letterFrom || !this.config.letterFrom.length) {
-					check = false;
-					texts.push('Du solltest unter der <a href="/config">Konfiguration - PDF-Erstellung</a> einen Absender angeben.');
-				}
-
-				if (check) {
-					vm.confirm(function() {
-						vm.$refs.emailBillForm.submit();
-					});
 					return;
 				}
 
+				confirmed();
+			},
+			submitEmailBill: function() {
+				var vm = this;
 
+				this.triggerSubmit([this.validations.email, this.validations.pdf], 'E-Mail trotzdem senden', function() {
+					vm.confirm(function() {
+						vm.$refs.emailBillForm.submit();
+					});
+				});
+			},
+			submitEmailRemember() {
+				var vm = this;
 
-				swal({
-					title: 'Warnung: Daten unvollständig!',
-					type: 'warning',
-					html: texts.join('<hr>'),
-					showCancelButton: true,
-					confirmButtonColor: '#3085d6',
-					confirmButtonText: 'E-Mail trotzdem senden',
-					confirmButtonClass: 'btn btn-success no-right-border-radius',
-					cancelButtonClass: 'btn btn-danger no-left-border-radius',
-					buttonsStyling: false
-				}).then(function(result) {
-					if (result != undefined && result.value == true) {
-						vm.confirm(function() {
-							vm.$refs.emailBillForm.submit();
-						});
-					}
+				this.triggerSubmit([this.validations.email, this.validations.pdf], 'E-Mail trotzdem senden', function() {
+					vm.confirm(function() {
+						vm.$refs.emailRememberForm.submit();
+					});
+				});
+			},
+			submitPostBill: function() {
+				var vm = this;
+
+				this.triggerSubmit([this.validations.pdf], 'Trotzdem anzeigen', function() {
+					vm.$refs.postBillForm.submit()
+				});
+			},
+			submitPostRemember() {
+				var vm = this;
+
+				this.triggerSubmit([this.validations.pdf], 'Trotzdem anzeigen', function() {
+					vm.$refs.postRememberForm.submit()
 				});
 			}
 		},

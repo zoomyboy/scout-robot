@@ -4,9 +4,9 @@ namespace Tests\Unit;
 
 use Tests\UnitTestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
-use App\Notifications\EmailBillNotification;
+use App\Notifications\EmailRememberNotification;
 
-class MassMemberEnumBillTest extends UnitTestCase {
+class MassMemberEnumRememberTest extends UnitTestCase {
 	use DatabaseMigrations;
 
 	public function setUp() {
@@ -68,7 +68,7 @@ class MassMemberEnumBillTest extends UnitTestCase {
 			return $this->create('Member', $m);
 		}, $members);
 
-		$n = new EmailBillNotification($this->create('Member'), true, '', collect($members));
+		$n = new EmailRememberNotification($this->create('Member'), true, '', collect($members));
 		$this->assertEquals($string, $n->generateMemberString());
 	}
 }

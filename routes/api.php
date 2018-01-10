@@ -60,4 +60,5 @@ Route::get('unit/{type}', 'UnitController@index');
 
 Route::get('/way', 'WayController@index');
 
-Route::post('mass/email/bill', 'MassController@email');
+Route::post('mass/email/bill', 'MassController@bill');
+Route::post('mass/email/remember', 'MassController@remember');

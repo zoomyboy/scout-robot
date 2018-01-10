@@ -4,13 +4,13 @@ namespace Tests\Integration\Mass;
 
 use Tests\IntegrationTestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
-use App\Notifications\EmailBillNotification;
+use App\Notifications\EmailRememberNotification;
 use Illuminate\Support\Facades\Notification;
 use \App\Member;
 use App\Status;
 use App\Payment;
 
-class BillTest extends IntegrationTestCase {
+class RememberTest extends IntegrationTestCase {
 
 	use DatabaseMigrations;
 
@@ -30,7 +30,7 @@ class BillTest extends IntegrationTestCase {
 	public function it_doesnt_notify_anyone_when_user_is_logged_out() {
 		$this->withExceptionHandling();
 
-		$this->postApi('mass/email/bill', [
+		$this->postApi('mass/email/remember', [
 			'deadline' => '02-02-2018',
 			'includeFamilies' => true,
 			'wayEmail' => true,
@@ -45,19 +45,18 @@ class BillTest extends IntegrationTestCase {
 
 		$this->authAsApi();
 
-		$this->postApi('mass/email/bill', [
+		$this->postApi('mass/email/remember', [
 			'deadline' => '2018-02-02'
 		])
 			->assertValidationFailedWith('includeFamilies', 'wayPost', 'wayEmail');
 
-		$this->postApi('mass/email/bill', [
+		$this->postApi('mass/email/remember', [
 			'deadline' => '02-02-2018',
 			'includeFamilies' => '',
 			'wayEmail' => '',
 			'wayPost' => 'dd',
-			'updatePayments' => '',
 		])
-			->assertValidationFailedWith('includeFamilies', 'wayPost', 'wayEmail', 'updatePayments');
+			->assertValidationFailedWith('includeFamilies', 'wayPost', 'wayEmail');
 	}
 
 	public function senderProvider() {
@@ -175,7 +174,7 @@ class BillTest extends IntegrationTestCase {
 		$members = array_map(function($member) {
 			$myMember = $this->create('Member', $member[0]);
 			$payment = new Payment(['amount' => '1000', 'nr' => '2015']);
-			$payment->status()->associate(Status::find(1));
+			$payment->status()->associate(Status::find(2));
 			$payment->member()->associate($myMember);
 			$payment->save();
 
@@ -184,12 +183,11 @@ class BillTest extends IntegrationTestCase {
 			return $member;
 		}, $members);
 
-		$this->postApi('mass/email/bill', [
+		$this->postApi('mass/email/remember', [
 			'deadline' => '2018-02-02',
 			'includeFamilies' => $families,
 			'wayEmail' => $email,
-			'wayPost' => $post,
-			'updatePayments' => true
+			'wayPost' => $post
 		])
 			->assertSuccess();
 
@@ -202,14 +200,14 @@ class BillTest extends IntegrationTestCase {
 					})
 					->pluck('id')->toArray();
 
-				Notification::assertSentTo($member[0], EmailBillNotification::class, function($m) use ($member, $families, $expectedMembers) {
+				Notification::assertSentTo($member[0], EmailRememberNotification::class, function($m) use ($member, $families, $expectedMembers) {
 					return $m->member->id == $member[0]->id
 						&& $m->family == $families
 						&& $m->deadline == '2018-02-02'
 						&& $expectedMembers == $m->members->pluck('id')->toArray();
 				});
 			} else {
-				Notification::assertNotSentTo($member[0], EmailBillNotification::class, function($m) use ($member, $families) {
+				Notification::assertNotSentTo($member[0], EmailRememberNotification::class, function($m) use ($member, $families) {
 					return $m->member->id == $member[0]->id
 						&& $m->family == $families
 						&& $m->deadline == '2018-02-02';
@@ -229,7 +227,7 @@ class BillTest extends IntegrationTestCase {
 			return [$this->create('Member', $member[0]), $member[1]];
 		}, $members);
 
-		$this->postApi('mass/email/bill', [
+		$this->postApi('mass/email/remember', [
 			'deadline' => '2018-02-02',
 			'includeFamilies' => $families,
 			'wayEmail' => $email,
@@ -239,7 +237,7 @@ class BillTest extends IntegrationTestCase {
 			->assertSuccess();
 
 		foreach($members as $ind => $member) {
-			Notification::assertNotSentTo($member[0], EmailBillNotification::class);
+			Notification::assertNotSentTo($member[0], EmailRememberNotification::class);
 		}
 	}
 
@@ -260,7 +258,7 @@ class BillTest extends IntegrationTestCase {
 			return [$this->create('Member', $member[0]), $member[1]];
 		}, $members);
 
-		$this->postApi('mass/email/bill', [
+		$this->postApi('mass/email/remember', [
 			'deadline' => '2018-02-02',
 			'includeFamilies' => $families,
 			'wayEmail' => $email,
@@ -270,7 +268,7 @@ class BillTest extends IntegrationTestCase {
 			->assertSuccess();
 
 		foreach($members as $ind => $member) {
-			Notification::assertNotSentTo($member[0], EmailBillNotification::class);
+			Notification::assertNotSentTo($member[0], EmailRememberNotification::class);
 		}
 	}
 
@@ -278,20 +276,20 @@ class BillTest extends IntegrationTestCase {
 	 * @test
 	 * @dataProvider senderProvider
 	 */
-	public function it_doesnt_send_notifications_when_only_received_payments($members, $families, $email, $post) {
+	public function it_doesnt_send_notifications_when_only_not_paid_payments($members, $families, $email, $post) {
 		$this->authAsApi();
 
 		$members = array_map(function($member) {
 			$myMember = $this->create('Member', $member[0]);
 			$payment = new Payment(['amount' => '1000', 'nr' => '2015']);
-			$payment->status()->associate(Status::find(2));
+			$payment->status()->associate(Status::find(1));
 			$payment->member()->associate($myMember);
 			$payment->save();
 
 			return [$this->create('Member', $member[0]), $member[1]];
 		}, $members);
 
-		$this->postApi('mass/email/bill', [
+		$this->postApi('mass/email/remember', [
 			'deadline' => '2018-02-02',
 			'includeFamilies' => $families,
 			'wayEmail' => $email,
@@ -301,7 +299,7 @@ class BillTest extends IntegrationTestCase {
 			->assertSuccess();
 
 		foreach($members as $ind => $member) {
-			Notification::assertNotSentTo($member[0], EmailBillNotification::class);
+			Notification::assertNotSentTo($member[0], EmailRememberNotification::class);
 		}
 	}
 

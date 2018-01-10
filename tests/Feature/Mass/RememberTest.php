@@ -4,14 +4,13 @@ namespace Tests\Feature\Mass;
 
 use Tests\FeatureTestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
-use App\Notifications\EmailBillNotification;
 use Illuminate\Support\Facades\Notification;
 use \App\Member;
 use App\Conf;
 use App\Payment;
 use App\Status;
 
-class BillTest extends FeatureTestCase {
+class RememberTest extends FeatureTestCase {
 
 	use DatabaseMigrations;
 
@@ -28,7 +27,7 @@ class BillTest extends FeatureTestCase {
 		$this->runSeeder('StatusSeeder');
 
 		Conf::first()->update(['groupname' => 'Bla']);
-		$this->subject = 'Rechnung für Bla';
+		$this->subject = 'Zahlungserinnerung von Bla';
 
 		$this->clearMailtrap();
 	}
@@ -41,8 +40,8 @@ class BillTest extends FeatureTestCase {
 					['way_id' => '1', 'lastname' => 'Doe', 'firstname' => 'Jane', 'email' => 'jane@doe.de']
 				],
 				[
-					['pdf' => 'Rechnung für John Doe.pdf', 'to' => 'john@doe.de'],
-					['pdf' => 'Rechnung für Jane Doe.pdf', 'to' => 'jane@doe.de'],
+					['pdf' => 'Zahlungserinnerung für John Doe.pdf', 'to' => 'john@doe.de'],
+					['pdf' => 'Zahlungserinnerung für Jane Doe.pdf', 'to' => 'jane@doe.de'],
 				],
 				'families' => false, 'email' => true, 'post' => true,
 			],
@@ -52,8 +51,8 @@ class BillTest extends FeatureTestCase {
 					['way_id' => '1', 'lastname' => 'Doe', 'firstname' => 'Jane', 'email' => 'jane@doe.de']
 				],
 				[
-					['pdf' => 'Rechnung für Familie Doe.pdf', 'to' => 'john@doe.de'],
-					['pdf' => 'Rechnung für Familie Doe.pdf', 'to' => 'jane@doe.de'],
+					['pdf' => 'Zahlungserinnerung für Familie Doe.pdf', 'to' => 'john@doe.de'],
+					['pdf' => 'Zahlungserinnerung für Familie Doe.pdf', 'to' => 'jane@doe.de'],
 				],
 				'families' => true, 'email' => true, 'post' => true,
 			],
@@ -63,7 +62,7 @@ class BillTest extends FeatureTestCase {
 					['way_id' => '2', 'lastname' => 'Doe', 'firstname' => 'Jane', 'email' => 'jane@doe.de']
 				],
 				[
-					['pdf' => 'Rechnung für Familie Doe.pdf', 'to' => 'jane@doe.de'],
+					['pdf' => 'Zahlungserinnerung für Familie Doe.pdf', 'to' => 'jane@doe.de'],
 				],
 				'families' => true, 'email' => false, 'post' => true,
 			],
@@ -73,7 +72,7 @@ class BillTest extends FeatureTestCase {
 					['way_id' => '2', 'lastname' => 'Doe', 'firstname' => 'Jane', 'email' => 'jane@doe.de']
 				],
 				[
-					['pdf' => 'Rechnung für Familie Doe.pdf', 'to' => 'john@doe.de'],
+					['pdf' => 'Zahlungserinnerung für Familie Doe.pdf', 'to' => 'john@doe.de'],
 				],
 				'families' => true, 'email' => true, 'post' => false,
 			],
@@ -90,14 +89,14 @@ class BillTest extends FeatureTestCase {
 		$members = array_map(function($member) {
 			$myMember = $this->create('Member', $member);
 			$payment = new Payment(['amount' => '1000', 'nr' => '2015']);
-			$payment->status()->associate(Status::find(1));
+			$payment->status()->associate(Status::find(2));
 			$payment->member()->associate($myMember);
 			$payment->save();
 
 			return $this->create('Member', $member);
 		}, $members);
 
-		$this->postApi('mass/email/bill', [
+		$this->postApi('mass/email/remember', [
 			'deadline' => '02-02-2018',
 			'includeFamilies' => $family,
 			'wayEmail' => $email,
