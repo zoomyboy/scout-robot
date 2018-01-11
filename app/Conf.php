@@ -12,10 +12,13 @@ class Conf extends Model
 
 	public $with = ['defaultCountry', 'defaultRegion', 'files', 'deadlineunit'];
 
+	public $hidden = ['namiPassword'];
+
 	public $casts = [
 		'default_keepdata' => 'boolean',
 		'default_sendnewspaper' => 'boolean',
-		'includeFamilies' => 'boolean'
+		'includeFamilies' => 'boolean',
+		'namiEnabled' => 'boolean'
 	];
 
 	public function defaultCountry() {
@@ -32,5 +35,15 @@ class Conf extends Model
 
 	public function files() {
 		return $this->morphMany(\Zoomyboy\Fileupload\Image::class, 'model');
+	}
+
+	public static function boot() {
+		static::updating(function($model) {
+			if ($model->namiEnabled == false) {
+				$model->namiPassword = '';
+				$model->namiUser = '';
+				$model->namiGroup = '';
+			}
+		});
 	}
 }

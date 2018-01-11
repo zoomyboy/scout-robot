@@ -31,7 +31,9 @@ class ConfSeeder extends Seeder
 		'emailHeading',
 		'letterDate',
 		'namiUser',
-		'namiPassword'
+		'namiPassword',
+		'namiGroup',
+		'namiEnabled'
 	];
 
     /**

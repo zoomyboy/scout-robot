@@ -12,6 +12,10 @@ class NaMiServiceProvider extends ServiceProvider
 		$this->app->bind('nami.member', function() {
 			return new \App\Services\NaMi\Member();
 		});
+
+		$this->app->bind('nami', function() {
+			return new \App\Services\NaMi\NaMiService();
+		});
     }
 
     public function boot()
