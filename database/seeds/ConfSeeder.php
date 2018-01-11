@@ -29,7 +29,9 @@ class ConfSeeder extends Seeder
 		'personCity',
 		'website',
 		'emailHeading',
-		'letterDate'
+		'letterDate',
+		'namiUser',
+		'namiPassword'
 	];
 
     /**
