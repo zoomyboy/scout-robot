@@ -25,14 +25,14 @@ class MemberTest extends IntegrationTestCase {
 		$this->runMigration('payments_table');
 		$this->runMigration('ways_table');
 
-		$this->runSeeder(\StatusSeeder::class);
-		$this->runSeeder(\GenderSeeder::class);
-		$this->runSeeder(\CountrySeeder::class);
-		$this->runSeeder(\RegionSeeder::class);
-		$this->runSeeder(\ConfessionSeeder::class);
+		$this->runSeeder('StatusSeeder');
+		$this->runSeeder('GenderSeeder');
+		$this->runSeeder('CountrySeeder');
+		$this->runSeeder('RegionSeeder');
+		$this->runSeeder('ConfessionSeeder');
 		$this->runSeeder('WaySeeder');
-		$this->runSeeder(\UsergroupSeeder::class);
-		$this->runSeeder(\UserSeeder::class);
+		$this->runSeeder('UsergroupSeeder');
+		$this->runSeeder('UserSeeder');
 
 		$payments = collect([
 			factory(Payment::class)->make([
