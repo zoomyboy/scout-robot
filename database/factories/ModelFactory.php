@@ -37,7 +37,7 @@ $factory->define(\App\Usergroup::class, function(Faker\Generator $faker) {
 $factory->define(\App\Member::class, function(Faker\Generator $faker) {
 	if (\App\Gender::get()->count() == 0) {abort(404, 'Error in Factory: No Genders');}
 	if (\App\Country::get()->count() == 0) {abort(404, 'Error in Factory: No Countries');}
-	if (\App\Region::get()->count() == 0) {abort(404, 'Error in Factory: No Regions');}
+	if (\App\Region::where('is_null', false)->get()->count() == 0) {abort(404, 'Error in Factory: No Regions');}
 	if (\App\Confession::get()->count() == 0) {abort(404, 'Error in Factory: No Confessions');}
 	if (\App\Way::get()->count() == 0) {abort(404, 'Error in Factory: No Ways');}
 
@@ -52,7 +52,7 @@ $factory->define(\App\Member::class, function(Faker\Generator $faker) {
 		'gender_id' => \App\Gender::get()->random()->id,
 		'country_id' => \App\Country::get()->random()->id,
 		'other_country' => $faker->country,
-		'region_id' => \App\Region::get()->random()->id,
+		'region_id' => \App\Region::where('is_null', false)->get()->random()->id,
 		'confession_id' => \App\Confession::get()->random()->id,
 		'way_id' => \App\Way::get()->random()->id,
 		'birthday' => $faker->date,

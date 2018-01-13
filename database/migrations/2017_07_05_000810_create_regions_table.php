@@ -17,7 +17,7 @@ class CreateRegionsTable extends Migration
             $table->increments('id');
 			$table->string('nami_title')->nullable();
 			$table->integer('nami_id')->nullable();
-			$table->string('is_null');
+			$table->boolean('is_null');
 			$table->string('title');
         });
     }

@@ -8,7 +8,7 @@ use \App\Region;
 class RegionController extends Controller
 {
 	public function index() {
-		return response()->json(Region::get()->toArray());
+		return response()->json(Region::where('is_null', false)->get()->toArray());
 	}
 
 	public function default() {
