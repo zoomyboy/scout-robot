@@ -20,7 +20,7 @@ class ClientInformationTest extends FeatureTestCase {
 		Config::set('seed.default_username', 'Admin');
 		Config::set('seed.default_userpw', 'admin22');
 		Config::set('seed.default_usermail', 'admin@example.tz');
-		Config::set('seed.default_country', 'BF');
+		Config::set('seed.default_country', 'Algerien');
 
 		$this->runSeeder(\RightSeeder::class);
 		$this->create('usergroup', ['title' => 'NewUserGroup'])->rights()->sync([2,3]);
@@ -38,9 +38,8 @@ class ClientInformationTest extends FeatureTestCase {
 			->assertSuccess()
 			->assertJson(['conf' => [
 				'default_country' => [
-					'id' => 40,
-					'code' => 'BF',
-					'title' => 'Burkina Faso'
+					'id' => 2,
+					'title' => 'Algerien'
 				],
 				'default_keepdata' => false,
 				'default_region' => null,
