@@ -15,7 +15,7 @@ class ConfTest extends TestCase
 
 	/** @test */
 	public function it_seeds_all_confs() {
-		Config::set('seed.default_country', 'GM');
+		Config::set('seed.default_country', 'Algerien');
 
 		$this->runSeeder(\RegionSeeder::class);
 		$this->runSeeder(\CountrySeeder::class);
@@ -25,7 +25,7 @@ class ConfTest extends TestCase
 
 		$config = Conf::first();
 
-		$this->assertEquals(69, $config->defaultCountry->id);
+		$this->assertEquals(2, $config->defaultCountry->id);
 		$this->assertNull($config->defaultRegion);
 		$this->assertFalse($config->default_keepdata);
 		$this->assertFalse($config->default_sendnewspaper);
