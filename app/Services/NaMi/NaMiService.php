@@ -121,6 +121,23 @@ class NaMiService {
 		return $this->password ?: $this->config->namiPassword;
 	}
 
+	public function isSuccess($response) {
+		return isset ($response->success) && $response->success === true
+			&& isset ($response->responseType) && $response->responseType == 'OK';
+	}
+
+	public function checkCredentials($user, $password) {
+		$this->setPassword($password);
+		$this->setUser($user);
+		try {
+			$this->newSession();
+		} catch (LoginException $e) {
+			return false;
+		}
+
+		return true;
+	}
+
 	public function get($url) {
 		return $this->login(function() use ($url) {
 			$handle = curl_init($this->getBaseUrl().$url);

@@ -7,6 +7,7 @@ use Zoomyboy\Fileupload\Image;
 use App\Exceptions\NaMi\LoginException;
 use App\Exceptions\NaMi\TooManyLoginAttemptsException;
 use App\Exceptions\NaMi\GroupAccessDeniedException;
+use App\Facades\NaMi\NaMiGroup;
 
 class ConfUpdateRequest extends Request
 {
@@ -32,19 +33,14 @@ class ConfUpdateRequest extends Request
 	public function customRules() {
 		if (!$this->namiEnabled) {
 			return [];
-		}
+		} else {
+			if (!$this->namiUser) {
+				return ['namiUser' => 'Dieses Feld ist erforderlich'];
+			}
 
-
-		if (!$this->namiUser) {
-			return ['namiUser' => 'Dieses Feld ist erforderlich'];
-		}
-
-		if (!$this->namiPassword) {
-			return ['namiPassword' => 'Dieses Feld ist erforderlich'];
-		}
-
-		if (!$this->namiGroup) {
-			return ['namiGroup' => 'Dieses Feld ist erforderlich'];
+			if (!$this->namiGroup) {
+				return ['namiGroup' => 'Dieses Feld ist erforderlich'];
+			}
 		}
 
 		if (!is_numeric($this->namiGroup)) {
@@ -52,12 +48,14 @@ class ConfUpdateRequest extends Request
 		}
 
 		try {
-			$response = app('nami.member')->checkCredentials($this->namiUser, $this->namiPassword, $this->namiGroup);
+			$response = app('nami')->checkCredentials($this->namiUser, $this->namiPassword);
 		} catch(LoginException $e) {
 			return ['namiUser' =>  'Login zu NaMi fehlgeschlagen. Bitte prüfe deine Zugangsdaten.'];
 		} catch(TooManyLoginAttemptsException $e) {
 			return ['namiUser' =>  'Zu viele Loginversuche. Bitte warte '.$e->time.' Minuten'];
-		} catch (GroupAccessDeniedException $e) {
+		}
+
+		if (! NaMiGroup::hasAccess($this->namiGroup)) {
 			return ['namiGroup' =>  'Du hast keinen Zugriff auf diese Gruppierung'];
 		}
 

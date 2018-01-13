@@ -7,10 +7,12 @@ use Illuminate\Foundation\Testing\DatabaseMigrations;
 use App\Facades\NaMi\NaMiMember;
 use App\Conf;
 use App\Exceptions\NaMi\LoginException;
+use Tests\Traits\SetsUpNaMi;
 
 class GetMembersTest extends FeatureTestCase {
 
 	use DatabaseMigrations;
+	use SetsUpNaMi;
 
 	public function setUp() {
 		parent::setUp();
@@ -21,28 +23,21 @@ class GetMembersTest extends FeatureTestCase {
 		$this->runSeeder('RegionSeeder');
 		$this->runSeeder('ConfSeeder');
 
-		Conf::first()->update(['namiUser' => env('NAMI_TEST_USER')]);
-		Conf::first()->update(['namiPassword' => env('NAMI_TEST_PASSWORD')]);
+		$this->setUpNaMi();
 	}
 
 	/** @test */
 	public function it_receives_all_members_from_nami() {
-		$list = NaMiMember::all(env('NAMI_TEST_GROUP'));
-		$this->assertTrue($list->success);
-
-		unlink(config('nami.cookie'));
-
-		$list = NaMiMember::all(env('NAMI_TEST_GROUP'));
-		$this->assertTrue($list->success);
+		$list = NaMiMember::all();
 	}
 
 	/**
 	 * @test
-	 * @expectedException \App\Exceptions\NaMi\GroupAccessDeniedException
+	 * @expectedException \App\Exceptions\NaMi\GroupException
 	 */
 	public function it_throws_error_when_no_group_access() {
-		$list = NaMiMember::all(env('NAMI_TEST_GROUP')+1);
-		$this->assertTrue($list->success);
+		\App\Conf::first()->update(['namiGroup' => '12345']);
+		NaMiMember::all();
 	}
 
 	/**
@@ -52,6 +47,6 @@ class GetMembersTest extends FeatureTestCase {
 	public function it_throws_error_when_wrong_credentials() {
 		Conf::first()->update(['namiPassword' => substr(env('NAMI_TEST_PASSWORD'),0,-1)]);
 
-		$m = NaMiMember::all(env('NAMI_TEST_GROUP'));
+		NaMiMember::all();
 	}
 }

@@ -39,6 +39,7 @@ class CreateMembersTable extends Migration
 			$table->string('email')->nullable();
 			$table->string('email_parents')->nullable();
 			$table->boolean('active')->default(1);
+			$table->integer('nami_id')->nullable();
 			
             $table->timestamps();
         });

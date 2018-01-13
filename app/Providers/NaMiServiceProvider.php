@@ -9,11 +9,19 @@ class NaMiServiceProvider extends ServiceProvider
 {
     public function register()
 	{
-		$this->app->bind('nami.member', function() {
+		$this->app->singleton('nami.member', function() {
 			return new \App\Services\NaMi\Member();
 		});
 
-		$this->app->bind('nami', function() {
+		$this->app->singleton('nami.region', function() {
+			return new \App\Services\NaMi\Region();
+		});
+
+		$this->app->singleton('nami.group', function() {
+			return new \App\Services\NaMi\Group();
+		});
+
+		$this->app->singleton('nami', function() {
 			return new \App\Services\NaMi\NaMiService();
 		});
     }
