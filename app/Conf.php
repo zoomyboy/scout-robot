@@ -10,7 +10,7 @@ class Conf extends Model
 
 	public $timestamps = false;
 
-	public $with = ['defaultCountry', 'defaultRegion', 'files', 'deadlineunit'];
+	public $with = ['defaultCountry', 'defaultRegion', 'files', 'deadlineunit', 'defaultWay'];
 
 	public $hidden = ['namiPassword'];
 
@@ -23,6 +23,10 @@ class Conf extends Model
 
 	public function defaultCountry() {
 		return $this->belongsTo(\App\Country::class);
+	}
+
+	public function defaultWay() {
+		return $this->belongsTo(\App\Way::class);
 	}
 
 	public function deadlineunit() {

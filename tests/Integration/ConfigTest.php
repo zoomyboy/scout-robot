@@ -3,27 +3,22 @@
 namespace Tests\Integration;
 
 use Tests\IntegrationTestCase;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class ConfigTest extends IntegrationTestCase {
+
+	use DatabaseMigrations;
+
 	public function setUp() {
 		parent::setUp();
 
-		$this->runMigration('confs_table');
-		$this->runMigration('countries_table');
-		$this->runMigration('usergroups_table');
-		$this->runMigration('users_table');
-		$this->runMigration('rights_table');
-		$this->runMigration('right_usergroup_table');
-		$this->runMigration('regions_table');
-		$this->runMigration('images_table');
-		$this->runMigration('units_table');
-		
 		$this->runSeeder('CountrySeeder');
 		$this->runSeeder('UsergroupSeeder');
 		$this->runSeeder('ConfSeeder');
 		$this->runSeeder('RightSeeder');
 		$this->runSeeder('RegionSeeder');
 		$this->runSeeder('UnitSeeder');
+		$this->runSeeder('WaySeeder');
 	}
 
 	/** @test */

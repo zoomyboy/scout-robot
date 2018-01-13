@@ -33,7 +33,8 @@ class ConfSeeder extends Seeder
 		'namiUser',
 		'namiPassword',
 		'namiGroup',
-		'namiEnabled'
+		'namiEnabled',
+		'default_way_id'
 	];
 
     /**
@@ -65,7 +66,8 @@ class ConfSeeder extends Seeder
 			'emailBillText' => 'Im Anhang dieser Mail befindet sich die Jahresrechnung für {{ $members }}. Bitte begleiche diese bis zum angegebenen Datum.',
 			'emailRememberText' => 'Leider haben wir bisher für die ausstehenden Beträge keinen Zahlungseingang feststellen können. Daher senden wir dir mit dieser E-Mail eine Zahlungserinnerung im Anhang. Bitte begleiche diese bis zum angegebenen Datum.',
 			'emailGreeting' => 'Gut Pfad | {{ $groupname }}',
-			'letterDate' => 'Solingen, den {{ $date }}'
+			'letterDate' => 'Solingen, den {{ $date }}',
+			'default_way_id' => 1
 		]);
     }
 }
