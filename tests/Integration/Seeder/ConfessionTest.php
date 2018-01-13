@@ -14,9 +14,9 @@ class ConfessionTest extends TestCase
 		$this->runMigration('confessions_table');
 		$this->runSeeder(\ConfessionSeeder::class);
 
-		$this->assertEquals(9, Confession::count());
+		$this->assertEquals(10, Confession::count());
 		$this->assertEquals(
-			['Römisch-Katholisch', 'Evangelisch / Protestantisch', 'Orthodox', 'Freikirchlich', 'Andere christliche', 'Jüdisch', 'Muslimisch', 'Sonstige', 'Neuapostolisch'], 
+			['Römisch-Katholisch', 'Evangelisch / Protestantisch', 'Orthodox', 'Freikirchlich', 'Andere christliche', 'Jüdisch', 'Muslimisch', 'Sonstige', 'Neuapostolisch', 'Ohne Konfession'], 
 			Confession::get()->pluck('title')->toArray()
 		);
 	}
