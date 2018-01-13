@@ -28,7 +28,7 @@ class ConfigTest extends IntegrationTestCase {
 		$this->patchApi('conf/1', [
 			'deadlinenr' => 2,
 			'deadlineunit' => "4",
-			'defaultCountry' => 51,
+			'defaultCountry' => 2,
 			'defaultRegion' => 2,
 			'default_keepdata' => true,
 			'default_sendnewspaper' => true,
@@ -53,7 +53,7 @@ class ConfigTest extends IntegrationTestCase {
 		$this->getApi('info')->assertJson(['conf' => [
 			'deadlinenr' => 2,
 			'deadlineunit_id' => 4,
-			'default_country_id' => "51",
+			'default_country_id' => "2",
 			'default_region_id' => 2,
 			'default_keepdata' => true,
 			'default_sendnewspaper' => true,
