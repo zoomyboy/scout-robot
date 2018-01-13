@@ -23,14 +23,6 @@ class HomeController extends Controller
      */
     public function index()
     {
-
-
-		foreach(\App\Facades\NaMi\NaMiCountry::all() as $c) {
-			echo "Country::create(['title' => '".$c->descriptor."', 'nami_id' => ".$c->id.", 'nami_title' => '".$c->descriptor."']);<br>";
-		}
-
-		exit;
-
 		if (auth()->guard('web')->check()) {
         	return view('home');
 		} else {
