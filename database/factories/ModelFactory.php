@@ -65,7 +65,8 @@ $factory->define(\App\Member::class, function(Faker\Generator $faker) {
 		'city' => $faker->city,
 		'email' => $faker->email,
 		'email_parents' => $faker->email,
-		'active' => true
+		'active' => true,
+		'nami_id' => $faker->regexify('/[0-9]{8}/')
 	];
 });
 
