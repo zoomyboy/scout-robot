@@ -59,7 +59,7 @@ class Member extends NaMiService {
 
 		$confession = \App\Confession::where('nami_id', $data->konfessionId)->first();
 
-		$country = \App\Country::where('lang', $data->staatsangehoerigkeit)->first();
+		$country = \App\Country::where('nami_id', $data->landId)->first();
 
 		$m = new \App\Member([
 			'firstname' => $data->vorname,

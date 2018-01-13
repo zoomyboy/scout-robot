@@ -54,12 +54,12 @@ class ConfSeeder extends Seeder
 			}
 		});
 
-		if (is_null(\App\Country::where('code', config('seed.default_country'))->first())) {
+		if (is_null(\App\Country::where('title', config('seed.default_country'))->first())) {
 			throw new \Exception('Default country  not found in countries table. You should run a seeder or create the table!');
 		}
 
 		Conf::create([
-			'default_country_id' => \App\Country::where('code', config('seed.default_country'))->first()->id,
+			'default_country_id' => \App\Country::where('title', config('seed.default_country'))->first()->id,
 			'default_region_id' => null,
 			'default_keepdata' => false,
 			'default_sendnewspaper' => false,
