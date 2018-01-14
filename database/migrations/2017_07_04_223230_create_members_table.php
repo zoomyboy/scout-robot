@@ -30,7 +30,7 @@ class CreateMembersTable extends Migration
 			$table->string('further_address')->nullable();
 			$table->string('zip');
 			$table->string('city');
-			$table->string('region_id');
+			$table->string('region_id')->nullable();
 			$table->string('phone')->nullable();
 			$table->string('mobile')->nullable();
 			$table->string('business_phone')->nullable();

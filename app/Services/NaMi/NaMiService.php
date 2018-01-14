@@ -114,11 +114,11 @@ class NaMiService {
 	}
 
 	public function username() {
-		return $this->user ?: $this->config->namiUser;
+		return $this->user ?: $this->getConfig()->namiUser;
 	}
 
 	public function password() {
-		return $this->password ?: $this->config->namiPassword;
+		return $this->password ?: $this->getConfig()->namiPassword;
 	}
 
 	public function isSuccess($response) {

@@ -53,11 +53,8 @@ class Member extends NaMiService {
 			return strtolower($g->title) == $data->geschlecht;
 		});
 
-		$region = \App\Region::get()->first(function($g) use ($data) {
-			return str_contains($data->region, $g->title);
-		});
-
 		$confession = \App\Confession::where('nami_id', $data->konfessionId)->first();
+		$region = \App\Region::where('nami_id', $data->regionId)->where('is_null', false)->first();
 
 		$country = \App\Country::where('nami_id', $data->landId)->first();
 
