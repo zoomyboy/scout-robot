@@ -3,7 +3,7 @@
 		<vf-form redirect="member.index" method="patch" :url="'/api/member/'+$route.params.id" :action="'/api/member/'+$route.params.id" msg="Mitglied erfolgreich bearbeitet">
 			<tabs>
 				<tab title="Stamdaten" active>
-					<vf-select url="/api/gender" name="gender" label="Geschlecht"></vf-select>
+					<vf-select url="/api/gender" name="gender" label="Geschlecht" nullable></vf-select>
 					<div class="row">
 						<div class="col-md-6"><vf-text name="firstname" label="Vorname"></vf-text></div>
 						<div class="col-md-6"><vf-text name="lastname" label="Nachname"></vf-text></div>

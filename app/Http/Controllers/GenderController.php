@@ -8,6 +8,6 @@ use App\Gender;
 class GenderController extends Controller
 {
     public function index() {
-    	return response()->json(Gender::get()->toArray());
+    	return response()->json(Gender::where('is_null', false)->get()->toArray());
     }
 }

@@ -20,7 +20,6 @@ class MemberUpdateRequest extends Request
 		$ret = [
 			'firstname' => 'required',
 			'lastname' => 'required',
-			'gender' => 'required',
 			'birthday' => 'required|date',
 			'joined_at' => 'required|date',
 			'address' => 'required',

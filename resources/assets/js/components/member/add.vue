@@ -8,7 +8,7 @@
 						<tab title="Sonstiges" index="1"></tab>
 					</div>
 					<panelcontent index="0" active>
-						<vf-select url="/api/gender" name="gender" label="Geschlecht"></vf-select>
+						<vf-select url="/api/gender" name="gender" label="Geschlecht" nullable></vf-select>
 						<div class="row">
 							<div class="col-md-6"><vf-text name="firstname" label="Vorname"></vf-text></div>
 							<div class="col-md-6"><vf-text name="lastname" label="Nachname"></vf-text></div>

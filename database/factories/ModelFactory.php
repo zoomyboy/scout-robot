@@ -35,7 +35,7 @@ $factory->define(\App\Usergroup::class, function(Faker\Generator $faker) {
 });
 
 $factory->define(\App\Member::class, function(Faker\Generator $faker) {
-	if (\App\Gender::get()->count() == 0) {abort(404, 'Error in Factory: No Genders');}
+	if (\App\Gender::where('is_null', false)->get()->count() == 0) {abort(404, 'Error in Factory: No Genders');}
 	if (\App\Country::get()->count() == 0) {abort(404, 'Error in Factory: No Countries');}
 	if (\App\Region::where('is_null', false)->get()->count() == 0) {abort(404, 'Error in Factory: No Regions');}
 	if (\App\Confession::get()->count() == 0) {abort(404, 'Error in Factory: No Confessions');}
@@ -50,7 +50,7 @@ $factory->define(\App\Member::class, function(Faker\Generator $faker) {
 		'fax' => $faker->regexify('/\+49 [0-9]{3} [0-9]{5,7}/'),
 		'business_phone' => $faker->regexify('/\+49 [0-9]{3} [0-9]{5,7}/'),
 		'mobile' => $faker->regexify('/\+49 [0-9]{3} [0-9]{5,7}/'),
-		'gender_id' => \App\Gender::get()->random()->id,
+		'gender_id' => \App\Gender::where('is_null', false)->get()->random()->id,
 		'country_id' => \App\Country::get()->random()->id,
 		'other_country' => $faker->country,
 		'region_id' => \App\Region::where('is_null', false)->get()->random()->id,
