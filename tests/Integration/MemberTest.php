@@ -7,6 +7,7 @@ use App\Status;
 use App\Payment;
 use App\Member;
 use Tests\IntegrationTestCase;
+use App\Right;
 
 class MemberTest extends IntegrationTestCase {
 	public function setUp() {
@@ -26,6 +27,7 @@ class MemberTest extends IntegrationTestCase {
 		$this->runMigration('ways_table');
 		$this->runMigration('nationalities_table');
 
+		$this->runSeeder('RightSeeder');
 		$this->runSeeder('NationalitySeeder');
 		$this->runSeeder('StatusSeeder');
 		$this->runSeeder('GenderSeeder');
@@ -127,5 +129,92 @@ class MemberTest extends IntegrationTestCase {
 		]);
 
 		$this->assertEquals($members->slice(0, 2)->toArray(), Member::family($members[0])->get()->toArray());
+	}
+
+	/** @test */
+	public function it_can_add_a_member_with_minimal_requirements_of_validation() {
+		$this->withExceptionHandling();
+
+		$this->authAsApi();
+		auth()->user()->usergroup->rights()->attach(Right::where('key', 'member.manage')->first());
+
+		$data = $this->postApi('member', [
+			'firstname' => 'John',
+			'lastname' => 'Doe',
+			'birthday' => '2018-01-02',
+			'joined_at' => '2017-12-07',
+			'address' => 'Straße 1',
+			'zip' => '45444',
+			'city' => 'Köln',
+			'nationality' => 4,
+			'way' => 1,
+			'country' => 5,
+			'keepdata' => false,
+			'sendnewspaper' => false
+		])
+			->assertSuccess();
+	}
+
+	public function validationDataProvider() {
+		return [
+			[['nationality' => null], ['nationality']],
+			[['country' => null], ['country']],
+		];
+	}
+
+	/**
+	 * @test
+	 * @dataProvider validationDataProvider
+	 */
+	public function it_should_add_validations($fields, $valid) {
+		$this->withExceptionHandling();
+
+		$this->authAsApi();
+		auth()->user()->usergroup->rights()->attach(Right::where('key', 'member.manage')->first());
+
+		$data = $this->postApi('member', array_merge([
+			'firstname' => 'John',
+			'lastname' => 'Doe',
+			'birthday' => '2018-01-02',
+			'joined_at' => '2017-12-07',
+			'address' => 'Straße 1',
+			'zip' => '45444',
+			'city' => 'Köln',
+			'nationality' => 4,
+			'way' => 1,
+			'country' => 5,
+			'keepdata' => false,
+			'sendnewspaper' => false
+		], $fields))
+			->assertValidationFailedWith(...$valid);
+	}
+
+	/**
+	 * @test
+	 * @dataProvider validationDataProvider
+	 */
+	public function it_should_add_validations_on_update($fields, $valid) {
+		$this->withExceptionHandling();
+
+		$this->authAsApi();
+		auth()->user()->usergroup->rights()->attach(Right::where('key', 'member.manage')->first());
+
+		$member = $this->create('Member');
+
+		$data = $this->patchApi('member/'.$member->id, array_merge([
+			'firstname' => 'John',
+			'lastname' => 'Doe',
+			'birthday' => '2018-01-02',
+			'joined_at' => '2017-12-07',
+			'address' => 'Straße 1',
+			'zip' => '45444',
+			'city' => 'Köln',
+			'nationality' => 4,
+			'way' => 1,
+			'country' => 5,
+			'keepdata' => false,
+			'sendnewspaper' => false
+		], $fields))
+			->assertValidationFailedWith(...$valid);
 	}
 }

@@ -64,3 +64,4 @@ Route::post('mass/email/bill', 'MassController@bill');
 Route::post('mass/email/remember', 'MassController@remember');
 
 Route::post('nami/getmembers', 'NaMiController@getmembers');
+Route::get('/nationality', 'NationalityController@index');

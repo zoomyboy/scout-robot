@@ -19,6 +19,7 @@
 						<panelcontent index="1">
 							<vf-select name="defaultCountry" label="Land" url="/api/country" nullable></vf-select>
 							<vf-select name="defaultRegion" label="Bundesland" url="/api/region" nullable></vf-select>
+							<vf-select name="defaultNationality" label="Staatsangehörigkeit" url="/api/nationality" nullable></vf-select>
 							<vf-checkbox name="default_keepdata" label="Datenweiterverwendung" help="Standardeinstellung für Datenweiterverwendung beim anlegen neuer Mitglieder"></vf-checkbox>
 							<vf-checkbox name="default_sendnewspaper" label="Zeitschriftenversand" help="Standardeinstellung für Zeitschriftenversand beim anlegen neuer Mitglieder"></vf-checkbox>
 						</panelcontent>

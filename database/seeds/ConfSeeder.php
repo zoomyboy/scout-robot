@@ -9,6 +9,7 @@ class ConfSeeder extends Seeder
 	private $confs = [
 		'default_country_id',
 		'default_region_id',
+		'default_nationality_id',
 		'default_keepdata' => false,
 		'default_sendnewspaper' => false,
 		'letterKontoName',
@@ -61,6 +62,7 @@ class ConfSeeder extends Seeder
 		Conf::create([
 			'default_country_id' => \App\Country::where('title', config('seed.default_country'))->first()->id,
 			'default_region_id' => null,
+			'default_nationality_id' => null,
 			'default_keepdata' => false,
 			'default_sendnewspaper' => false,
 			'emailBillText' => 'Im Anhang dieser Mail befindet sich die Jahresrechnung für {{ $members }}. Bitte begleiche diese bis zum angegebenen Datum.',

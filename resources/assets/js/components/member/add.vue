@@ -26,14 +26,6 @@
 							<div class="col-md-6"><vf-text name="city" label="Stadt"></vf-text></div>
 						</div>
 						<div class="row">
-							<div class="col-md-6">
-								<vf-select name="country" url="/api/country" label="Staatsangehörigkeit" :value="config.default_country"></vf-select>
-							</div>
-							<div class="col-md-6">
-								<vf-select name="region" url="/api/region" label="Bundesland" :value="config.default_region"></vf-select>
-							</div>
-						</div>
-						<div class="row">
 							<div class="col-md-6"><vf-text name="phone" label="Telefonnummer" :mask="{mask: '+99 999 9{1,}'}" value="+49"></vf-text></div>
 							<div class="col-md-6"><vf-text name="mobile" label="Handynummer" :mask="{mask: '+99 999 9{1,}'}" value="+49"></vf-text></div>
 						</div>
@@ -41,12 +33,31 @@
 					</panelcontent>
 					<panelcontent index="1">
 						<vf-text name="nickname" label="Spitzname"></vf-text>
-						<vf-text name="other_country" label="Andere Staatsangehörigkeit"></vf-text>
-						<vf-text name="business_phone" label="Geschäftliche Nummer" :mask="{mask: '+99 999 9{1,}'}" value="+49"></vf-text>
-						<vf-text name="fax" label="Fax"></vf-text>
+						<div class="row">
+							<div class="col-md-6">
+								<vf-select name="nationality" url="/api/nationality" label="Staatsangehörigeit" :value="config.default_nationality" nullable></vf-select>
+							</div>
+							<div class="col-md-6">
+								<vf-text name="other_country" label="Andere Staatsangehörigkeit"></vf-text>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-6">
+								<vf-select name="region" url="/api/region" label="Bundesland" :value="config.default_region" nullable></vf-select>
+							</div>
+							<div class="col-md-6">
+								<vf-select name="country" url="/api/country" label="Land" :value="config.default_country"></vf-select>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-6"><vf-text name="business_phone" label="Geschäftliche Nummer" :mask="{mask: '+99 999 9{1,}'}" value="+49"></vf-text></div>
+							<div class="col-md-6"><vf-text name="fax" label="Fax"></vf-text></div>
+						</div>
 						<vf-text name="email_parents" label="E-Mail-Adresse Erziehungsberechtigter"></vf-text>
-						<vf-select name="way" label="Rechnung versenden über..." url="/api/way"></vf-select>
-						<vf-select name="confession" label="Konfession" url="/api/confession" nullable></vf-select>
+						<div class="row">
+							<div class="col-md-6"><vf-select name="way" label="Rechnung versenden über..." url="/api/way"></vf-select></div>
+							<div class="col-md-6"><vf-select name="confession" label="Konfession" url="/api/confession" nullable></vf-select></div>
+						</div>
 						<vf-checkbox :value="config.default_keepdata" label="Datenweiterverwendung" name="keepdata" help="Wenn dieses Feld aktiviert wird, wird ein Mitglied beim Löschen zu den abgemeldeten Mitgliedern hinzugefügt, sodass dessen Daten noch eingesehen werden können. Wird das Mitglied mit NaMi synchronisiert, wird der Status dort auf 'inaktiv' gesetzt und auch dort bleiben die Daten bestehen.<br>Ist dieses Feld deaktiviert, werden die Daten komplett gelöscht.<br>Der Standardwert kann allgemein unter der globalen Konfiguration eingestellt werden."></vf-checkbox>
 						<vf-checkbox :value="config.default_sendnewspaper" label="Zeitschriftenversand" name="sendnewspaper" help="Wenn dieses Feld aktiviert wird, bekommt ein Mitglied die Mittendrin-Zeitschrift zugesendet. Der Standardwert kann allgemein unter der globalen Konfiguration eingestellt werden."></vf-checkbox>
 					</panelcontent>
@@ -58,8 +69,11 @@
 </template>
 
 <style type="less">
-	.cp-member-add form {
+	.cp-member-add form, .cp-member-add .form-container {
 		height: 100%;
+	}
+	.form-container form:last-child {
+		display: none;
 	}
 </style>
 
