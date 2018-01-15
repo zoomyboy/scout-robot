@@ -17,6 +17,7 @@ class CreateConfessionsTable extends Migration
             $table->increments('id');
 			$table->string('title');
 			$table->integer('nami_id')->nullable();
+			$table->string('nami_title');
         });
     }
 
