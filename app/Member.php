@@ -65,6 +65,10 @@ class Member extends Model
 		return $this->belongsTo(Way::class);
 	}
 
+	public function nationality() {
+		return $this->belongsTo(Nationality::class);
+	}
+
 	//----------------------------------- Scopes ------------------------------------
 	public function scopeFamily($q, $member) {
 		return $q

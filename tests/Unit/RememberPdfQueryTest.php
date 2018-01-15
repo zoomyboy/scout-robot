@@ -9,20 +9,12 @@ class RememberPdfQueryTest extends UnitTestCase {
 	public function setUp() {
 		parent::setUp();
 
-		$this->runMigration('genders_table');
-		$this->runMigration('countries_table');
-		$this->runMigration('regions_table');
-		$this->runMigration('confessions_table');
-		$this->runMigration('ways_table');
-		$this->runMigration('members_table');
-		$this->runMigration('payments_table');
-		$this->runMigration('statuses_table');
-		
 		$this->runSeeder('WaySeeder');
 		$this->runSeeder('ConfessionSeeder');
 		$this->runSeeder('RegionSeeder');
 		$this->runSeeder('CountrySeeder');
 		$this->runSeeder('GenderSeeder');
+		$this->runSeeder('NationalitySeeder');
 		$this->runSeeder('StatusSeeder');
 	}
 

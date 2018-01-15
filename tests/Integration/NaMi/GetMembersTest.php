@@ -24,6 +24,7 @@ class GetMembersTest extends IntegrationTestCase {
 		$this->runSeeder('RegionSeeder');
 		$this->runSeeder('WaySeeder');
 		$this->runSeeder('ConfessionSeeder');
+		$this->runSeeder('NationalitySeeder');
 
 		$this->setUpNaMi();
 	}
@@ -76,13 +77,25 @@ class GetMembersTest extends IntegrationTestCase {
 		foreach(\App\Gender::get() as $c) {
 			if ($c->is_null) {
 				$values[] = [
-					['genderId' =>  $c->nami_id], [], ['gender' => null], [], []
+					['geschlechtId' =>  $c->nami_id], [], ['gender' => null], [], []
 				];
 			} else {
 				$values[] = [
-					['genderId' =>  $c->nami_id], [], ['gender' => $c->title], [], []
+					['geschlechtId' =>  $c->nami_id], [], ['gender' => $c->title], [], []
 				];
 			}
+		}
+
+		foreach(\App\Nationality::get() as $n) {
+			$values[] = [
+				['staatsangehoerigkeitId' =>  $n->nami_id], [], ['nationality' => $n->title], [], []
+			];
+		}
+
+		foreach(\App\Country::get() as $n) {
+			$values[] = [
+				['landId' =>  $n->nami_id], [], ['country' => $n->title], [], []
+			];
 		}
 
 		foreach(\App\Region::get() as $c) {
@@ -106,9 +119,12 @@ class GetMembersTest extends IntegrationTestCase {
 
 		$this->authAsApi();
 
-		$ids = array_map(function() {
-			return (object)['id' => rand(500, 10000)];
-		}, array_fill(0, count($data), 0));
+		$ids = range(500, 10000);
+		shuffle($ids);
+		$ids = array_slice($ids, 0, count($data));
+		$ids = array_map(function($id) {
+			return (object)['id' => $id];
+		}, $ids);
 
 		NaMiMember::shouldReceive('all')->andReturn($ids);
 		NaMiMember::shouldReceive('getConfig')->andReturn(\App\Conf::first());

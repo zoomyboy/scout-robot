@@ -11,7 +11,8 @@ class GenderSeeder extends Seeder
      */
     public function run()
     {
-		\App\Gender::create(['title' => 'Männlich']);
-		\App\Gender::create(['title' => 'Weiblich']);
+		\App\Gender::create(['title' => 'Männlich', 'nami_id' => 19, 'nami_title' => 'männlich', 'is_null' => false]);
+		\App\Gender::create(['title' => 'Weiblich', 'nami_id' => 20, 'nami_title' => 'weiblich', 'is_null' => false]);
+		\App\Gender::create(['title' => 'keine Angabe', 'nami_id' => 23, 'nami_title' => 'keine Angabe', 'is_null' => true]);
     }
 }

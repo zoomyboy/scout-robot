@@ -17,6 +17,7 @@ class RememberTest extends FeatureTestCase {
 	public function setUp() {
 		parent::setUp();
 
+		$this->runSeeder('NationalitySeeder');
 		$this->runSeeder('UsergroupSeeder');
 		$this->runSeeder('GenderSeeder');
 		$this->runSeeder('CountrySeeder');

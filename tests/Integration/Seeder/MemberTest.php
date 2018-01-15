@@ -26,7 +26,9 @@ class MemberTest extends TestCase
 		$this->runMigration('confessions_table');
 		$this->runMigration('members_table');
 		$this->runMigration('ways_table');
+		$this->runMigration('nationalities_table');
 
+		$this->runSeeder(\NationalitySeeder::class);
 		$this->runSeeder(\GenderSeeder::class);
 		$this->runSeeder(\RegionSeeder::class);
 		$this->runSeeder(\ConfessionSeeder::class);

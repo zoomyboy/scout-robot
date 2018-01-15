@@ -28,8 +28,10 @@ class PaymentTest extends TestCase
 		$this->runMigration('payments_table');
 		$this->runMigration('members_table');
 		$this->runMigration('ways_table');
+		$this->runMigration('nationalities_table');
 
 		$this->runSeeder(\GenderSeeder::class);
+		$this->runSeeder(\NationalitySeeder::class);
 		$this->runSeeder(\RegionSeeder::class);
 		$this->runSeeder(\ConfessionSeeder::class);
 		$this->runSeeder(\CountrySeeder::class);

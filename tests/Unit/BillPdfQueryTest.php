@@ -4,19 +4,14 @@ namespace Tests\Unit;
 
 use Tests\UnitTestCase;
 use App\Queries\BillPdfQuery;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class BillPdfQueryTest extends UnitTestCase {
+
+	use DatabaseMigrations;
+
 	public function setUp() {
 		parent::setUp();
-
-		$this->runMigration('genders_table');
-		$this->runMigration('countries_table');
-		$this->runMigration('regions_table');
-		$this->runMigration('confessions_table');
-		$this->runMigration('ways_table');
-		$this->runMigration('members_table');
-		$this->runMigration('payments_table');
-		$this->runMigration('statuses_table');
 		
 		$this->runSeeder('WaySeeder');
 		$this->runSeeder('ConfessionSeeder');
@@ -24,6 +19,7 @@ class BillPdfQueryTest extends UnitTestCase {
 		$this->runSeeder('CountrySeeder');
 		$this->runSeeder('GenderSeeder');
 		$this->runSeeder('StatusSeeder');
+		$this->runSeeder('NationalitySeeder');
 	}
 
 	/** @test */

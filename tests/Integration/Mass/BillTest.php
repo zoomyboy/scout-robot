@@ -24,6 +24,7 @@ class BillTest extends IntegrationTestCase {
 		$this->runSeeder('ConfessionSeeder');
 		$this->runSeeder('WaySeeder');
 		$this->runSeeder('StatusSeeder');
+		$this->runSeeder('NationalitySeeder');
 	}
 
 	/** @test */

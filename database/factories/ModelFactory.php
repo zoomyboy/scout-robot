@@ -40,6 +40,7 @@ $factory->define(\App\Member::class, function(Faker\Generator $faker) {
 	if (\App\Region::where('is_null', false)->get()->count() == 0) {abort(404, 'Error in Factory: No Regions');}
 	if (\App\Confession::get()->count() == 0) {abort(404, 'Error in Factory: No Confessions');}
 	if (\App\Way::get()->count() == 0) {abort(404, 'Error in Factory: No Ways');}
+	if (\App\Nationality::get()->count() == 0) {abort(404, 'Error in Factory: No Nationalities');}
 
 	return [
 		'firstname' => $faker->firstname,
@@ -54,6 +55,7 @@ $factory->define(\App\Member::class, function(Faker\Generator $faker) {
 		'other_country' => $faker->country,
 		'region_id' => \App\Region::where('is_null', false)->get()->random()->id,
 		'confession_id' => \App\Confession::get()->random()->id,
+		'nationality_id' => \App\Nationality::get()->random()->id,
 		'way_id' => \App\Way::get()->random()->id,
 		'birthday' => $faker->date,
 		'further_address' => $faker->streetAddress,

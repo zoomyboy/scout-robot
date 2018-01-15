@@ -26,6 +26,7 @@ class BillTest extends FeatureTestCase {
 		$this->runSeeder('WaySeeder');
 		$this->runSeeder('ConfSeeder');
 		$this->runSeeder('StatusSeeder');
+		$this->runSeeder('NationalitySeeder');
 
 		Conf::first()->update(['groupname' => 'Bla']);
 		$this->subject = 'Rechnung von Bla';

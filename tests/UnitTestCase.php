@@ -7,11 +7,13 @@ use Zoomyboy\Tests\Traits\HandlesExceptions;
 use Zoomyboy\Tests\Traits\AuthenticatesUsers;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class UnitTestCase extends \Tests\TestCase {
 	use CreatesModels;
 	use HandlesExceptions;
 	use AuthenticatesUsers;
+	use DatabaseMigrations;
 
 	public function setUp() {
 		parent::setUp();

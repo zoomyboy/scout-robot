@@ -49,14 +49,16 @@ class Member extends NaMiService {
 	}
 
 	public function importMember($data) {
-		$gender = \App\Gender::get()->first(function($g) use ($data) {
-			return strtolower($g->title) == $data->geschlecht;
-		});
+		$gender = \App\Gender::where('nami_id', $data->geschlechtId)->where('is_null', false)->first();
 
-		$confession = \App\Confession::where('nami_id', $data->konfessionId)->first();
+		$confession = $data->konfessionId
+			? \App\Confession::where('nami_id', $data->konfessionId)->first()
+			: null
+		;
 		$region = \App\Region::where('nami_id', $data->regionId)->where('is_null', false)->first();
 
 		$country = \App\Country::where('nami_id', $data->landId)->first();
+		$nationality = \App\Nationality::where('nami_id', $data->staatsangehoerigkeitId)->first();
 
 		$m = new \App\Member([
 			'firstname' => $data->vorname,
@@ -86,6 +88,7 @@ class Member extends NaMiService {
 		$m->region()->associate($region);
 		$m->way()->associate($this->getConfig()->defaultWay->id);
 		$m->confession()->associate($confession);
+		$m->nationality()->associate($nationality);
 
 		$m->save();
 	}

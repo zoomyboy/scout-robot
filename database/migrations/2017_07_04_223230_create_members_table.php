@@ -18,7 +18,7 @@ class CreateMembersTable extends Migration
 			$table->string('firstname');
 			$table->string('lastname');
 			$table->string('nickname')->nullable();
-			$table->integer('gender_id')->unsigned();
+			$table->integer('gender_id')->unsigned()->nullable();
 			$table->integer('country_id')->unsigned();
 			$table->string('other_country')->nullable();
 			$table->integer('confession_id')->unsigned()->nullable();
@@ -40,6 +40,7 @@ class CreateMembersTable extends Migration
 			$table->string('email_parents')->nullable();
 			$table->boolean('active')->default(1);
 			$table->integer('nami_id')->nullable();
+			$table->integer('nationality_id');
 			
             $table->timestamps();
         });

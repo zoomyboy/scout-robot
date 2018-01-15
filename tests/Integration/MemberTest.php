@@ -24,7 +24,9 @@ class MemberTest extends IntegrationTestCase {
 		$this->runMigration('members_table');
 		$this->runMigration('payments_table');
 		$this->runMigration('ways_table');
+		$this->runMigration('nationalities_table');
 
+		$this->runSeeder('NationalitySeeder');
 		$this->runSeeder('StatusSeeder');
 		$this->runSeeder('GenderSeeder');
 		$this->runSeeder('CountrySeeder');

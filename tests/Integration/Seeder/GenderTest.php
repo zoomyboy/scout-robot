@@ -14,9 +14,9 @@ class GenderTest extends TestCase
 		$this->runMigration('genders_table');
 		$this->runSeeder(\GenderSeeder::class);
 
-		$this->assertEquals(2, Gender::count());
+		$this->assertEquals(3, Gender::count());
 		$this->assertEquals(
-			['Männlich', 'Weiblich'], 
+			['Männlich', 'Weiblich', 'keine Angabe'], 
 			Gender::get()->pluck('title')->toArray()
 		);
 	}
