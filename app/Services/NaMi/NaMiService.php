@@ -154,4 +154,24 @@ class NaMiService {
 			return json_decode($body);
 		});
 	}
+
+	public function post($url, $fields) {
+		return $this->login(function() use ($url, $fields) {
+			$handle = curl_init($this->getBaseUrl().$url);
+
+			curl_setopt($handle, CURLOPT_CUSTOMREQUEST, 'POST');
+			curl_setopt($handle, CURLOPT_POSTFIELDS, json_encode($fields));
+			curl_setopt($handle, CURLOPT_RETURNTRANSFER, 1);
+			curl_setopt ($handle, CURLOPT_COOKIEJAR, $this->getCookie());
+			curl_setopt ($handle, CURLOPT_COOKIEFILE, $this->getCookie());
+			curl_setopt ($handle, CURLOPT_HTTPHEADER, [
+				'Content-Type: application/json',
+				'Accept: application/json'
+			]);
+			$body = curl_exec($handle);
+			curl_close($handle);
+
+			return json_decode($body);
+		});
+	}
 }

@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use App\Collections\OwnCollection;
 use Illuminate\Notifications\Notifiable;
+use App\Events\MemberCreated;
 
 class Member extends Model
 {
@@ -25,6 +26,10 @@ class Member extends Model
 		'region_id' => 'integer',
 		'confession_id' => 'integer',
 		'nami_id' => 'integer',
+	];
+
+	public $events = [
+		'created' => MemberCreated::class
 	];
 
 	public function newCollection(array $models = []) {

@@ -6,6 +6,7 @@ use GuzzleHttp\Client;
 use App\Exceptions\NaMi\GroupException;
 use App\Exceptions\NaMi\SystemException;
 use App\Facades\NaMi\NaMiGroup;
+use App\Member as MemberModel;
 
 class Member extends NaMiService {
 	public function __construct() {
@@ -91,5 +92,56 @@ class Member extends NaMiService {
 		$m->nationality()->associate($nationality);
 
 		$m->save();
+	}
+
+	public function store(MemberModel $member) {
+		$group = $this->getConfig()->namiGroup;
+
+		$gender = $member->gender
+			? $member->gender->nami_id 
+			: \App\Gender::where('is_null', true)->first()->nami_id
+		;
+
+		$region = $member->region
+			? $member->region->nami_id 
+			: \App\Region::where('is_null', true)->first()->nami_id
+		;
+
+		$nationality = $member->nationality->nami_id;
+		$confession = $member->confession
+			? $member->confession->nami_id
+			: null;
+
+		$response = $this->post('/ica/rest/nami/mitglied/filtered-for-navigation/gruppierung/gruppierung/'.$group, [
+			'vorname' => $member->firstname,
+			'nachname' => $member->lastname,
+			'eintrittsdatum' => $member->joined_at->format('Y-m-d').'T00:00:00',
+			'geburtsDatum' => $member->birthday->format('Y-m-d').'T00:00:00',
+			'geschlechtId' => $gender,
+			'staatsangehoerigkeitId' => $nationality,
+			'strasse' => $member->address,
+			'plz' => $member->zip,
+			'regionId' => $region,
+			'ort' => $member->city,
+			'landId' => $member->country->nami_id,
+			'ersteTaetigkeitId' => 35,
+			'spitzname' => $member->nickname,
+			'staatsangehoerigkeitText' => $member->other_country,
+			'konfessionId' => $confession,
+			'konfessionId' => $confession,
+			'wiederverwendenFlag' => $member->keepdata,
+			'zeitschriftenversand' => $member->sendnewspaper,
+			'nameZusatz' => $member->further_address,
+			'telefon1' => $member->phone,
+			'telefon2' => $member->mobile,
+			'telefon3' => $member->business_phone,
+			'telefax' => $member->fax,
+			'email' => $member->email,
+			'emailVertretungsberechtigter' => $member->email_parents,
+		]);
+
+		return is_numeric($response->data) && $response->success === true
+			? $response->data
+			: false;
 	}
 }
