@@ -2,15 +2,15 @@
 
 namespace Tests\Integration\Seeder;
 
-use Tests\TestCase;
 use \App\Member;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
+use Tests\IntegrationTestCase;
 
-class MemberTest extends TestCase
+class MemberTest extends IntegrationTestCase
 {
 	public function setUp() {
 		parent::setUp();
@@ -19,14 +19,6 @@ class MemberTest extends TestCase
 		Config::set('seed.default_username', 'Admin');
 		Config::set('seed.default_userpw', 'admin22');
 		Config::set('seed.default_usermail', 'admin@example.tz');
-
-		$this->runMigration('genders_table');
-		$this->runMigration('countries_table');
-		$this->runMigration('regions_table');
-		$this->runMigration('confessions_table');
-		$this->runMigration('members_table');
-		$this->runMigration('ways_table');
-		$this->runMigration('nationalities_table');
 
 		$this->runSeeder(\NationalitySeeder::class);
 		$this->runSeeder(\GenderSeeder::class);
