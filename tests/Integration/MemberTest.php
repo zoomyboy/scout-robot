@@ -6,6 +6,8 @@ use Tests\TestCase;
 use App\Status;
 use App\Payment;
 use App\Member;
+use App\Activity;
+use App\Group;
 use Tests\IntegrationTestCase;
 use App\Right;
 
@@ -13,21 +15,8 @@ class MemberTest extends IntegrationTestCase {
 	public function setUp() {
 		parent::setUp();
 
-		$this->runMigration('rights_table');
-		$this->runMigration('right_usergroup_table');
-		$this->runMigration('statuses_table');
-		$this->runMigration('genders_table');
-		$this->runMigration('countries_table');
-		$this->runMigration('regions_table');
-		$this->runMigration('confessions_table');
-		$this->runMigration('usergroups_table');
-		$this->runMigration('users_table');
-		$this->runMigration('members_table');
-		$this->runMigration('payments_table');
-		$this->runMigration('ways_table');
-		$this->runMigration('nationalities_table');
-
 		$this->runSeeder('RightSeeder');
+		$this->runSeeder('ActivitySeeder');
 		$this->runSeeder('NationalitySeeder');
 		$this->runSeeder('StatusSeeder');
 		$this->runSeeder('GenderSeeder');
@@ -131,14 +120,27 @@ class MemberTest extends IntegrationTestCase {
 		$this->assertEquals($members->slice(0, 2)->toArray(), Member::family($members[0])->get()->toArray());
 	}
 
-	/** @test */
-	public function it_can_add_a_member_with_minimal_requirements_of_validation() {
+	public function succeedsDataProvider() {
+		return [ 
+			[
+				[],
+				['activity' => 8, 'group' => 1],
+				['activity' => 35, 'group' => 1]
+			]
+		];
+	}
+
+	/**
+	 * @test
+	 * @dataProvider succeedsDataProvider
+	 */
+	public function it_can_add_a_member_with_minimal_requirements_of_validation($fields) {
 		$this->withExceptionHandling();
 
 		$this->authAsApi();
 		auth()->user()->usergroup->rights()->attach(Right::where('key', 'member.manage')->first());
 
-		$data = $this->postApi('member', [
+		$data = $this->postApi('member', array_merge([
 			'firstname' => 'John',
 			'lastname' => 'Doe',
 			'birthday' => '2018-01-02',
@@ -150,15 +152,33 @@ class MemberTest extends IntegrationTestCase {
 			'way' => 1,
 			'country' => 5,
 			'keepdata' => false,
-			'sendnewspaper' => false
-		])
+			'sendnewspaper' => false,
+			'activity' => 1,
+			'group' => 1
+		], $fields))
 			->assertSuccess();
 	}
 
 	public function validationDataProvider() {
 		return [
-			[['nationality' => null], ['nationality']],
-			[['country' => null], ['country']],
+			'one' => [['nationality' => null], ['nationality']],
+			'two' => [['country' => null], ['country']],
+			'ActivityIsMissing' => [['activity' => null], ['activity']],
+
+			// Mitglied
+			'GroupIsMissing' => [['activity' => 1, 'group' => null], ['group']],
+			'groupIsNotFromGivenActivity' => [['activity' => 1, 'group' => 6], ['group']],
+			'groupIsNotFound' => [['activity' => 1, 'group' => 116], ['group']],
+
+			// Leiter
+			'GroupIsMissing2' => [['activity' => 8, 'group' => null], ['group']],
+			'groupIsNotFromGivenActivity2' => [['activity' => 8, 'group' => 6], ['group']],
+			'groupIsNotFound2' => [['activity' => 8, 'group' => 116], ['group']],
+
+			//Schnupperer
+			'GroupIsMissing3' => [['activity' => 35, 'group' => null], ['group']],
+			'groupIsNotFromGivenActivity3' => [['activity' => 35, 'group' => 6], ['group']],
+			'groupIsNotFound3' => [['activity' => 35, 'group' => 116], ['group']],
 		];
 	}
 
@@ -166,7 +186,7 @@ class MemberTest extends IntegrationTestCase {
 	 * @test
 	 * @dataProvider validationDataProvider
 	 */
-	public function it_should_add_validations($fields, $valid) {
+	public function it_should_add_validations_on_create($fields, $valid) {
 		$this->withExceptionHandling();
 
 		$this->authAsApi();
@@ -186,7 +206,7 @@ class MemberTest extends IntegrationTestCase {
 			'keepdata' => false,
 			'sendnewspaper' => false
 		], $fields))
-			->assertValidationFailedWith(...$valid);
+		->assertValidationFailedWith(...$valid);
 	}
 
 	/**
@@ -213,7 +233,9 @@ class MemberTest extends IntegrationTestCase {
 			'way' => 1,
 			'country' => 5,
 			'keepdata' => false,
-			'sendnewspaper' => false
+			'sendnewspaper' => false,
+			'activity' => 1,
+			'group' => 1
 		], $fields))
 			->assertValidationFailedWith(...$valid);
 	}
