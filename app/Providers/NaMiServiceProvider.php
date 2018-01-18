@@ -25,6 +25,10 @@ class NaMiServiceProvider extends ServiceProvider
 			return new \App\Services\NaMi\Group();
 		});
 
+		$this->app->singleton('nami.membership', function() {
+			return new \App\Services\NaMi\Membership();
+		});
+
 		$this->app->singleton('nami.nationality', function() {
 			return new \App\Services\NaMi\Nationality();
 		});

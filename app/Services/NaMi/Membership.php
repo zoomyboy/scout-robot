@@ -7,11 +7,8 @@ use App\Exceptions\NaMi\GroupException;
 use App\Exceptions\NaMi\SystemException;
 use App\Facades\NaMi\NaMiGroup;
 use App\Member as MemberModel;
-use App\Facades\NaMi\NaMiMembership;
-use App\Activity;
-use App\Group;
 
-class Member extends NaMiService {
+class Membership extends NaMiService {
 	public function __construct() {
 		parent::__construct();
 	}
@@ -146,32 +143,5 @@ class Member extends NaMiService {
 		return is_numeric($response->data) && $response->success === true
 			? $response->data
 			: false;
-	}
-
-	/**
-	 * Gets the memberships from nami for the given Member and synchs it
-	 *
-	 * @param MemberModel $member The Member Model
-	 */
-	public function importMemberships(MemberModel $member) {
-		$memberships = NaMiMembership::all($member->nami_id);
-		$memberships = collect($memberships)->map(function($ms) {
-			return NaMiMembership::single($ms->id);
-		});
-
-		$memberships = $memberships->filter(function($ms) {
-			return $ms->aktivBis == ''
-				&& isset($ms->taetigkeitId) && Activity::where('nami_id', $ms->taetigkeitId)->first() != null
-				&& isset($ms->untergliederungId) && Group::where('nami_id', $ms->untergliederungId)->first() != null;
-		});
-
-		foreach($memberships as $ms) {
-			$member->memberships()->create([
-				'activity_id' => Activity::where('nami_id', $ms->taetigkeitId)->first()->id,
-				'group_id' => Group::where('nami_id', $ms->untergliederungId)->first()->id,
-				'created_at' => $ms->aktivVon
-			]);
-
-		}
 	}
 }
