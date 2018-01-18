@@ -168,6 +168,7 @@ class Member extends NaMiService {
 		foreach($memberships as $ms) {
 			$member->memberships()->create([
 				'activity_id' => Activity::where('nami_id', $ms->taetigkeitId)->first()->id,
+				'nami_id' => $ms->id,
 				'group_id' => Group::where('nami_id', $ms->untergliederungId)->first()->id,
 				'created_at' => $ms->aktivVon
 			]);
