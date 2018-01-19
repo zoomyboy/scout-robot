@@ -69,11 +69,9 @@ class NaMiService {
 		curl_setopt ($handle, CURLOPT_COOKIEJAR, $this->getCookie());
 		curl_setopt ($handle, CURLOPT_COOKIEFILE, $this->getCookie());
 		$body = curl_exec($handle);
-		dd(curl_error($handle));
 		curl_close($handle);
 
 		$response = json_decode($body);
-
 
 		if (str_contains($body, 'Anzahl von Login-Versuchen wurde erreicht')) {
 			$time = preg_replace('/^.*([0-9]+)\ Minuten.*$/Us', '$1', $body);
