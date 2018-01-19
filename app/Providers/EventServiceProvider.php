@@ -16,6 +16,9 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\MemberCreated' => [
             'App\Listeners\StoreMemberInNaMi',
         ],
+        'App\Events\MembershipCreated' => [
+            'App\Listeners\StoreMembershipInNaMi',
+        ],
     ];
 
     /**

@@ -6,7 +6,7 @@ use Tests\UnitTestCase;
 use App\Facades\NaMi\NaMiMembership;
 use App\Facades\NaMi\NaMiMember;
 
-class StoreNaMiActivitiesInMember extends UnitTestCase {
+class SyncNaMiActivitiesInMember extends UnitTestCase {
 	public function setUp() {
 		parent::setUp();
 

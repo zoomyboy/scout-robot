@@ -25,6 +25,7 @@ class GetMembersTest extends IntegrationTestCase {
 		$this->runSeeder('WaySeeder');
 		$this->runSeeder('ConfessionSeeder');
 		$this->runSeeder('NationalitySeeder');
+		$this->runSeeder('ActivitySeeder');
 
 		$this->setUpNaMi();
 	}
@@ -130,6 +131,7 @@ class GetMembersTest extends IntegrationTestCase {
 		NaMiMember::shouldReceive('getConfig')->andReturn(\App\Conf::first());
 
 		foreach(array_column($this->dataProvider(), 0) as $i => $mock) {
+			NaMiMember::shouldReceive('importMemberships')->andReturn(true);		// This just prevents the membership import in real time - it doesnt assert or checks anything! 
 			NaMiMember::shouldReceive('single')
 				->with($ids[$i]->id)
 				->andReturn($this->mockDb($mock, $ids[$i]->id));

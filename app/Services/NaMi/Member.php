@@ -95,6 +95,8 @@ class Member extends NaMiService {
 		$m->nationality()->associate($nationality);
 
 		$m->save();
+
+		return $m;
 	}
 
 	public function store(MemberModel $member) {
@@ -155,8 +157,8 @@ class Member extends NaMiService {
 	 */
 	public function importMemberships(MemberModel $member) {
 		$memberships = NaMiMembership::all($member->nami_id);
-		$memberships = collect($memberships)->map(function($ms) {
-			return NaMiMembership::single($ms->id);
+		$memberships = collect($memberships)->map(function($ms) use ($member) {
+			return NaMiMembership::single($member->nami_id, $ms->id);
 		});
 
 		$memberships = $memberships->filter(function($ms) {

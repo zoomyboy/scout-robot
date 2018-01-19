@@ -6,138 +6,74 @@ use GuzzleHttp\Client;
 use App\Exceptions\NaMi\GroupException;
 use App\Exceptions\NaMi\SystemException;
 use App\Facades\NaMi\NaMiGroup;
-use App\Member as MemberModel;
+use App\Membership as MembershipModel;
+use App\Facades\NaMi\NaMi;
+use Carbon\Carbon;
 
 class Membership extends NaMiService {
 	public function __construct() {
 		parent::__construct();
 	}
 
-	public function single($memberId) {
-		$group = $this->getConfig()->namiGroup;
-		$url = '/ica/rest/nami/mitglied/filtered-for-navigation/gruppierung/gruppierung/'.$group.'/'.$memberId;
+	/**
+	 * Gets a single membership from nami
+	 *
+	 * @param int $memberId The real Nami member id
+	 * @param int $membershipId The real nami membership id
+	 */
+	public function single($memberId, $membershipId) {
+		$url = '/ica/rest/nami/zugeordnete-taetigkeiten/filtered-for-navigation/gruppierung-mitglied/mitglied/'.$memberId.'/'.$membershipId;
 		$response = $this->get($url);
 
 		if ($response->success === true) {
 			return $response->data;
 		}
 
-		if (! NaMiGroup::hasAccess($group)) {
+		/* if (! NaMiGroup::hasAccess($group)) {
 			throw new GroupException('Du hast keinen Zugriff auf diese Gruppierung');
 		}
 
 		throw (new SystemException('Unknown Error'))
 			->setUrl($url)
 			->setResponse($response);
+		 */
 	}
 
-	public function all() {
-		$group = $this->config->namiGroup;
-		$url = '/ica/rest/nami/mitglied/filtered-for-navigation/gruppierung/gruppierung/'.$group.'/flist';
+	/**
+	 * Get all memberships from nami for one member
+	 *
+	 * @param int $memberId The ID of the Member inside NaMi
+	 */
+	public function all($memberId) {
+		$url = '/ica/rest/nami/zugeordnete-taetigkeiten/filtered-for-navigation/gruppierung-mitglied/mitglied/'.$memberId.'/flist';
 		$response = $this->get($url);
 
 		if ($this->isSuccess($response)) {
 			return $response->data;
 		}
 
-		if (! NaMiGroup::hasAccess($group)) {
+		/* if (! NaMiGroup::hasAccess($group)) {
 			throw new GroupException('Du hast keinen Zugriff auf diese Gruppierung');
 		}
 
 		throw (new SystemException('Unknown Error'))
 			->setUrl($url)
 			->setResponse($response);
+		 */
 	}
 
-	public function importMember($data) {
-		$gender = \App\Gender::where('nami_id', $data->geschlechtId)->where('is_null', false)->first();
+	public function store(MembershipModel $membership) {
+		$group = NaMi::getConfig()->namiGroup;
 
-		$confession = $data->konfessionId
-			? \App\Confession::where('nami_id', $data->konfessionId)->first()
-			: null
-		;
-		$region = \App\Region::where('nami_id', $data->regionId)->where('is_null', false)->first();
-
-		$country = \App\Country::where('nami_id', $data->landId)->first();
-		$nationality = \App\Nationality::where('nami_id', $data->staatsangehoerigkeitId)->first();
-
-		$m = new \App\Member([
-			'firstname' => $data->vorname,
-			'lastname' => $data->nachname,
-			'nickname' => $data->spitzname,
-			'joined_at' => $data->eintrittsdatum,
-			'birthday' => $data->geburtsDatum,
-			'keepdata' => $data->wiederverwendenFlag,
-			'sendnewspaper' => $data->zeitschriftenversand,
-			'address' => $data->strasse,
-			'zip' => $data->plz,
-			'city' => $data->ort,
-			'nickname' => $data->spitzname,
-			'other_country' => $data->staatsangehoerigkeitText,
-			'further_address' => $data->nameZusatz,
-			'phone' => $data->telefon1,
-			'mobile' => $data->telefon2,
-			'business_phone' => $data->telefon3,
-			'fax' => $data->telefax,
-			'email' => $data->email,
-			'email_parents' => $data->emailVertretungsberechtigter,
-			'nami_id' => $data->id
-		]);
-
-		$m->gender()->associate($gender);
-		$m->country()->associate($country);
-		$m->region()->associate($region);
-		$m->way()->associate($this->getConfig()->defaultWay->id);
-		$m->confession()->associate($confession);
-		$m->nationality()->associate($nationality);
-
-		$m->save();
-	}
-
-	public function store(MemberModel $member) {
-		$group = $this->getConfig()->namiGroup;
-
-		$gender = $member->gender
-			? $member->gender->nami_id 
-			: \App\Gender::where('is_null', true)->first()->nami_id
-		;
-
-		$region = $member->region
-			? $member->region->nami_id 
-			: \App\Region::where('is_null', true)->first()->nami_id
-		;
-
-		$nationality = $member->nationality->nami_id;
-		$confession = $member->confession
-			? $member->confession->nami_id
-			: null;
-
-		$response = $this->post('/ica/rest/nami/mitglied/filtered-for-navigation/gruppierung/gruppierung/'.$group, [
-			'vorname' => $member->firstname,
-			'nachname' => $member->lastname,
-			'eintrittsdatum' => $member->joined_at->format('Y-m-d').'T00:00:00',
-			'geburtsDatum' => $member->birthday->format('Y-m-d').'T00:00:00',
-			'geschlechtId' => $gender,
-			'staatsangehoerigkeitId' => $nationality,
-			'strasse' => $member->address,
-			'plz' => $member->zip,
-			'regionId' => $region,
-			'ort' => $member->city,
-			'landId' => $member->country->nami_id,
-			'ersteTaetigkeitId' => 35,
-			'spitzname' => $member->nickname,
-			'staatsangehoerigkeitText' => $member->other_country,
-			'konfessionId' => $confession,
-			'konfessionId' => $confession,
-			'wiederverwendenFlag' => $member->keepdata,
-			'zeitschriftenversand' => $member->sendnewspaper,
-			'nameZusatz' => $member->further_address,
-			'telefon1' => $member->phone,
-			'telefon2' => $member->mobile,
-			'telefon3' => $member->business_phone,
-			'telefax' => $member->fax,
-			'email' => $member->email,
-			'emailVertretungsberechtigter' => $member->email_parents,
+		$response = NaMi::post('/ica/rest/nami/zugeordnete-taetigkeiten/filtered-for-navigation/gruppierung-mitglied/mitglied/'.$membership->member->id, [
+			'gruppierungId' => $group,
+			'aktivVon' => $membership->created_at->format('Y-m-d').'T00:00:00',
+			'aktivBis' => null,
+			'taetigkeitId' => $membership->activity->nami_id,
+			'untergliederungId' => $membership->group->nami_id,
+			'beitragsArtId' => null,
+			'caeaGroupId' => null,
+			'caeaGroupForGfId' => null
 		]);
 
 		return is_numeric($response->data) && $response->success === true

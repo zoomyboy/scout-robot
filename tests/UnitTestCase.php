@@ -21,6 +21,7 @@ class UnitTestCase extends \Tests\TestCase {
 
 		Notification::fake();
 		Event::fake();
+
 	}
 
 	public function afterAuthUserCreated($user) {

@@ -18,7 +18,7 @@ class CreateMembershipsTable extends Migration
 			$table->integer('activity_id');
 			$table->integer('group_id');
 			$table->integer('member_id');
-			$table->integer('nami_id');
+			$table->integer('nami_id')->nullable();
             $table->timestamps();
         });
     }

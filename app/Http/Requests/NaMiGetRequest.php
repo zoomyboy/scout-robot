@@ -24,7 +24,13 @@ class NaMiGetRequest extends Request
 		$members = NaMiMember::all();
 
 		foreach($members as $member) {
-			NaMiMember::importMember(NaMiMember::single($member->id));	
+			$member = NaMiMember::importMember(NaMiMember::single($member->id));	
+
+			if ($member == null) {
+				return false;
+			}
+
+			NaMiMember::importMemberships($member);
 		}
 	}
 }

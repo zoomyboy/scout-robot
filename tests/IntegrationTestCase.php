@@ -2,6 +2,7 @@
 
 namespace Tests;
 
+use Tests\Traits\SetsUpNaMi;
 use Zoomyboy\Tests\Traits\CreatesModels;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Event;
@@ -16,6 +17,7 @@ class IntegrationTestCase extends \Tests\TestCase {
 	use AuthenticatesUsers;
 	use HandlesApiCalls;
 	use DatabaseMigrations;
+	use SetsUpNaMi;
 
 	public function setUp() {
 		parent::setUp();
