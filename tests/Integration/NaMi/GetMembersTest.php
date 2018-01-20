@@ -2,245 +2,106 @@
 
 namespace App\Integration\NaMi;
 
-use Tests\IntegrationTestCase;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use App\Facades\NaMi\NaMiMember;
-use Tests\Traits\SetsUpNaMi;
 use App\Member;
-use \Mockery as M;
+use App\Facades\NaMi\NaMi;
+use Tests\IntegrationTestCase;
+use App\Jobs\SyncAllNaMiMembers;
 
 class GetMembersTest extends IntegrationTestCase {
-	use DatabaseMigrations;
-	use SetsUpNaMi;
+	public $config;
 
 	public function setUp() {
 		parent::setUp();
 
-		$this->runSeeder('CountrySeeder');
 		$this->runSeeder('UsergroupSeeder');
-		$this->runSeeder('GenderSeeder');
 		$this->runSeeder('CountrySeeder');
-		$this->runSeeder('ConfSeeder');
-		$this->runSeeder('RegionSeeder');
 		$this->runSeeder('WaySeeder');
-		$this->runSeeder('ConfessionSeeder');
 		$this->runSeeder('NationalitySeeder');
-		$this->runSeeder('ActivitySeeder');
+		$this->runSeeder('ConfSeeder');
+		$this->runSeeder('GenderSeeder');
 
 		$this->setUpNaMi();
 	}
 
-	public function dataProvider() {
-		$values = [];
+	/** @test */
+	public function it_saves_a_members_firstname() {
+		$this->authAsApi();
 
-		$values[] = [
-			[],
-			[
-				'firstname' => 'Max',
-				'lastname' => 'Mustermann',
-				'address' => 'Strasse 1',
-				'zip' => '42777',
-				'city' => 'City',
-				'phone' => '+49 212 319345',
-				'mobile' => '+49 163 1725774',
-				'fax' => '+49 212 4455555',
-				'nickname' => 'Spitz',
-				'business_phone' => '+49 222 33333',
-				'further_address' => 'Zusatz',
-				'other_country' => 'Andere',
-				'email' => 'member@test.de',
-				'email_parents' => 'eltern@test.de',
-			], [
-				'gender' => 'Männlich',
-				'way' => 'E-Mail',
-				'confession' => 'Evangelisch / Protestantisch',
-				'region' => 'Nordrhein-Westfalen',
-				'country' => 'Deutschland'
-			],
-			[
-				'birthday' => '2005-12-28',
-				'joined_at' => '2015-05-27'
-			], [
-				'keepdata' => true,
-				'sendnewspaper' => true
-			]
-		];
+		NaMi::createMember(['vorname' => 'Julia', 'id' => 2334]);
 
-		foreach(\App\Confession::get() as $c) {
-			$values[] = [
-				['konfessionId' =>  $c->nami_id], [], ['confession' => $c->title], [], []
-			];
-		}
-		$values[] = [
-			['konfessionId' => null], [], ['confession' => null], [], []
-		];
+		SyncAllNaMiMembers::dispatch();	
 
-		foreach(\App\Gender::get() as $c) {
-			if ($c->is_null) {
-				$values[] = [
-					['geschlechtId' =>  $c->nami_id], [], ['gender' => null], [], []
-				];
-			} else {
-				$values[] = [
-					['geschlechtId' =>  $c->nami_id], [], ['gender' => $c->title], [], []
-				];
-			}
-		}
-
-		foreach(\App\Nationality::get() as $n) {
-			$values[] = [
-				['staatsangehoerigkeitId' =>  $n->nami_id], [], ['nationality' => $n->title], [], []
-			];
-		}
-
-		foreach(\App\Country::get() as $n) {
-			$values[] = [
-				['landId' =>  $n->nami_id], [], ['country' => $n->title], [], []
-			];
-		}
-
-		foreach(\App\Region::get() as $c) {
-			if ($c->is_null) {
-				$values[] = [
-					['regionId' =>  $c->nami_id], [], ['region' => null], [], []
-				];
-			} else {
-				$values[] = [
-					['regionId' =>  $c->nami_id], [], ['region' => $c->title], [], []
-				];
-			}
-		}
-
-		return $values;
+		$member = Member::where('nami_id', 2334)->first();
+		$this->assertNotNull($member);
+		$this->assertEquals('Julia', $member->firstname);
 	}
 
 	/** @test */
-	public function it_saves_a_membrs_basic_data() {
-		$data = $this->dataProvider();
-
+	public function it_saves_a_members_lastname() {
 		$this->authAsApi();
 
-		$ids = range(500, 10000);
-		shuffle($ids);
-		$ids = array_slice($ids, 0, count($data));
-		$ids = array_map(function($id) {
-			return (object)['id' => $id];
-		}, $ids);
+		NaMi::createMember(['nachname' => 'Heut', 'id' => 2334]);
 
-		NaMiMember::shouldReceive('all')->andReturn($ids);
-		NaMiMember::shouldReceive('getConfig')->andReturn(\App\Conf::first());
+		SyncAllNaMiMembers::dispatch();	
 
-		foreach(array_column($this->dataProvider(), 0) as $i => $mock) {
-			NaMiMember::shouldReceive('importMemberships')->andReturn(true);		// This just prevents the membership import in real time - it doesnt assert or checks anything! 
-			NaMiMember::shouldReceive('single')
-				->with($ids[$i]->id)
-				->andReturn($this->mockDb($mock, $ids[$i]->id));
-		}
-
-		NaMiMember::makePartial();
-
-		$response = $this->postApi('nami/getmembers', []);
-
-		foreach($data as $i => $info) {
-			 $this->runTestWith($ids[$i]->id, ...$info);
-		}
-		$this->assertCount(count($data), Member::get());
+		$member = Member::where('nami_id', 2334)->first();
+		$this->assertNotNull($member);
+		$this->assertEquals('Heut', $member->lastname);
 	}
 
-	private function runTestWith($id, $mock, $values, $relations, $dates, $booleans) {
-		$m = Member::where('nami_id', $id)->first();
-		foreach($values as $key => $v) {
-			$this->assertEquals($v, $m->{$key}, 'Failed asserting that Property '.$key.' has the Value '.$v.'.'."\n Mock: ".print_r($mock, true)."\n Values: ".print_r($values, true));
-		}
+	/** @test */
+	public function it_saves_a_members_birthday() {
+		$this->authAsApi();
 
-		foreach($relations as $key => $r) {
-			if (is_null($r)) {
-				$this->assertNull($m->{$key}, 'Failed asserting that relation '.$m->{$key}.' is null. Factory data: '.print_r($this->mockDb($mock, $id), true)."\n\n Expected Data: ".print_r($relations, true));
-			} else {
-				$this->assertNotNull($m->{$key}, 'Failed asserting that '.$m.' has a valid '.$key."\n Factory: ".print_r(NaMiMember::single($id), true)."\n\n");
-				$this->assertEquals($r, $m->{$key}->title, 'Failed asserting that relation '.$m->{$key}->title.' is expected '.$r.'. Factory data: '.print_r($mock, true)."\n\n Expected Data: ".print_r($relations, true));
-			}
-		}
+		NaMi::createMember(['geburtsDatum' => '2016-04-05 00:00:00', 'id' => 2334]);
 
-		foreach($dates as $key => $d) {
-			$this->assertEquals($d, $m->{$key}->format('Y-m-d'));
-		}
+		SyncAllNaMiMembers::dispatch();	
 
-		foreach($booleans as $key => $b) {
-			$this->assertEquals($b, $m->{$key});
-		}
-
-		M::close();
+		$member = Member::where('nami_id', 2334)->first();
+		$this->assertNotNull($member);
+		$this->assertEquals('2016-04-05', $member->birthday->format('Y-m-d'));
 	}
 
-	private function mockDb($attr = [], $id = null) {
-		return (object) array_merge([
-			'jungpfadfinder' => null,
-			'mglType' => 'Mitglied',
-			'geschlecht' => 'männlich',
-			'staatsangehoerigkeit' => 'deutsch',
-			'ersteTaetigkeitId' => null,
-			'ersteUntergliederung' => 'Jungpfadfinder',
-			'emailVertretungsberechtigter' => 'eltern@test.de',
-			'lastUpdated' => '2016-01-20 19:45:24',
-			'ersteTaetigkeit' => null,
-			'nameZusatz' => 'Zusatz',
-			'id' => $id ?? 20000001,
-			'staatsangehoerigkeitId' => 1054,
-			'version' => 30,
-			'sonst01' => false,
-			'sonst02' => false,
-			'spitzname' => 'Spitz',
-			'landId' => 1,
-			'staatsangehoerigkeitText' => 'Andere',
-			'gruppierungId' => 100105,
-			'mglTypeId' => 'MITGLIED',
-			'beitragsart' => 'Voller Beitrag',
-			'nachname' => 'Mustermann',
-			'eintrittsdatum' =>'2015-05-27 00:00:00',
-			'rover' => null,
-			'region' => 'Nordrhein-Westfalen (Deutschland)',
-			'status' => 'Aktiv',
-			'konfession' => 'evangelisch / protestantisch',
-			'fixBeitrag' => null,
-			'konfessionId' => 2,
-			'zeitschriftenversand' => true,
-			'pfadfinder' => null,
-			'telefon3' => '+49 222 33333',
-			'kontoverbindung' => (object)[
-				'id' => 227580,
-				'institut' => '',
-				'bankleitzahl' => '',
-				'kontonummer' => '',
-				'iban' => '',
-				'bic' => '',
-				'kontoinhaber' => '',
-				'mitgliedsNummer' => 245852,
-				'zahlungsKonditionId' => null,
-				'zahlungsKondition' => null
-			],
-			"geschlechtId" => 19,
-			'land' => 'Deutschland',
-			'email' => 'member@test.de',
-			'telefon1' => '+49 212 319345',
-			'woelfling' => null,
-			'telefon2' => '+49 163 1725774',
-			'strasse' => 'Strasse 1',
-			'vorname' => 'Max',
-			'mitgliedsNummer' => 245852,
-			'gruppierung' => 'Solingen-Wald, Silva 100105',
-			'austrittsDatum' => '',
-			'ort' => 'City',
-			'ersteUntergliederungId' => null,
-			'wiederverwendenFlag' => true,
-			'regionId' => 10,
-			'geburtsDatum' => '2005-12-28 00:00:00',
-			'stufe' => 'Jungpfadfinder',
-			'genericField1' => '',
-			'genericField2' => '',
-			'telefax' => '+49 212 4455555',
-			'beitragsartId' => 1,
-			'plz' => '42777'
-		], $attr);
+	/** @test */
+	public function it_saves_a_members_gender() {
+		$this->authAsApi();
+
+		NaMi::createMember(['geschlechtId' => 19, 'id' => 2334]);
+
+		SyncAllNaMiMembers::dispatch();	
+
+		$member = Member::where('nami_id', 2334)->first();
+		$this->assertNotNull($member);
+		$this->assertEquals('Männlich', $member->gender->title);
+	}
+
+	/** @test */
+	public function it_sets_a_members_gender_to_null_when_gender_is_keine_angabe() {
+		$this->authAsApi();
+
+		NaMi::createMember(['geschlechtId' => 23, 'id' => 2334]);
+
+		SyncAllNaMiMembers::dispatch();	
+
+		$member = Member::where('nami_id', 2334)->first();
+		$this->assertNotNull($member);
+		$this->assertNull($member->gender);
+	}
+
+	/** @test */
+	public function it_overwrites_a_members_firstname_that_is_found_locally_by_nami_id() {
+		NaMi::createMember(['vorname' => 'Hans', 'id' => 2334]);
+
+		SyncAllNaMiMembers::dispatch();	
+
+		$this->assertNotNull(Member::where('firstname', 'Hans')->first());
+		$this->assertCount(1, Member::get());
+
+		NaMi::updateMember(2334, ['vorname' => 'Peter']);
+
+		SyncAllNaMiMembers::dispatch();	
+
+		$this->assertCount(1, Member::get());
+		$this->assertNotNull(Member::where('firstname', 'Peter')->first());
 	}
 }

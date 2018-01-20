@@ -2,7 +2,8 @@
 
 namespace App\Services\NaMi;
 
-use App\Http\Exceptions\NaMi\GroupException;
+use App\Exceptions\NaMi\GroupException;
+use App\Facades\NaMi\NaMi;
 
 class Group extends NaMiService {
 	public function __construct() {
@@ -10,7 +11,7 @@ class Group extends NaMiService {
 	}
 
 	public function all() {
-		$response = $this->get('/ica/rest/nami/gruppierungen/filtered-for-navigation/gruppierung/node/root');
+		$response = NaMi::get('/ica/rest/nami/gruppierungen/filtered-for-navigation/gruppierung/node/root');
 
 		if ($this->isSuccess($response)) {
 			return $response->data;

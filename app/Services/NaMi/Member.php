@@ -10,6 +10,7 @@ use App\Member as MemberModel;
 use App\Facades\NaMi\NaMiMembership;
 use App\Activity;
 use App\Group;
+use App\Facades\NaMi\NaMi;
 
 class Member extends NaMiService {
 	public function __construct() {
@@ -17,9 +18,9 @@ class Member extends NaMiService {
 	}
 
 	public function single($memberId) {
-		$group = $this->getConfig()->namiGroup;
+		$group = NaMi::getConfig()->namiGroup;
 		$url = '/ica/rest/nami/mitglied/filtered-for-navigation/gruppierung/gruppierung/'.$group.'/'.$memberId;
-		$response = $this->get($url);
+		$response = NaMi::get($url);
 
 		if ($response->success === true) {
 			return $response->data;
@@ -35,9 +36,9 @@ class Member extends NaMiService {
 	}
 
 	public function all() {
-		$group = $this->config->namiGroup;
+		$group = NaMi::getConfig()->namiGroup;
 		$url = '/ica/rest/nami/mitglied/filtered-for-navigation/gruppierung/gruppierung/'.$group.'/flist';
-		$response = $this->get($url);
+		$response = NaMi::get($url);
 
 		if ($this->isSuccess($response)) {
 			return $response->data;
@@ -52,6 +53,13 @@ class Member extends NaMiService {
 			->setResponse($response);
 	}
 
+	/**
+	 * Imports a member from nami and stores it locally
+	 * Caution: This will always create a new member, no matter if it exists already!
+	 *
+	 * @param object $data The member-data from nami
+	 * @return MemberModel $member The new member
+	 */
 	public function importMember($data) {
 		$gender = \App\Gender::where('nami_id', $data->geschlechtId)->where('is_null', false)->first();
 
@@ -90,7 +98,7 @@ class Member extends NaMiService {
 		$m->gender()->associate($gender);
 		$m->country()->associate($country);
 		$m->region()->associate($region);
-		$m->way()->associate($this->getConfig()->defaultWay->id);
+		$m->way()->associate(NaMi::getConfig()->defaultWay->id);
 		$m->confession()->associate($confession);
 		$m->nationality()->associate($nationality);
 
@@ -99,8 +107,60 @@ class Member extends NaMiService {
 		return $m;
 	}
 
+	/**
+	 * Updates a local member
+	 *
+	 * @param MemberModel $member The local member
+	 * @param object $data The member-data from nami
+	 * @return MemberModel $member The new member
+	 */
+	public function update($local, $data) {
+		$gender = \App\Gender::where('nami_id', $data->geschlechtId)->where('is_null', false)->first();
+
+		$confession = $data->konfessionId
+			? \App\Confession::where('nami_id', $data->konfessionId)->first()
+			: null
+		;
+		$region = \App\Region::where('nami_id', $data->regionId)->where('is_null', false)->first();
+
+		$country = \App\Country::where('nami_id', $data->landId)->first();
+		$nationality = \App\Nationality::where('nami_id', $data->staatsangehoerigkeitId)->first();
+
+		$local->update([
+			'firstname' => $data->vorname,
+			'lastname' => $data->nachname,
+			'nickname' => $data->spitzname,
+			'joined_at' => $data->eintrittsdatum,
+			'birthday' => $data->geburtsDatum,
+			'keepdata' => $data->wiederverwendenFlag,
+			'sendnewspaper' => $data->zeitschriftenversand,
+			'address' => $data->strasse,
+			'zip' => $data->plz,
+			'city' => $data->ort,
+			'nickname' => $data->spitzname,
+			'other_country' => $data->staatsangehoerigkeitText,
+			'further_address' => $data->nameZusatz,
+			'phone' => $data->telefon1,
+			'mobile' => $data->telefon2,
+			'business_phone' => $data->telefon3,
+			'fax' => $data->telefax,
+			'email' => $data->email,
+			'email_parents' => $data->emailVertretungsberechtigter,
+			'nami_id' => $data->id
+		]);
+
+		$local->gender()->associate($gender);
+		$local->country()->associate($country);
+		$local->region()->associate($region);
+		$local->way()->associate(NaMi::getConfig()->defaultWay->id);
+		$local->confession()->associate($confession);
+		$local->nationality()->associate($nationality);
+
+		return $local;
+	}
+
 	public function store(MemberModel $member) {
-		$group = $this->getConfig()->namiGroup;
+		$group = NaMi::getConfig()->namiGroup;
 
 		$gender = $member->gender
 			? $member->gender->nami_id 
@@ -117,7 +177,7 @@ class Member extends NaMiService {
 			? $member->confession->nami_id
 			: null;
 
-		$response = $this->post('/ica/rest/nami/mitglied/filtered-for-navigation/gruppierung/gruppierung/'.$group, [
+		$response = NaMi::post('/ica/rest/nami/mitglied/filtered-for-navigation/gruppierung/gruppierung/'.$group, [
 			'vorname' => $member->firstname,
 			'nachname' => $member->lastname,
 			'eintrittsdatum' => $member->joined_at->format('Y-m-d').'T00:00:00',

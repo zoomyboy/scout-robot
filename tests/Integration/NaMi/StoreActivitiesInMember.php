@@ -2,11 +2,11 @@
 
 namespace Tests\Unit\NaMi;
 
-use Tests\UnitTestCase;
 use App\Facades\NaMi\NaMiMembership;
 use App\Facades\NaMi\NaMiMember;
+use Tests\IntegrationTestCase;
 
-class SyncNaMiActivitiesInMember extends UnitTestCase {
+class SyncNaMiActivitiesInMember extends IntegrationTestCase {
 	public function setUp() {
 		parent::setUp();
 
@@ -17,6 +17,8 @@ class SyncNaMiActivitiesInMember extends UnitTestCase {
 		$this->runSeeder('ConfessionSeeder');
 		$this->runSeeder('NationalitySeeder');
 		$this->runSeeder('ActivitySeeder');
+
+		$this->setUpNaMi();
 	}
 
 	/** @test */

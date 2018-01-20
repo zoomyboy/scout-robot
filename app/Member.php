@@ -98,4 +98,11 @@ class Member extends Model
 			return $q->whereIn('status_id', [2])->where('amount', '>', 0);
 		});
 	}
+
+	/**
+	 * Filter by members that are synched with nami id
+	 */
+	public function scopeNami($q, $id) {
+		return $q->where('nami_id', $id);
+	}
 }

@@ -7,6 +7,7 @@ use Zoomyboy\Tests\Traits\HandlesExceptions;
 use Zoomyboy\Tests\Traits\AuthenticatesUsers;
 use Zoomyboy\Tests\Traits\HandlesApiCalls;
 use Zoomyboy\Tests\Traits\TestsEmails;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class FeatureTestCase extends \Tests\TestCase {
 	use CreatesModels;
@@ -14,6 +15,7 @@ class FeatureTestCase extends \Tests\TestCase {
 	use AuthenticatesUsers;
 	use HandlesApiCalls;
 	use TestsEmails;
+	use DatabaseMigrations;
 
 	public function setUp() {
 		parent::setUp();

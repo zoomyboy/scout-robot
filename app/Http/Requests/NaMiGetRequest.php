@@ -5,10 +5,12 @@ namespace App\Http\Requests;
 use Zoomyboy\BaseRequest\Request;
 use Illuminate\Validation\Rule;
 use App\Facades\NaMi\NaMiMember;
+use App\Jobs\SyncAllNaMiMembers;
+use \App\Member;
 
 class NaMiGetRequest extends Request
 {
-	public $model = \App\Member::class;
+	public $model = Member::class;
 
     /**
      * Get the validation rules that apply to the request.
@@ -20,17 +22,15 @@ class NaMiGetRequest extends Request
         return [];
     }
 
-	public function persist($model = null) {
-		$members = NaMiMember::all();
-
-		foreach($members as $member) {
-			$member = NaMiMember::importMember(NaMiMember::single($member->id));	
-
-			if ($member == null) {
-				return false;
-			}
-
-			NaMiMember::importMemberships($member);
+	public function customRules() {
+		if (!\App\Conf::first()->namiEnabled) {
+			return ['error' => 'NaMi ist nicht eingeschaltet. Es kann keine Synchronisation stattfinden.'];
 		}
+
+		return [];
+	}
+
+	public function persist($model = null) {
+		SyncAllNaMiMembers::dispatch();
 	}
 }

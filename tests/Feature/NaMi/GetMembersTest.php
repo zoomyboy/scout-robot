@@ -1,52 +1,50 @@
 <?php
 
-namespace App\Feature\NaMi;
+namespace App\Integration\NaMi;
 
-use Tests\FeatureTestCase;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+use App\Member;
 use App\Facades\NaMi\NaMiMember;
-use App\Conf;
-use App\Exceptions\NaMi\LoginException;
-use Tests\Traits\SetsUpNaMi;
+use Tests\FeatureTestCase;
+use Illuminate\Support\Facades\Queue;
+use App\Jobs\SyncAllNaMiMembers;
 
-class GetMembersTest extends FeatureTestCase {
-
-	use DatabaseMigrations;
-	use SetsUpNaMi;
+class ImportMembersTest extends FeatureTestCase {
+	public $config;
 
 	public function setUp() {
 		parent::setUp();
 
-		@unlink(config('nami.cookie'));
-
+		$this->runSeeder('UsergroupSeeder');
+		$this->runSeeder('WaySeeder');
 		$this->runSeeder('CountrySeeder');
-		$this->runSeeder('RegionSeeder');
 		$this->runSeeder('ConfSeeder');
 
-		$this->setUpNaMi();
+		Queue::fake();
 	}
 
 	/** @test */
-	public function it_receives_all_members_from_nami() {
-		$list = NaMiMember::all();
+	public function it_synchs_all_nami_members_when_nami_is_enabled() {
+		$this->authAsApi();
+
+		\App\Conf::first()->update(['namiEnabled' => true]);
+
+		$this->postApi('nami/getmembers', [])
+			->assertSuccess();
+
+		Queue::assertPushed(SyncAllNaMiMembers::class);
 	}
 
-	/**
-	 * @test
-	 * @expectedException \App\Exceptions\NaMi\GroupException
-	 */
-	public function it_throws_error_when_no_group_access() {
-		\App\Conf::first()->update(['namiGroup' => '12345']);
-		NaMiMember::all();
-	}
+	/** @test */
+	public function it_doesnt_sync_when_nami_is_not_enabled() {
+		$this->withExceptionHandling();
 
-	/**
-	 * @test
-	 * @expectedException \App\Exceptions\NaMi\LoginException
-	 */
-	public function it_throws_error_when_wrong_credentials() {
-		Conf::first()->update(['namiPassword' => substr(env('NAMI_TEST_PASSWORD'),0,-1)]);
+		$this->authAsApi();
 
-		NaMiMember::all();
+		\App\Conf::first()->update(['namiEnabled' => false]);
+
+		$this->postApi('nami/getmembers', [])
+			->assertValidationFailedWith('error');
+
+		Queue::assertNotPushed(SyncAllNaMiMembers::class);
 	}
 }

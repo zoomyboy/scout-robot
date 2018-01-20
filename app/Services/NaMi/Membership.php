@@ -28,15 +28,6 @@ class Membership extends NaMiService {
 		if ($response->success === true) {
 			return $response->data;
 		}
-
-		/* if (! NaMiGroup::hasAccess($group)) {
-			throw new GroupException('Du hast keinen Zugriff auf diese Gruppierung');
-		}
-
-		throw (new SystemException('Unknown Error'))
-			->setUrl($url)
-			->setResponse($response);
-		 */
 	}
 
 	/**
@@ -46,20 +37,11 @@ class Membership extends NaMiService {
 	 */
 	public function all($memberId) {
 		$url = '/ica/rest/nami/zugeordnete-taetigkeiten/filtered-for-navigation/gruppierung-mitglied/mitglied/'.$memberId.'/flist';
-		$response = $this->get($url);
+		$response = NaMi::get($url);
 
 		if ($this->isSuccess($response)) {
 			return $response->data;
 		}
-
-		/* if (! NaMiGroup::hasAccess($group)) {
-			throw new GroupException('Du hast keinen Zugriff auf diese Gruppierung');
-		}
-
-		throw (new SystemException('Unknown Error'))
-			->setUrl($url)
-			->setResponse($response);
-		 */
 	}
 
 	public function store(MembershipModel $membership) {

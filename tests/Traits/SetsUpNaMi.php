@@ -2,12 +2,21 @@
 
 namespace Tests\Traits;
 
+use App\Facades\NaMi\NaMiMembership;
+use Tests\Utilities\NaMiDatabaseMockService;
+use App\Facades\NaMi\NaMi;
+
 trait SetsUpNaMi {
-	public function setUpNaMi() {
-		\App\Conf::first()->update(['namiUser' => env('NAMI_TEST_USER'), 'namiPassword' => env('NAMI_TEST_PASSWORD'), 'namiEnabled' => true, 'namiGroup' => env('NAMI_TEST_GROUP')]);
+	public function setUpNaMi($enabled = true) {
+		$user = ($enabled) ? env('NAMI_TEST_USER') : '';
+		$password = ($enabled) ? env('NAMI_TEST_PASSWORD') : '';
+		$group = ($enabled) ? env('NAMI_TEST_GROUP') : '';
+
+		$this->assertNotNull(\App\Conf::first(), 'You should run a conf seeder first.');
+
+		\App\Conf::first()->update(['namiUser' => $user, 'namiPassword' => $password, 'namiEnabled' => $enabled, 'namiGroup' => $group]);
+
+		NaMi::fake();
 	}
 
-	public function mockSyncNaMi() {
-		$this->runSeeder('ConfessionMockSeeder');
-	}
 }
