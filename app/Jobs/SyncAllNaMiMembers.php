@@ -8,6 +8,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use App\Facades\NaMi\NaMiMember;
+use App\Facades\NaMi\NaMiMembership;
 use App\Member;
 
 class SyncAllNaMiMembers implements ShouldQueue
@@ -47,7 +48,9 @@ class SyncAllNaMiMembers implements ShouldQueue
 				return false;
 			}
 
-			NaMiMember::importMemberships($member);
+			foreach(NaMiMembership::all($member->nami_id) as $ms) {
+				NaMiMember::importMemberships($member, $ms);
+			}
 		}
     }
 }

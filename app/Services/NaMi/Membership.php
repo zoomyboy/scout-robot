@@ -23,7 +23,7 @@ class Membership extends NaMiService {
 	 */
 	public function single($memberId, $membershipId) {
 		$url = '/ica/rest/nami/zugeordnete-taetigkeiten/filtered-for-navigation/gruppierung-mitglied/mitglied/'.$memberId.'/'.$membershipId;
-		$response = $this->get($url);
+		$response = NaMi::get($url);
 
 		if ($response->success === true) {
 			return $response->data;

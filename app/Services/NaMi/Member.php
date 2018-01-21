@@ -224,7 +224,8 @@ class Member extends NaMiService {
 		$memberships = $memberships->filter(function($ms) {
 			return $ms->aktivBis == ''
 				&& isset($ms->taetigkeitId) && Activity::where('nami_id', $ms->taetigkeitId)->first() != null
-				&& isset($ms->untergliederungId) && Group::where('nami_id', $ms->untergliederungId)->first() != null;
+				&& isset($ms->untergliederungId) && Group::where('nami_id', $ms->untergliederungId)->first() != null
+				&& Activity::where('nami_id', $ms->taetigkeitId)->first()->groups()->where('nami_id', $ms->untergliederungId)->first() != null;
 		});
 
 		foreach($memberships as $ms) {
@@ -232,9 +233,8 @@ class Member extends NaMiService {
 				'activity_id' => Activity::where('nami_id', $ms->taetigkeitId)->first()->id,
 				'nami_id' => $ms->id,
 				'group_id' => Group::where('nami_id', $ms->untergliederungId)->first()->id,
-				'created_at' => $ms->aktivVon
+				'created_at' => \Carbon\Carbon::parse($ms->aktivVon)->format('Y-m-d')
 			]);
-
 		}
 	}
 }

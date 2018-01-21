@@ -13,7 +13,11 @@ class NaMiFake {
 	}
 
 	public function createMember($data) {
-		$this->members[] = (object) array_merge($this->fakeValues(), $data);
+		$this->members[] = (object) array_merge($this->fakeMemberValues(), $data);
+	}
+
+	public function createMembership($memberId, $data) {
+		$this->memberships[$memberId][] = (object) array_merge($this->fakeMembershipValues(), $data);
 	}
 
 	public function updateMember($id, $data) {
@@ -73,6 +77,44 @@ class NaMiFake {
 
 			return (object) ['success' => true, 'responseType' => "OK", 'data' => $this->memberships[$memberId] ?? []];
 		}
+
+		//------------------------------ Single membership ------------------------------
+		//*******************************************************************************
+		preg_match_all('#^/ica/rest/nami/zugeordnete-taetigkeiten/filtered-for-navigation/gruppierung-mitglied/mitglied/([0-9]+)/([0-9]+)$#', $url, $matches);
+		if (isset($matches[1][0]) && isset($matches[2][0]) && is_numeric($matches[1][0]) && is_numeric($matches[2][0])) {
+			$memberId = $matches[1][0];
+			$membershipId = $matches[2][0];
+
+			$validMembers = array_values(array_filter($this->members, function($m) use ($memberId) {
+				return $m->id == $memberId;
+			}));
+
+			if (!count($validMembers)) {
+				return (object) [
+    				"success" => false,
+    				"data" => null,
+    				"responseType" => "EXCEPTION",
+    				"message" => "Access denied - no right for requested operation",
+    				"title" => "Exception"
+				];
+			}
+
+			$validMemberships = array_values(array_filter($this->memberships[$memberId], function($m) use ($membershipId) {
+				return $m->id == $membershipId;
+			}));
+
+			if (!count($validMemberships)) {
+				return (object) [
+    				"success" => false,
+    				"data" => null,
+    				"responseType" => "EXCEPTION",
+    				"message" => "Access denied - no right for requested operation",
+    				"title" => "Exception"
+				];
+			}
+
+    		return (object) ["success" => true, "data" => $validMemberships[0], "responseType" => null, "message" => null, "title" => null];
+		}
 	}
 
 	public function successResponse($data) {
@@ -83,27 +125,7 @@ class NaMiFake {
 		];
 	}
 
-	public function mockDb($attrs = [], $ids = null) {
-		$config = \App\Conf::first();
-
-		$ids = array_map(function($id) {
-			return (object)['id' => $id];
-		}, $ids);
-
-		NaMiMembership::shouldReceive('all')->andReturn([]);
-
-		NaMi::shouldReceive('get')
-			->with('/ica/rest/nami/mitglied/filtered-for-navigation/gruppierung/gruppierung/'.$config->namiGroup.'/flist')
-			->andReturn((object)['success' => true, 'responseType' => 'OK', 'data' => $ids]);
-
-		foreach($ids as $key => $id) {
-			NaMi::shouldReceive('get')
-				->with('/ica/rest/nami/mitglied/filtered-for-navigation/gruppierung/gruppierung/'.$config->namiGroup.'/'.$id->id)
-				->andReturn((object) ['success' => true, 'data' => (object) array_merge([], $attrs[$key])]);
-		}
-	}
-
-	public function fakeValues() {
+	public function fakeMemberValues() {
 		return [
 			'jungpfadfinder' => null,
 			'mglType' => 'Mitglied',
@@ -171,6 +193,19 @@ class NaMiFake {
 			'telefax' => '+49 212 4455555',
 			'beitragsartId' => 1,
 			'plz' => '42777'
+		];
+	}
+
+	public function fakeMembershipValues() {
+		$ids = range(5000, 10000);
+		shuffle($ids);
+
+		return [
+			"aktivVon" => \Carbon\Carbon::now()->subDays(3)->format('Y-m-d').'T00:00:00',
+			"aktivBis" => null,
+			"taetigkeitId" => 6,
+			"untergliederungId" => 4,
+			'id' => $ids[0]
 		];
 	}
 }
