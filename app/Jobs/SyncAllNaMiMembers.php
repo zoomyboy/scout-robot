@@ -48,9 +48,7 @@ class SyncAllNaMiMembers implements ShouldQueue
 				return false;
 			}
 
-			foreach(NaMiMembership::all($member->nami_id) as $ms) {
-				NaMiMember::importMemberships($member, $ms);
-			}
+			NaMiMember::importMemberships($member);
 		}
     }
 }

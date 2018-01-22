@@ -140,8 +140,8 @@ class GetMembersTest extends IntegrationTestCase {
 	public function it_imports_a_membership_that_is_valid() {
 		$this->authAsApi();
 
-		NaMi::createMember(['id' => 2334, 'taetigkeitId' => 6, 'groupId' => 4]);
-		NaMi::createMembership(2334, []);
+		NaMi::createMember(['id' => 2334]);
+		NaMi::createMembership(2334, ['taetigkeitId' => 6, 'untergliederungId' => 4]);
 
 		SyncAllNaMiMembers::dispatch();	
 
@@ -151,6 +151,29 @@ class GetMembersTest extends IntegrationTestCase {
 
 		$membership = $member->memberships->first();
 		$this->assertEquals(4, $membership->group->nami_id);
+		$this->assertEquals(6, $membership->activity->nami_id);
+	}
+
+	/** @test */
+	public function it_imports_each_membership_only_once_when_there_are_multiple_ones() {
+		$this->authAsApi();
+
+		NaMi::createMember(['id' => 2334]);
+		NaMi::createMembership(2334, ['taetigkeitId' => 6, 'untergliederungId' => 4]);
+		NaMi::createMembership(2334, ['taetigkeitId' => 6, 'untergliederungId' => 3]);
+
+		SyncAllNaMiMembers::dispatch();	
+
+		$member = Member::where('nami_id', 2334)->first();
+		$this->assertNotNull($member);
+		$this->assertCount(2, $member->memberships);
+
+		$membership = $member->memberships->first();
+		$this->assertEquals(4, $membership->group->nami_id);
+		$this->assertEquals(6, $membership->activity->nami_id);
+
+		$membership = $member->memberships[1];
+		$this->assertEquals(3, $membership->group->nami_id);
 		$this->assertEquals(6, $membership->activity->nami_id);
 	}
 
