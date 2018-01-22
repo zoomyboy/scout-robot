@@ -48,16 +48,12 @@ class MemberStoreRequest extends Request
 		return $ret;
 	}
 
-	public function persist($model = null) {
-		$m = parent::persist($model);
-
-		$m->memberships()->create([
+	public function afterPersist($model = null) {
+		$model->memberships()->create([
 			'activity_id' => $this->activity,
 			'group_id' => $this->group
 		]);
-	}
 
-	public function afterPersist($model = null) {
  		if (!is_null($model->nami_id)) {
 			return;
 		}
