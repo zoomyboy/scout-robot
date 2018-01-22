@@ -46,6 +46,12 @@ class StoreMembersTest extends FeatureTestCase {
 		]))
 			->assertSuccess();
 
+		$member = \App\Member::where('firstname', 'John')->first();
+		$this->assertNotNull($member);
+		$this->assertCount(1, $member->memberships);
+		$this->assertEquals('Mitglied', $member->memberships->first()->activity->title);
+		$this->assertEquals('Biber', $member->memberships->first()->group->title);
+
 		Queue::assertPushed(StoreNaMiMember::class, function($j) {
 			return $j->member->firstname == 'John';
 		});

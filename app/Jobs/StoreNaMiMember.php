@@ -9,6 +9,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use App\Member;
 use App\Facades\NaMi\NaMiMember;
+use App\Facades\NaMi\NaMiMembership;
 
 class StoreNaMiMember implements ShouldQueue
 {
@@ -34,6 +35,9 @@ class StoreNaMiMember implements ShouldQueue
     public function handle()
     {
 		$id = NaMiMember::store($this->member);
+		$firstMembership = NaMiMembership::all($id)[0];
+
+		$this->member->memberships->first()->update(['nami_id' => $firstMembership->id]);
 
 		if (is_numeric($id)) {
 			$this->member->nami_id = $id;

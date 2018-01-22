@@ -44,7 +44,13 @@ class Membership extends NaMiService {
 		}
 	}
 
-	public function store(MembershipModel $membership) {
+	/**
+	 * Stores a new membership for a member
+	 *
+	 * @param  int $memberId ID des Mitglieds in NaMi
+	 * @param MembershipModel $membership Membership Model
+	 */
+	public function store($memberId, MembershipModel $membership) {
 		$group = NaMi::getConfig()->namiGroup;
 
 		$response = NaMi::post('/ica/rest/nami/zugeordnete-taetigkeiten/filtered-for-navigation/gruppierung-mitglied/mitglied/'.$membership->member->id, [

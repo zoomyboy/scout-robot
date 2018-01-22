@@ -5,6 +5,10 @@ use Tests\IntegrationTestCase;
 use App\Jobs\StoreNaMiMember;
 use App\Conf;
 use App\Member;
+use App\Activity;
+use App\Group;
+use App\Facades\NaMi\NaMiMembership;
+use Carbon\Carbon;
 
 class StoreMemberTest extends IntegrationTestCase {
 	public $dontFakeEvents = true;
@@ -12,6 +16,7 @@ class StoreMemberTest extends IntegrationTestCase {
 	public function setUp() {
 		parent::setUp();
 
+		$this->runSeeder('ActivitySeeder');
 		$this->runSeeder('UsergroupSeeder');
 		$this->runSeeder('GenderSeeder');
 		$this->runSeeder('CountrySeeder');
@@ -25,10 +30,16 @@ class StoreMemberTest extends IntegrationTestCase {
 	}
 
 	/** @test */
-	public function it_stores_a_member_in_nami_when_saved_for_the_first_time() {
-		$member = $this->make('Member', ['nami_id' => null, 'firstname' => 'John']);
+	public function it_stores_a_members_membership_for_the_first_time() {
 		Conf::first()->update(['namiEnabled' => true]);
+
+		$member = $this->make('Member', ['nami_id' => null, 'firstname' => 'John']);
 		$member->save();
+
+		$member->memberships()->create([
+			'activity_id' => Activity::where('nami_id', 6)->first()->id,
+			'group_id' => Group::where('nami_id', 4)->first()->id
+		]);
 
 		StoreNaMiMember::dispatch($member);
 
@@ -37,7 +48,16 @@ class StoreMemberTest extends IntegrationTestCase {
 
 		$member = Member::where('nami_id', $namiId)->first();
 		$this->assertNotNull($member);
-
 		$this->assertEquals('John', $member->firstname);
+
+		$memberships = NaMiMembership::all($namiId);
+		$this->assertCount(1, $memberships);
+
+		$singleMembership = NaMiMembership::single($namiId, $memberships[0]->id);
+		$this->assertEquals($singleMembership->id, $member->memberships()->first()->nami_id);
+		$this->assertEquals(6, $singleMembership->taetigkeitId);
+		$this->assertEquals(4, $singleMembership->untergliederungId);
+		$this->assertEquals(Carbon::now()->format('Y-m-d'), Carbon::parse($singleMembership->aktivVon)->format('Y-m-d'));
+		$this->assertNull($singleMembership->aktivBis);
 	}
 }

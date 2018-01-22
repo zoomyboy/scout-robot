@@ -3,6 +3,7 @@
 namespace Tests\Utilities;
 
 use App\Facades\NaMi\NaMiMember;
+use Carbon\Carbon;
 
 class NaMiFake {
 
@@ -119,11 +120,20 @@ class NaMiFake {
 
 	public function post($url, $data) {
 		if ($url == '/ica/rest/nami/mitglied/filtered-for-navigation/gruppierung/gruppierung/'.$this->getConfig()->namiGroup) {
-			self::createMember($data);
+			$memberId = $this->createRandomId();
+
+			self::createMember(array_merge($data, ['id' => $memberId]));
+
+			self::createMembership($memberId, [
+				'taetigkeitId' => $data['ersteTaetigkeitId'],
+				'untergliederungId' => $data['ersteUntergliederungId'],
+				'aktivVon' => Carbon::now()->format('Y-m-d').'T00:00:00',
+				'id' => $this->createRandomId()
+			]);
 			
 			return (object) [
     			"success" => true,
-    			"data" => $this->createRandomId(),
+    			"data" => $memberId,
     			"responseType" => "OK",
     			"message" => "Entry with id: BLA successfull created",
     			"title" => null
