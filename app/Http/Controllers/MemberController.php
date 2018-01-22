@@ -26,7 +26,7 @@ class MemberController extends Controller
 
 	public function show(Member $member) {
 		$this->authorize('index', Member::class);
-		return response()->json($member->load(['gender', 'region', 'country', 'confession', 'way'])->toArray());
+		return response()->json($member->load(['gender', 'region', 'country', 'confession', 'way', 'nationality'])->toArray());
 	}
 
 	public function destroy(Member $member, MemberDeleteRequest $request) {
