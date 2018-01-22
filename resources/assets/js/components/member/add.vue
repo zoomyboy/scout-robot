@@ -30,6 +30,10 @@
 							<div class="col-md-6"><vf-text name="mobile" label="Handynummer" :mask="{mask: '+99 999 9{1,}'}" value="+49"></vf-text></div>
 						</div>
 						<vf-text name="email" label="E-Mail-Adresse"></vf-text>
+						<div class="row">
+							<div class="col-md-6"><vf-select name="activity" label="Tätigkeit" @change="loadgroup" :options="activities" ref="activity"></vf-select></div>
+							<div class="col-md-6"><vf-select name="group" label="Abteilung" :options="loadedGroups"></vf-select></div>
+						</div>
 					</panelcontent>
 					<panelcontent index="1">
 						<vf-text name="nickname" label="Spitzname"></vf-text>
@@ -81,7 +85,33 @@
 	import {mapState} from 'vuex';
 
 	export default {
-		computed: mapState(['config']),
+		data: function() {
+			return {
+				activities: [],
+				loadedActivityId: null
+			}
+		},
+		computed: {
+			loadedGroups: function() {
+				var vm = this;
+
+				if (this.loadedActivityId == null) {
+					return [];
+				} 
+			
+				var filteredActivities = this.activities.filter(function(a) {
+					return a.id == vm.loadedActivityId;
+				});
+
+				if (filteredActivities.length == 0) {
+					return [];
+				}
+
+				return filteredActivities.shift().groups;
+
+			},
+			...mapState(['config'])
+		},
 		components: {
 			tabs: require('z-ui/panel/tabs.vue'),
 			tab: require('z-ui/panel/tab.vue'),
@@ -89,6 +119,18 @@
 			grid: require('z-ui/grid/grid.vue'),
 			vfDate: require('z-ui/form/fields/date.vue'),
 			panelcontent: require('z-ui/panel/content.vue'),
+		},
+		methods: {
+			loadgroup: function(v) {
+				this.loadedActivityId = v;
+			}
+		},
+		mounted: function() {
+			var vm = this;
+
+			axios.get('/api/activity').then((ret) => {
+				vm.activities = ret.data;
+			});
 		}
 	}
 </script>

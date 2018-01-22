@@ -65,3 +65,5 @@ Route::post('mass/email/remember', 'MassController@remember');
 
 Route::post('nami/getmembers', 'NaMiController@getmembers');
 Route::get('/nationality', 'NationalityController@index');
+
+Route::resource('activity', 'ActivityController', ['only' => 'index']);
