@@ -151,6 +151,8 @@ class NaMiService {
 			$body = curl_exec($handle);
 			curl_close($handle);
 
+			\Log::debug('NaMi-Response: '.$body);
+
 			return json_decode($body);
 		});
 	}
@@ -170,6 +172,8 @@ class NaMiService {
 			]);
 			$body = curl_exec($handle);
 			curl_close($handle);
+
+			\Log::debug('NaMi-Response: '.$body);
 
 			return json_decode($body);
 		});
