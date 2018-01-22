@@ -10,6 +10,7 @@ use App\Activity;
 use App\Group;
 use Tests\IntegrationTestCase;
 use App\Right;
+use Illuminate\Support\Facades\Queue;
 
 class MemberTest extends IntegrationTestCase {
 	public function setUp() {
@@ -26,6 +27,7 @@ class MemberTest extends IntegrationTestCase {
 		$this->runSeeder('WaySeeder');
 		$this->runSeeder('UsergroupSeeder');
 		$this->runSeeder('UserSeeder');
+		$this->runSeeder('ConfSeeder');
 
 		$payments = collect([
 			factory(Payment::class)->make([
@@ -69,6 +71,8 @@ class MemberTest extends IntegrationTestCase {
 			'zip' => 4875
 		]);
 		$member->payments()->saveMany($payments);
+
+		Queue::fake();
 	}
 
 	/** @test */

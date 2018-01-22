@@ -117,6 +117,20 @@ class NaMiFake {
 		}
 	}
 
+	public function post($url, $data) {
+		if ($url == '/ica/rest/nami/mitglied/filtered-for-navigation/gruppierung/gruppierung/'.$this->getConfig()->namiGroup) {
+			self::createMember($data);
+			
+			return (object) [
+    			"success" => true,
+    			"data" => $this->createRandomId(),
+    			"responseType" => "OK",
+    			"message" => "Entry with id: BLA successfull created",
+    			"title" => null
+			];
+		}
+	}
+
 	public function successResponse($data) {
 		return (object) [
 			"success" => true,
@@ -196,16 +210,19 @@ class NaMiFake {
 		];
 	}
 
-	public function fakeMembershipValues() {
+	public function createRandomId() {
 		$ids = range(5000, 10000);
 		shuffle($ids);
+		return $ids[0];
+	}
 
+	public function fakeMembershipValues() {
 		return [
 			"aktivVon" => \Carbon\Carbon::now()->subDays(3)->format('Y-m-d').'T00:00:00',
 			"aktivBis" => null,
 			"taetigkeitId" => 6,
 			"untergliederungId" => 4,
-			'id' => $ids[0]
+			'id' => $this->createRandomId()
 		];
 	}
 }

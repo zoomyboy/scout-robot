@@ -28,10 +28,6 @@ class Member extends Model
 		'nami_id' => 'integer',
 	];
 
-	public $events = [
-		'created' => MemberCreated::class
-	];
-
 	public function newCollection(array $models = []) {
 		return new OwnCollection($models);
 	}

@@ -6,6 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Zoomyboy\BaseRequest\Request;
 use App\Member;
 use App\Group;
+use App\Jobs\StoreNaMiMember;
 use Illuminate\Validation\Rule;
 
 class MemberStoreRequest extends Request
@@ -45,5 +46,17 @@ class MemberStoreRequest extends Request
 		}
 
 		return $ret;
+	}
+
+	public function afterPersist($model = null) {
+ 		if (!is_null($model->nami_id)) {
+			return;
+		}
+
+		if (!\App\Conf::first()->namiEnabled) {
+			return;
+		}
+
+		StoreNaMiMember::dispatch($model);
 	}
 }
