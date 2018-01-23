@@ -1,0 +1,6 @@
+title: Scout Robot
+description: Mit Scout Robot kannst du dein Mitgliederdaten mit NAMi synchronisieren, Rechnungen erstellen und vieles mehr.
+show_downloads: false
+google_analytics:
+theme: jekyll-theme-cayman
+github: {repository_name: zoomyboy/scout-robot, is_project_page: true, owner_name: Philipp Lang, owner_url: 'https://github.com/zoomyboy', repository_url: 'https://github.com/zoomyboy/scout-robot'}
