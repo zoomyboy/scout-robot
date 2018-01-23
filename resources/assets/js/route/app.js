@@ -9,6 +9,7 @@ const profilePassword = () => import('../components/profile/password.vue');
 const welcome = () => import('../components/welcome/index.vue');
 const mass = () => import('../components/mass/index.vue');
 const namiGet = () => import('../components/nami/get.vue');
+const feeIndex = () => import('../components/fee/index.vue');
 
 module.exports = [
 	{
@@ -70,5 +71,11 @@ module.exports = [
 		name: 'nami.index',
 		props: { heading: { title: 'NaMi-Abruf' } },
 		components: { default: namiGet, heading }
+	},
+	{
+		path: '/fee',
+		name: 'fee.index',
+		props: { heading: { title: 'Beitrags-Übersicht' } },
+		components: { default: feeIndex, heading }
 	}
 ];
