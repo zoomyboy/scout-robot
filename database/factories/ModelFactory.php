@@ -79,3 +79,11 @@ $factory->define(\App\Payment::class, function(Faker\Generator $faker) {
 		'status_id' => \App\Status::get()->random()->id
 	];
 });
+
+$factory->define(\App\Subscription::class, function(Faker\Generator $faker) {
+	return [
+		'amount' => $faker->numberBetween(1000, 5000),
+		'title' => $faker->words(3, true),
+		'fee_id' => \App\Fee::get()->random()->id
+	];
+});

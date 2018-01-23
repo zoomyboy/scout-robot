@@ -17,6 +17,10 @@ Route::bind('profile', function ($id) {
 	return App\User::findOrFail($id);
 });
 
+Route::bind('subscription', function ($id) {
+	return App\Subscription::findOrFail($id);
+});
+
 Route::get('/authuser', 'AuthuserController@show');
 Route::resource('profile', 'ProfileController');
 Route::patch('/profile/{profile}/password', 'ProfileController@updatePassword');
@@ -67,3 +71,4 @@ Route::post('nami/getmembers', 'NaMiController@getmembers');
 Route::get('/nationality', 'NationalityController@index');
 
 Route::resource('activity', 'ActivityController', ['only' => 'index']);
+Route::resource('subscription', 'SubscriptionController', ['only' => ['index', 'store', 'update', 'destroy']]);
