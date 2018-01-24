@@ -5,7 +5,7 @@ layout: default
 
 # Konfiguration - Allgemein
 
-![Konfiguration - Allgemein](/assets/img/config-general.jpg)
+![Konfiguration - Allgemein]({{ site.baseurl }}/assets/img/config-general.jpg)
 
 ### Gruppenname
 

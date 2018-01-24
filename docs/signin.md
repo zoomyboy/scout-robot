@@ -5,7 +5,7 @@ layout: default
 
 # Einloggen
 
-![Einloggen](/assets/img/signin.jpg)
+![Einloggen]({{ site.baseurl }}/assets/img/signin.jpg)
 
 Öffne die Startseite in deinem Browser und du kommst üblicherweise zum Loginformular.
 
@@ -13,7 +13,7 @@ Hier kannst du dich mit deinen Zugangsdaten (E-Mail-Adresse und Passwort) einlog
 
 ## Passwort vergessen
 
-![Passwort vergessen](/assets/img/pwrestore.jpg)
+![Passwort vergessen]({{ site.baseurl }}/assets/img/pwrestore.jpg)
 
 Solltest du dein Passwort nicht mehr wissen, kannst du über 'Passwort vergessen' ein neues anfordern.
 

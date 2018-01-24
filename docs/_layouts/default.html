@@ -29,12 +29,12 @@
 			<ul class="nav nav-pills">
 				{% for p in site.data.nav.nav %}
 				<li>
-					<a href="{{ p.url }}" {% if p.url == page.url %} class="active" {% endif %}>{{ p.title }}</a>
+					<a href="{{ site.baseurl }}{{ p.url }}" {% if p.url == page.url %} class="active" {% endif %}>{{ p.title }}</a>
 					{% if p.subpages.length != 0 %}
 						<ul>
 							{% for subpage in p.subpages %}
 								<li>
-									<a href="{{ subpage.url }}" {% if subpage.url == page.url %} class="active" {% endif %}>{{ subpage.title }}</a>
+									<a href="{{ site.baseurl}}{{ subpage.url }}" {% if subpage.url == page.url %} class="active" {% endif %}>{{ subpage.title }}</a>
 								</li>
 							{% endfor %}
 						</ul>
