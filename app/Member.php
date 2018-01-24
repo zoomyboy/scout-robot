@@ -74,6 +74,10 @@ class Member extends Model
 		return $this->hasMany(Membership::class);
 	}
 
+	public function subscription() {
+		return $this->belongsTo(Subscription::class);
+	}
+
 	//----------------------------------- Scopes ------------------------------------
 	public function scopeFamily($q, $member) {
 		return $q

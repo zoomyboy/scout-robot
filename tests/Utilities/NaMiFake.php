@@ -122,6 +122,46 @@ class NaMiFake {
 		if ($url == '/ica/rest/nami/mitglied/filtered-for-navigation/gruppierung/gruppierung/'.$this->getConfig()->namiGroup) {
 			$memberId = $this->createRandomId();
 
+			if (is_null($data['ersteTaetigkeitId']) || is_null(\App\Activity::where('nami_id', $data['ersteTaetigkeitId'])->first())) {
+				return (object) [
+					"success" => false,
+					"data" => (object) [
+						"fieldInfo" => [
+							(object) [
+					            "fieldName" => "ersteTaetigkeitId",
+					            "fieldLabel" => "not.nullable",
+					            "messageId" => null,
+					            "level" => "ERROR",
+					            "message" => "Feld ist ein Pflichtfeld.<br>"
+							]
+						]
+				 	],
+					"responseType" => "ERROR",
+					"message" => "",
+					"title" => null
+				];
+			}
+
+			if (\App\Activity::where('nami_id', $data['ersteTaetigkeitId'])->first()->is_payable && !$data['beitragsartId']) {
+				return (object) [
+					"success" => false,
+					"data" => (object) [
+						"fieldInfo" => [
+							(object) [
+					            "fieldLabel" => NULL,
+					            "fieldName" => "ersteTaetigkeit",
+					            "level" => "ERROR",
+								"message" => "Es muss eine Beitragsart ausgewählt werden, weil das Mitglied beitragspflichtige Tätigkeitszuordnungen hat.",
+								"messageId" => "beitragspflichtige-zuordnungen",
+							]
+						]
+				 	],
+					"responseType" => "ERROR",
+					"message" => "",
+					"title" => null
+				];
+			}
+
 			self::createMember(array_merge($data, ['id' => $memberId]));
 
 			self::createMembership($memberId, [

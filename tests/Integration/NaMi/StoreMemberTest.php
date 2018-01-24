@@ -37,7 +37,7 @@ class StoreMemberTest extends IntegrationTestCase {
 		$member->save();
 
 		$member->memberships()->create([
-			'activity_id' => Activity::where('nami_id', 6)->first()->id,
+			'activity_id' => Activity::where('nami_id', 35)->first()->id,
 			'group_id' => Group::where('nami_id', 4)->first()->id
 		]);
 
@@ -55,7 +55,7 @@ class StoreMemberTest extends IntegrationTestCase {
 
 		$singleMembership = NaMiMembership::single($namiId, $memberships[0]->id);
 		$this->assertEquals($singleMembership->id, $member->memberships()->first()->nami_id);
-		$this->assertEquals(6, $singleMembership->taetigkeitId);
+		$this->assertEquals(35, $singleMembership->taetigkeitId);
 		$this->assertEquals(4, $singleMembership->untergliederungId);
 		$this->assertEquals(Carbon::now()->format('Y-m-d'), Carbon::parse($singleMembership->aktivVon)->format('Y-m-d'));
 		$this->assertNull($singleMembership->aktivBis);

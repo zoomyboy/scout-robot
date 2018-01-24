@@ -71,4 +71,6 @@ Route::post('nami/getmembers', 'NaMiController@getmembers');
 Route::get('/nationality', 'NationalityController@index');
 
 Route::resource('activity', 'ActivityController', ['only' => 'index']);
-Route::resource('subscription', 'SubscriptionController', ['only' => ['index', 'store', 'update', 'destroy']]);
+Route::resource('subscription', 'SubscriptionController', ['only' => ['index', 'store', 'update', 'show']]);
+
+Route::resource('fee', 'FeeController', ['only' => ['index']]);

@@ -68,7 +68,7 @@ $factory->define(\App\Member::class, function(Faker\Generator $faker) {
 		'email' => $faker->email,
 		'email_parents' => $faker->email,
 		'active' => true,
-		'nami_id' => $faker->regexify('/[0-9]{8}/')
+		'nami_id' => $faker->regexify('/[0-9]{8}/'),
 	];
 });
 
@@ -77,6 +77,13 @@ $factory->define(\App\Payment::class, function(Faker\Generator $faker) {
 		'amount' => $faker->numberBetween(1, 500),
 		'nr' => $faker->numberBetween(date('Y')-5, date('Y')),
 		'status_id' => \App\Status::get()->random()->id
+	];
+});
+
+$factory->define(\App\Fee::class, function(Faker\Generator $faker) {
+	return [
+		'title' => $faker->words(3, true),
+		'nami_id' => $faker->numberBetween(100, 200)
 	];
 });
 

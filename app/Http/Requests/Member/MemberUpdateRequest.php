@@ -37,6 +37,14 @@ class MemberUpdateRequest extends Request
 			$ret['email'] = 'email';
 		}
 
+		if (is_null(\App\Activity::where('id', $this->activity)->first())) {
+			return $ret;
+		}
+
+		if (\App\Activity::where('id', $this->activity)->first()->is_payable) {
+			$ret['subscription'] = 'required';
+		}
+
 		$ret['group'] = [
 			'required',
 			Rule::in(Group::whereHas('activities', function($q) {

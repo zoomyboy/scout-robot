@@ -121,14 +121,15 @@ class MemberTest extends IntegrationTestCase {
 			$this->create('Member', array_merge($atts, ['firstname' => 'Jane', 'city' => 'City2']))
 		]);
 
-		$this->assertEquals($members->slice(0, 2)->toArray(), Member::family($members[0])->get()->toArray());
+		$this->assertEquals($members->slice(0, 2)->pluck('id')->toArray(), Member::family($members[0])->get()->pluck('id')->toArray());
 	}
 
 	public function succeedsDataProvider() {
 		return [ 
 			[
 				[],
-				['activity' => 8, 'group' => 1],
+				//['activity' => 8, 'group' => 1],
+				['activity' => 35, 'group' => 1],
 				['activity' => 35, 'group' => 1]
 			]
 		];
@@ -139,7 +140,7 @@ class MemberTest extends IntegrationTestCase {
 	 * @dataProvider succeedsDataProvider
 	 */
 	public function it_can_add_a_member_with_minimal_requirements_of_validation($fields) {
-		$this->withExceptionHandling();
+		//$this->withExceptionHandling();
 
 		$this->authAsApi();
 		auth()->user()->usergroup->rights()->attach(Right::where('key', 'member.manage')->first());
@@ -157,8 +158,8 @@ class MemberTest extends IntegrationTestCase {
 			'country' => 5,
 			'keepdata' => false,
 			'sendnewspaper' => false,
-			'activity' => 1,
-			'group' => 1
+			'activity' => 17,	//Schnupperer
+			'group' => 1,
 		], $fields))
 			->assertSuccess();
 	}
@@ -168,21 +169,25 @@ class MemberTest extends IntegrationTestCase {
 			'one' => [['nationality' => null], ['nationality']],
 			'two' => [['country' => null], ['country']],
 			'ActivityIsMissing' => [['activity' => null], ['activity']],
+			'ActivityIsMissingInDb' => [['activity' => 35, 'group' => 1], ['activity']],
 
 			// Mitglied
 			'GroupIsMissing' => [['activity' => 1, 'group' => null], ['group']],
 			'groupIsNotFromGivenActivity' => [['activity' => 1, 'group' => 6], ['group']],
 			'groupIsNotFound' => [['activity' => 1, 'group' => 116], ['group']],
 
+			'noPaymentGiven' => [['activity' => 8, 'group' => 1, 'subscription' => null], ['subscription']],
+
 			// Leiter
 			'GroupIsMissing2' => [['activity' => 8, 'group' => null], ['group']],
 			'groupIsNotFromGivenActivity2' => [['activity' => 8, 'group' => 6], ['group']],
 			'groupIsNotFound2' => [['activity' => 8, 'group' => 116], ['group']],
+			'groupHasNoValidSubscription' => [['subscription' => null, 'activity' => 8, 'group' => 5], ['subscription']],
+			'groupHasNoValidSubscription2' => [['subscription' => null, 'activity' => 8, 'group' => null], ['subscription']],
 
 			//Schnupperer
-			'GroupIsMissing3' => [['activity' => 35, 'group' => null], ['group']],
-			'groupIsNotFromGivenActivity3' => [['activity' => 35, 'group' => 6], ['group']],
-			'groupIsNotFound3' => [['activity' => 35, 'group' => 116], ['group']],
+			'GroupIsMissing3' => [['activity' => 17, 'group' => null], ['group']],
+			'groupIsNotFound3' => [['activity' => 17, 'group' => 116], ['group']],
 		];
 	}
 
@@ -208,7 +213,9 @@ class MemberTest extends IntegrationTestCase {
 			'way' => 1,
 			'country' => 5,
 			'keepdata' => false,
-			'sendnewspaper' => false
+			'sendnewspaper' => false,
+			'activity' => 17,	//Schnupperer
+			'group' => 1,
 		], $fields))
 		->assertValidationFailedWith(...$valid);
 	}

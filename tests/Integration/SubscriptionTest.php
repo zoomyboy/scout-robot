@@ -17,6 +17,24 @@ class SubscriptionTest extends IntegrationTestCase {
 	}
 
 	/** @test */
+	public function it_can_get_a_single_subscription() {
+		$this->authAsApi();
+
+		Subscription::create(['title' => 'Beitrag', 'amount' => '5000'])
+			->fee()->associate(Fee::first())
+			->save();
+
+		$this->getApi('subscription/1')
+			->assertSuccess()
+			->assertJson(['title' => 'Beitrag',
+				'id' => 1,
+				'amount' => 5000,
+				'fee_id' => 1,
+				'fee' => ['title' => 'Voller Beitrag', 'nami_id' => 1]
+			]);
+	}
+
+	/** @test */
 	public function it_can_get_all_subscriptions() {
 		$this->authAsApi();
 
@@ -41,7 +59,7 @@ class SubscriptionTest extends IntegrationTestCase {
 		$this->postApi('subscription', [
 			'title' => 'Beitrag',
 			'fee' => 2,
-			'amount' => '10000'
+			'amount' => '100,00'
 		])
 			->assertSuccess();
 
@@ -59,7 +77,7 @@ class SubscriptionTest extends IntegrationTestCase {
 		$this->postApi('subscription', [
 			'title' => 'Beitrag',
 			'fee' => null,
-			'amount' => '10000'
+			'amount' => '100,00'
 		])
 			->assertSuccess();
 
@@ -79,7 +97,7 @@ class SubscriptionTest extends IntegrationTestCase {
 		$this->postApi('subscription', [
 			'title' => null,
 			'fee' => 2,
-			'amount' => '10000'
+			'amount' => '100,00'
 		])
 			->assertValidationFailedWith('title');
 
@@ -93,7 +111,7 @@ class SubscriptionTest extends IntegrationTestCase {
 		$this->postApi('subscription', [
 			'title' => 'Beitrag',
 			'fee' => 2,
-			'amount' => '44,55'
+			'amount' => '44.55'
 		])
 			->assertValidationFailedWith('amount');
 	}
@@ -107,7 +125,7 @@ class SubscriptionTest extends IntegrationTestCase {
 		$this->patchApi('subscription/'.$sub->id, [
 			'title' => 'Beitrag',
 			'fee' => 2,
-			'amount' => '10000'
+			'amount' => '100,00'
 		])
 			->assertSuccess();
 
@@ -130,7 +148,7 @@ class SubscriptionTest extends IntegrationTestCase {
 		$this->patchApi('subscription/'.$sub->id, [
 			'title' => null,
 			'fee' => 2,
-			'amount' => '10000'
+			'amount' => '100,00'
 		])
 			->assertValidationFailedWith('title');
 
@@ -151,7 +169,7 @@ class SubscriptionTest extends IntegrationTestCase {
 		$this->patchApi('subscription/'.$sub->id, [
 			'title' => 'Beitrag',
 			'fee' => null,
-			'amount' => '10000'
+			'amount' => '100,00'
 		])
 			->assertSuccess();
 

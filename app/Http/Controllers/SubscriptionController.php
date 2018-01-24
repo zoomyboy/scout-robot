@@ -10,6 +10,10 @@ use App\Subscription;
 
 class SubscriptionController extends Controller
 {
+	public function show(Subscription $subscription) {
+		return response()->json($subscription->load('fee')->toArray());
+	}
+
     public function index() {
     	return response()->json(\App\Subscription::with('fee')->get());
     }

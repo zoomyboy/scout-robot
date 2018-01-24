@@ -11,6 +11,7 @@ const mass = () => import('../components/mass/index.vue');
 const namiGet = () => import('../components/nami/get.vue');
 const subscriptionIndex = () => import('../components/subscription/index.vue');
 const subscriptionAdd = () => import('../components/subscription/add.vue');
+const subscriptionEdit = () => import('../components/subscription/edit.vue');
 
 module.exports = [
 	{
@@ -84,5 +85,11 @@ module.exports = [
 		name: 'subscription.add',
 		props: { heading: { title: 'Beitrag hinzufügen' } },
 		components: { default: subscriptionAdd, heading }
+	},
+	{
+		path: '/subscription/:id',
+		name: 'subscription.edit',
+		props: { heading: { title: 'Beitrag bearbeiten' } },
+		components: { default: subscriptionEdit, heading }
 	}
 ];

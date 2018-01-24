@@ -36,13 +36,19 @@ class StoreMembersTest extends FeatureTestCase {
 	public function it_synchs_a_nami_member_when_it_is_created() {
 		\App\Conf::first()->update(['namiEnabled' => true]);
 		$member = $this->make('Member', ['firstname' => 'John', 'nami_id' => null]);
+		$sub = \App\Subscription::create([
+			'amount' => '5000',
+			'fee_id' => 2,
+			'title' => 'Sub'
+		]);
 
 		$this->postApi('member', array_merge($member->getAttributes(), [
 			'way' => \App\Way::first()->id,
 			'country' => \App\Way::first()->id,
 			'activity' => \App\Activity::first()->id,
 			'group' => \App\Group::first()->id,
-			'nationality' => \App\Nationality::first()->id
+			'nationality' => \App\Nationality::first()->id,
+			'subscription' => $sub->id
 		]))
 			->assertSuccess();
 
@@ -62,12 +68,19 @@ class StoreMembersTest extends FeatureTestCase {
 		\App\Conf::first()->update(['namiEnabled' => false]);
 		$member = $this->make('Member', ['firstname' => 'John', 'nami_id' => null]);
 
+		$sub = \App\Subscription::create([
+			'amount' => '5000',
+			'fee_id' => 2,
+			'title' => 'Sub'
+		]);
+
 		$this->postApi('member', array_merge($member->getAttributes(), [
 			'way' => \App\Way::first()->id,
 			'country' => \App\Way::first()->id,
 			'activity' => \App\Activity::first()->id,
 			'group' => \App\Group::first()->id,
-			'nationality' => \App\Nationality::first()->id
+			'nationality' => \App\Nationality::first()->id,
+			'subscription' => $sub->id
 		]))
 			->assertSuccess();
 
@@ -81,12 +94,19 @@ class StoreMembersTest extends FeatureTestCase {
 		\App\Conf::first()->update(['namiEnabled' => true]);
 		$member = $this->make('Member', ['firstname' => 'John', 'nami_id' => 1355]);
 
+		$sub = \App\Subscription::create([
+			'amount' => '5000',
+			'fee_id' => 2,
+			'title' => 'Sub'
+		]);
+
 		$this->postApi('member', array_merge($member->getAttributes(), [
 			'way' => \App\Way::first()->id,
 			'country' => \App\Way::first()->id,
 			'activity' => \App\Activity::first()->id,
 			'group' => \App\Group::first()->id,
-			'nationality' => \App\Nationality::first()->id
+			'nationality' => \App\Nationality::first()->id,
+			'subscription' => $sub->id
 		]))
 			->assertSuccess();
 

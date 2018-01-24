@@ -34,6 +34,14 @@ class MemberStoreRequest extends Request
 			'activity' => 'required|exists:activities,id',
 		];
 
+		if (is_null(\App\Activity::where('id', $this->activity)->first())) {
+			return $ret;
+		}
+
+		if (\App\Activity::where('id', $this->activity)->first()->is_payable) {
+			$ret['subscription'] = 'required';
+		}
+
 		$ret['group'] = [
 			'required',
 			Rule::in(Group::whereHas('activities', function($q) {

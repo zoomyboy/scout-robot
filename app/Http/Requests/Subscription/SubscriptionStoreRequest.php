@@ -12,9 +12,21 @@ class SubscriptionStoreRequest extends Request
 	public $model = Subscription::class;
 
 	public function rules() {
-		return [
+		$ret = [
 			'title' => 'required',
-			'amount' => 'required|integer'
+			'amount' => 'required|regex:/^[0-9]+,[0-9]+$/'
 		];
+
+		if (!is_null($this->fee)) {
+			$ret['fee'] = 'exists:fees,id';
+		}
+
+		return $ret;
+	}
+
+	public function modifyFillables($fill = null) {
+		$fill['amount'] = str_replace(',', '.', $fill['amount']) * 100;
+
+		return $fill;
 	}
 }

@@ -41,6 +41,7 @@ class CreateMembersTable extends Migration
 			$table->boolean('active')->default(1);
 			$table->integer('nami_id')->nullable();
 			$table->integer('nationality_id')->unsigned();
+			$table->integer('subscription_id')->nullable();
 			
             $table->timestamps();
         });

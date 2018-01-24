@@ -14,6 +14,7 @@
 						controller="subscription"
 						:headings="headings"
 						:collection="subscription"
+						:deleteaction="false"
 	  					scrolling
 					>
 				
@@ -37,7 +38,8 @@
 				subscription: [],
 				headings: [
 					{title: 'Name', data: 'title'},
-					{title: 'Lokaler Beitrag', data: 'amount', type: 'currency'},
+					{title: 'Lokaler Beitrag', data: 'amount', type: 'money'},
+					{title: 'NaMi-Beitrag', data: 'fee[title]'},
 				]
 			};
 		},
@@ -50,7 +52,7 @@
 			var vm = this;
 
 			axios.get('/api/subscription').then(function(data) {
-				vm.fee = data.data;
+				vm.subscription = data.data;
 			});
 		}
 	}

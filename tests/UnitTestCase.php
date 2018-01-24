@@ -2,6 +2,7 @@
 
 namespace Tests;
 
+use Tests\Traits\SetsUpNaMi;
 use Zoomyboy\Tests\Traits\CreatesModels;
 use Zoomyboy\Tests\Traits\HandlesExceptions;
 use Zoomyboy\Tests\Traits\AuthenticatesUsers;
@@ -14,6 +15,7 @@ class UnitTestCase extends \Tests\TestCase {
 	use HandlesExceptions;
 	use AuthenticatesUsers;
 	use DatabaseMigrations;
+	use SetsUpNaMi;
 
 	public function setUp() {
 		parent::setUp();

@@ -2,7 +2,7 @@
 	<div class="cp-wrap cp-subscription-add">
 		<vf-form redirect="subscription.index" method="post" action="/api/subscription"  msg="Beitrag erfolgreich hinzugefügt">
 			<grid><article>
-				<panel>
+				<panel title="Neuer Beitrag">
 					<vf-text name="title" label="Name"></vf-text>
 					<vf-text name="amount" label="Beitrag" :mask="{mask: '9{1,},99'}"></vf-text>
 					<vf-select url="/api/fee" name="fee" label="NaMi-Beitrag" nullable></vf-select>
@@ -33,21 +33,7 @@
 		},
 		components: {
 			panel: require('z-ui/panel/panel.vue'),
-			grid: require('z-ui/grid/grid.vue'),
-			vfDate: require('z-ui/form/fields/date.vue'),
-			panelcontent: require('z-ui/panel/content.vue'),
-		},
-		methods: {
-			loadgroup: function(v) {
-				this.loadedActivityId = v;
-			}
-		},
-		mounted: function() {
-			var vm = this;
-
-			axios.get('/api/activity').then((ret) => {
-				vm.activities = ret.data;
-			});
+			grid: require('z-ui/grid/grid.vue')
 		}
 	}
 </script>
