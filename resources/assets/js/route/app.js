@@ -9,7 +9,8 @@ const profilePassword = () => import('../components/profile/password.vue');
 const welcome = () => import('../components/welcome/index.vue');
 const mass = () => import('../components/mass/index.vue');
 const namiGet = () => import('../components/nami/get.vue');
-const feeIndex = () => import('../components/fee/index.vue');
+const subscriptionIndex = () => import('../components/subscription/index.vue');
+const subscriptionAdd = () => import('../components/subscription/add.vue');
 
 module.exports = [
 	{
@@ -73,9 +74,15 @@ module.exports = [
 		components: { default: namiGet, heading }
 	},
 	{
-		path: '/fee',
-		name: 'fee.index',
+		path: '/subscription',
+		name: 'subscription.index',
 		props: { heading: { title: 'Beitrags-Übersicht' } },
-		components: { default: feeIndex, heading }
+		components: { default: subscriptionIndex, heading }
+	},
+	{
+		path: '/subscription/add',
+		name: 'subscription.add',
+		props: { heading: { title: 'Beitrag hinzufügen' } },
+		components: { default: subscriptionAdd, heading }
 	}
 ];
