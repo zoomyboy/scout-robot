@@ -1,0 +1,11 @@
+nav:
+- title: Home
+  url: /
+- title: Einloggen
+  url: /signin.html
+- title: Konfiguration
+  subpages:
+  - title: Allgemein
+    url: /config/general.html
+  - title: Mitgliederverwaltung
+    url: /config/member.html

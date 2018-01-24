@@ -1,5 +1,6 @@
 ---
 layout: default
+title: Home
 ---
 
 # Schön, dass du den Weg hierhin gefunden hast!
