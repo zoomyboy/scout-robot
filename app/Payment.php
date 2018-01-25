@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Payment extends Model
 {
-    public $fillable = ['amount', 'nr'];
+    public $fillable = ['nr'];
 
 	public $casts = [
 		'amount' => 'int'
@@ -18,5 +18,9 @@ class Payment extends Model
 
 	public function member() {
 		return $this->belongsTo(\App\Member::class);
+	}
+
+	public function subscription() {
+		return $this->belongsTo(Subscription::class);
 	}
 }

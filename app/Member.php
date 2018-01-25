@@ -34,7 +34,9 @@ class Member extends Model
 
 	//----------------------------------- Getters -----------------------------------
 	public function getStrikesAttribute() {
-		return $this->paymentsNotPaid()->sum('amount');
+		return $this->paymentsNotPaid->map(function($p) {
+			return $p->subscription->amount;
+		})->sum();
 	}
 
 	//---------------------------------- Relations ----------------------------------

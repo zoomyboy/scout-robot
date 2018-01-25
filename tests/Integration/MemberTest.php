@@ -27,38 +27,45 @@ class MemberTest extends IntegrationTestCase {
 		$this->runSeeder('WaySeeder');
 		$this->runSeeder('UsergroupSeeder');
 		$this->runSeeder('UserSeeder');
+		$this->runSeeder('FeeSeeder');
 		$this->runSeeder('ConfSeeder');
+
+		$subscriptions = collect([
+			$this->create('Subscription', ['amount' => '2000', 'fee_id' => 1, 'title' => 'Sub1']),
+			$this->create('Subscription', ['amount' => '3000', 'fee_id' => 2, 'title' => 'Sub2']),
+			$this->create('Subscription', ['amount' => '4000', 'fee_id' => 3, 'title' => 'Sub3'])
+		]);
 
 		$payments = collect([
 			factory(Payment::class)->make([
 				'status_id' => Status::whereTitle('Bezahlt')->first()->id,
 				'nr' => 2011,
-				'amount' => 16
+				'subscription_id' => 2
 			]),
 			factory(Payment::class)->make([
 				'status_id' => Status::whereTitle('Nicht bezahlt')->first()->id,
 				'nr' => 2012,
-				'amount' => 18
+				'subscription_id' => 3
 			]),
 			factory(Payment::class)->make([
 				'status_id' => Status::whereTitle('Rechnung versendet')->first()->id,
 				'nr' => 2013,
-				'amount' => 20
+				'subscription_id' => 1
 			]),
 			factory(Payment::class)->make([
 				'status_id' => Status::whereTitle('Bezahlt')->first()->id,
 				'nr' => 2014,
-				'amount' => 22
+				'subscription_id' => 1
 			]),
 			factory(Payment::class)->make([
 				'status_id' => Status::whereTitle('Nicht bezahlt')->first()->id,
 				'nr' => 2015,
-				'amount' => 24
+				'subscription_id' => 2
 			]),
 			factory(Payment::class)->make([
 				'status_id' => Status::whereTitle('Rechnung versendet')->first()->id,
 				'nr' => 2016,
-				'amount' => 26
+				'subscription_id' => 3
 			])
 		]);
 
@@ -82,7 +89,7 @@ class MemberTest extends IntegrationTestCase {
 		
 		$this->getApi('member/table')
 			->assertSuccess()
-			->assertExactJson([[
+			->assertJson([[
 				'active' => true,
 				'firstname' => 'Krug',
 				'lastname' => 'Betty',
@@ -90,7 +97,7 @@ class MemberTest extends IntegrationTestCase {
 				'zip' => '4875',
 				'city' => 'Paderborn',
 				'joined_at' => '2012-02-06 00:00:00',
-				'strikes' => '88',
+				'strikes' => '13000',
 				'id' => 1
 			]]);
 	}
@@ -128,7 +135,6 @@ class MemberTest extends IntegrationTestCase {
 		return [ 
 			[
 				[],
-				//['activity' => 8, 'group' => 1],
 				['activity' => 35, 'group' => 1],
 				['activity' => 35, 'group' => 1]
 			]

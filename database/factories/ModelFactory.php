@@ -73,8 +73,12 @@ $factory->define(\App\Member::class, function(Faker\Generator $faker) {
 });
 
 $factory->define(\App\Payment::class, function(Faker\Generator $faker) {
+	if (!\App\Subscription::get()->count()) {
+		abort(404, 'Du solltest einen SubscriptionSeder für Payments ausführen');
+	}
+
 	return [
-		'amount' => $faker->numberBetween(1, 500),
+ 		'subscription_id' => \App\Subscription::get()->random()->id,
 		'nr' => $faker->numberBetween(date('Y')-5, date('Y')),
 		'status_id' => \App\Status::get()->random()->id
 	];

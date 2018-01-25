@@ -13,6 +13,7 @@ class BillPdfQueryTest extends UnitTestCase {
 	public function setUp() {
 		parent::setUp();
 		
+		$this->runSeeder('FeeSeeder');
 		$this->runSeeder('WaySeeder');
 		$this->runSeeder('ConfessionSeeder');
 		$this->runSeeder('RegionSeeder');
@@ -20,6 +21,8 @@ class BillPdfQueryTest extends UnitTestCase {
 		$this->runSeeder('GenderSeeder');
 		$this->runSeeder('StatusSeeder');
 		$this->runSeeder('NationalitySeeder');
+
+		$this->createMany('Subscription', 3);
 	}
 
 	/** @test */
@@ -64,9 +67,11 @@ class BillPdfQueryTest extends UnitTestCase {
 			['way_id' => 1]
 		]);
 
-		$this->make('Payment', ['status_id' => 2, 'amount' => 0])->member()->associate($members[0])->save();
-		$this->make('Payment', ['status_id' => 3, 'amount' => 0])->member()->associate($members[1])->save();
-		$this->make('Payment', ['status_id' => 1, 'amount' => 0])->member()->associate($members[1])->save();
+		$sub = $this->create('Subscription', ['amount' => 0]);
+
+		$this->make('Payment', ['status_id' => 2, 'subscription_id' => $sub->id])->member()->associate($members[0])->save();
+		$this->make('Payment', ['status_id' => 3, 'subscription_id' => $sub->id])->member()->associate($members[1])->save();
+		$this->make('Payment', ['status_id' => 1, 'subscription_id' => $sub->id])->member()->associate($members[1])->save();
 
 		$query = new BillPdfQuery();
 		$this->assertEquals(0, $query->handle()->count());
@@ -82,11 +87,11 @@ class BillPdfQueryTest extends UnitTestCase {
 			['way_id' => 1]
 		]);
 
-		$this->make('Payment', ['status_id' => 1, 'amount' => 10])->member()->associate($members[0])->save();
-		$this->make('Payment', ['status_id' => 1, 'amount' => 10])->member()->associate($members[1])->save();
-		$this->make('Payment', ['status_id' => 1, 'amount' => 10])->member()->associate($members[2])->save();
-		$this->make('Payment', ['status_id' => 1, 'amount' => 10])->member()->associate($members[3])->save();
-		$this->make('Payment', ['status_id' => 1, 'amount' => 10])->member()->associate($members[4])->save();
+		$this->make('Payment', ['status_id' => 1])->member()->associate($members[0])->save();
+		$this->make('Payment', ['status_id' => 1])->member()->associate($members[1])->save();
+		$this->make('Payment', ['status_id' => 1])->member()->associate($members[2])->save();
+		$this->make('Payment', ['status_id' => 1])->member()->associate($members[3])->save();
+		$this->make('Payment', ['status_id' => 1])->member()->associate($members[4])->save();
 
 		$query = new BillPdfQuery();
 		$this->assertEquals([1,2,3,4,5], $query->handle([1,2])->get()->pluck('id')->sort()->values()->toArray());
@@ -104,11 +109,11 @@ class BillPdfQueryTest extends UnitTestCase {
 			['way_id' => 1, 'lastname' => 'U']
 		]);
 
-		$this->make('Payment', ['status_id' => 1, 'amount' => 10])->member()->associate($members[0])->save();
-		$this->make('Payment', ['status_id' => 1, 'amount' => 10])->member()->associate($members[1])->save();
-		$this->make('Payment', ['status_id' => 1, 'amount' => 10])->member()->associate($members[2])->save();
-		$this->make('Payment', ['status_id' => 1, 'amount' => 10])->member()->associate($members[3])->save();
-		$this->make('Payment', ['status_id' => 1, 'amount' => 10])->member()->associate($members[4])->save();
+		$this->make('Payment', ['status_id' => 1])->member()->associate($members[0])->save();
+		$this->make('Payment', ['status_id' => 1])->member()->associate($members[1])->save();
+		$this->make('Payment', ['status_id' => 1])->member()->associate($members[2])->save();
+		$this->make('Payment', ['status_id' => 1])->member()->associate($members[3])->save();
+		$this->make('Payment', ['status_id' => 1])->member()->associate($members[4])->save();
 
 		$query = new BillPdfQuery();
 		$this->assertEquals([2,1,4,3,5], $query->handle([1,2])->get()->pluck('id')->toArray());

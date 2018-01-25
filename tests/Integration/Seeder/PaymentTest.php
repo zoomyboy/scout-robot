@@ -20,6 +20,8 @@ class PaymentTest extends IntegrationTestCase
 		Config::set('seed.default_userpw', 'admin22');
 		Config::set('seed.default_usermail', 'admin@example.tz');
 
+		$this->runSeeder(\FeeSeeder::class);
+		$this->runSeeder(\SubscriptionSeeder::class);
 		$this->runSeeder(\GenderSeeder::class);
 		$this->runSeeder(\NationalitySeeder::class);
 		$this->runSeeder(\RegionSeeder::class);
@@ -41,9 +43,8 @@ class PaymentTest extends IntegrationTestCase
 		$this->assertLessThanOrEqual(5, $member->payments->count());
 
 		foreach($member->payments as $payment) {
-			$this->assertInternalType('integer', $payment->amount);
-			$this->assertLessThanOrEqual(500, $payment->amount);
-			$this->assertGreaterThanOrEqual(1, $payment->amount);
+			$this->assertInternalType('integer', $payment->subscription->amount);
+			$this->assertGreaterThanOrEqual(1, $payment->subscription->amount);
 			$this->assertInstanceOf(\App\Status::class, $payment->status);	
 			$this->assertRegExp('/[0-9]{4}/', $payment->nr);
 		}
