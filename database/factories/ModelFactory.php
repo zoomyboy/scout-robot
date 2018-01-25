@@ -35,11 +35,12 @@ $factory->define(\App\Usergroup::class, function(Faker\Generator $faker) {
 });
 
 $factory->define(\App\Member::class, function(Faker\Generator $faker) {
-	if (\App\Gender::get()->count() == 0) {abort(404, 'Error in Factory: No Genders');}
+	if (\App\Gender::where('is_null', false)->get()->count() == 0) {abort(404, 'Error in Factory: No Genders');}
 	if (\App\Country::get()->count() == 0) {abort(404, 'Error in Factory: No Countries');}
-	if (\App\Region::get()->count() == 0) {abort(404, 'Error in Factory: No Regions');}
+	if (\App\Region::where('is_null', false)->get()->count() == 0) {abort(404, 'Error in Factory: No Regions');}
 	if (\App\Confession::get()->count() == 0) {abort(404, 'Error in Factory: No Confessions');}
 	if (\App\Way::get()->count() == 0) {abort(404, 'Error in Factory: No Ways');}
+	if (\App\Nationality::get()->count() == 0) {abort(404, 'Error in Factory: No Nationalities');}
 
 	return [
 		'firstname' => $faker->firstname,
@@ -49,11 +50,12 @@ $factory->define(\App\Member::class, function(Faker\Generator $faker) {
 		'fax' => $faker->regexify('/\+49 [0-9]{3} [0-9]{5,7}/'),
 		'business_phone' => $faker->regexify('/\+49 [0-9]{3} [0-9]{5,7}/'),
 		'mobile' => $faker->regexify('/\+49 [0-9]{3} [0-9]{5,7}/'),
-		'gender_id' => \App\Gender::get()->random()->id,
+		'gender_id' => \App\Gender::where('is_null', false)->get()->random()->id,
 		'country_id' => \App\Country::get()->random()->id,
 		'other_country' => $faker->country,
-		'region_id' => \App\Region::get()->random()->id,
+		'region_id' => \App\Region::where('is_null', false)->get()->random()->id,
 		'confession_id' => \App\Confession::get()->random()->id,
+		'nationality_id' => \App\Nationality::get()->random()->id,
 		'way_id' => \App\Way::get()->random()->id,
 		'birthday' => $faker->date,
 		'further_address' => $faker->streetAddress,
@@ -65,14 +67,34 @@ $factory->define(\App\Member::class, function(Faker\Generator $faker) {
 		'city' => $faker->city,
 		'email' => $faker->email,
 		'email_parents' => $faker->email,
-		'active' => true
+		'active' => true,
+		'nami_id' => $faker->regexify('/[0-9]{8}/'),
 	];
 });
 
 $factory->define(\App\Payment::class, function(Faker\Generator $faker) {
+	if (!\App\Subscription::get()->count()) {
+		abort(404, 'Du solltest einen SubscriptionSeder für Payments ausführen');
+	}
+
 	return [
-		'amount' => $faker->numberBetween(1, 500),
+ 		'subscription_id' => \App\Subscription::get()->random()->id,
 		'nr' => $faker->numberBetween(date('Y')-5, date('Y')),
 		'status_id' => \App\Status::get()->random()->id
+	];
+});
+
+$factory->define(\App\Fee::class, function(Faker\Generator $faker) {
+	return [
+		'title' => $faker->words(3, true),
+		'nami_id' => $faker->numberBetween(100, 200)
+	];
+});
+
+$factory->define(\App\Subscription::class, function(Faker\Generator $faker) {
+	return [
+		'amount' => $faker->numberBetween(1000, 5000),
+		'title' => $faker->words(3, true),
+		'fee_id' => \App\Fee::get()->random()->id
 	];
 });

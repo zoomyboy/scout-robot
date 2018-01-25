@@ -10,6 +10,7 @@ use \App\Member;
 use App\Conf;
 use App\Payment;
 use App\Status;
+use App\Subscription;
 
 class BillTest extends FeatureTestCase {
 
@@ -18,6 +19,8 @@ class BillTest extends FeatureTestCase {
 	public function setUp() {
 		parent::setUp();
 
+		$this->runSeeder('FeeSeeder');
+		$this->runSeeder('SubscriptionSeeder');
 		$this->runSeeder('UsergroupSeeder');
 		$this->runSeeder('GenderSeeder');
 		$this->runSeeder('CountrySeeder');
@@ -26,6 +29,7 @@ class BillTest extends FeatureTestCase {
 		$this->runSeeder('WaySeeder');
 		$this->runSeeder('ConfSeeder');
 		$this->runSeeder('StatusSeeder');
+		$this->runSeeder('NationalitySeeder');
 
 		Conf::first()->update(['groupname' => 'Bla']);
 		$this->subject = 'Rechnung von Bla';
@@ -91,6 +95,7 @@ class BillTest extends FeatureTestCase {
 			$myMember = $this->create('Member', $member);
 			$payment = new Payment(['amount' => '1000', 'nr' => '2015']);
 			$payment->status()->associate(Status::find(1));
+			$payment->subscription()->associate(Subscription::find(3));
 			$payment->member()->associate($myMember);
 			$payment->save();
 

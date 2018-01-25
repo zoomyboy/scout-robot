@@ -4,12 +4,14 @@ namespace Tests\Feature;
 
 use Tests\FeatureTestCase;
 use App\User;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Support\Facades\Config;
 use App\Usergroup;
 use App\Right;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class ClientInformationTest extends FeatureTestCase {
+
+	use DatabaseMigrations;
 
 	public function setUp() {
 		parent::setUp();
@@ -18,23 +20,14 @@ class ClientInformationTest extends FeatureTestCase {
 		Config::set('seed.default_username', 'Admin');
 		Config::set('seed.default_userpw', 'admin22');
 		Config::set('seed.default_usermail', 'admin@example.tz');
-		Config::set('seed.default_country', 'BF');
-
-		$this->runMigration('users_table');
-		$this->runMigration('usergroups_table');
-		$this->runMigration('rights_table');
-		$this->runMigration('right_usergroup_table');
-		$this->runMigration('confs_table');
-		$this->runMigration('countries_table');
-		$this->runMigration('regions_table');
-		$this->runMigration('images_table');
-		$this->runMigration('units_table');
+		Config::set('seed.default_country', 'Algerien');
 
 		$this->runSeeder(\RightSeeder::class);
 		$this->create('usergroup', ['title' => 'NewUserGroup'])->rights()->sync([2,3]);
 		$this->runSeeder(\CountrySeeder::class);
 		$this->runSeeder(\RegionSeeder::class);
 		$this->runSeeder(\ConfSeeder::class);
+		$this->runSeeder('WaySeeder');
 	}
 
 	/** @test */
@@ -45,9 +38,8 @@ class ClientInformationTest extends FeatureTestCase {
 			->assertSuccess()
 			->assertJson(['conf' => [
 				'default_country' => [
-					'id' => 40,
-					'code' => 'BF',
-					'title' => 'Burkina Faso'
+					'id' => 2,
+					'title' => 'Algerien'
 				],
 				'default_keepdata' => false,
 				'default_region' => null,

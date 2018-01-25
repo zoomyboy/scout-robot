@@ -19,3 +19,4 @@ tags
 yarn.lock
 packages/
 /resources/views/temp
+/resources/temp

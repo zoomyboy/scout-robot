@@ -5,6 +5,9 @@ namespace App\Http\Requests\Member;
 use Illuminate\Foundation\Http\FormRequest;
 use Zoomyboy\BaseRequest\Request;
 use App\Member;
+use App\Group;
+use App\Jobs\StoreNaMiMember;
+use Illuminate\Validation\Rule;
 
 class MemberStoreRequest extends Request
 {
@@ -20,15 +23,30 @@ class MemberStoreRequest extends Request
 		$ret = [
 			'firstname' => 'required',
 			'lastname' => 'required',
-			'gender' => 'required',
 			'birthday' => 'required|date',
 			'joined_at' => 'required|date',
 			'address' => 'required',
 			'zip' => 'required|numeric',
 			'city' => 'required',
 			'country' => 'required|exists:countries,id',
-			'region' => 'required|exists:regions,id',
 			'way' => 'required|exists:ways,id',
+			'nationality' => 'required|exists:nationalities,id',
+			'activity' => 'required|exists:activities,id',
+		];
+
+		if (is_null(\App\Activity::where('id', $this->activity)->first())) {
+			return $ret;
+		}
+
+		if (\App\Activity::where('id', $this->activity)->first()->is_payable) {
+			$ret['subscription'] = 'required';
+		}
+
+		$ret['group'] = [
+			'required',
+			Rule::in(Group::whereHas('activities', function($q) {
+				return $q->where('id', $this->activity);
+			})->get()->pluck('id')->toArray())
 		];
 
 		if ($this->input('email')) {
@@ -36,5 +54,22 @@ class MemberStoreRequest extends Request
 		}
 
 		return $ret;
+	}
+
+	public function afterPersist($model = null) {
+		$model->memberships()->create([
+			'activity_id' => $this->activity,
+			'group_id' => $this->group
+		]);
+
+ 		if (!is_null($model->nami_id)) {
+			return;
+		}
+
+		if (!\App\Conf::first()->namiEnabled) {
+			return;
+		}
+
+		StoreNaMiMember::dispatch($model);
 	}
 }

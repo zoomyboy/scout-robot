@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Notification;
 use \App\Member;
 use App\Status;
 use App\Payment;
+use App\Subscription;
 
 class BillTest extends IntegrationTestCase {
 
@@ -17,6 +18,8 @@ class BillTest extends IntegrationTestCase {
 	public function setUp() {
 		parent::setUp();
 
+		$this->runSeeder('FeeSeeder');
+		$this->runSeeder('SubscriptionSeeder');
 		$this->runSeeder('UsergroupSeeder');
 		$this->runSeeder('GenderSeeder');
 		$this->runSeeder('CountrySeeder');
@@ -24,6 +27,7 @@ class BillTest extends IntegrationTestCase {
 		$this->runSeeder('ConfessionSeeder');
 		$this->runSeeder('WaySeeder');
 		$this->runSeeder('StatusSeeder');
+		$this->runSeeder('NationalitySeeder');
 	}
 
 	/** @test */
@@ -174,9 +178,10 @@ class BillTest extends IntegrationTestCase {
 
 		$members = array_map(function($member) {
 			$myMember = $this->create('Member', $member[0]);
-			$payment = new Payment(['amount' => '1000', 'nr' => '2015']);
+			$payment = new Payment(['nr' => '2015']);
 			$payment->status()->associate(Status::find(1));
 			$payment->member()->associate($myMember);
+			$payment->subscription()->associate(Subscription::find(2));
 			$payment->save();
 
 			$member[0] = $myMember;
@@ -229,9 +234,10 @@ class BillTest extends IntegrationTestCase {
 
 		$members = array_map(function($member) {
 			$myMember = $this->create('Member', $member[0]);
-			$payment = new Payment(['amount' => '1000', 'nr' => '2015']);
+			$payment = new Payment(['nr' => '2015']);
 			$payment->status()->associate(Status::find(1));
 			$payment->member()->associate($myMember);
+			$payment->subscription()->associate(Subscription::find(2));
 			$payment->save();
 
 			$member[0] = $myMember;
@@ -304,9 +310,10 @@ class BillTest extends IntegrationTestCase {
 
 		$members = array_map(function($member) {
 			$myMember = $this->create('Member', $member[0]);
-			$payment = new Payment(['amount' => '1000', 'nr' => '2015']);
+			$payment = new Payment(['nr' => '2015']);
 			$payment->status()->associate(Status::find(3));
 			$payment->member()->associate($myMember);
+			$payment->subscription()->associate(Subscription::find(2));
 			$payment->save();
 
 			return [$this->create('Member', $member[0]), $member[1]];
@@ -335,9 +342,10 @@ class BillTest extends IntegrationTestCase {
 
 		$members = array_map(function($member) {
 			$myMember = $this->create('Member', $member[0]);
-			$payment = new Payment(['amount' => '1000', 'nr' => '2015']);
+			$payment = new Payment(['nr' => '2015']);
 			$payment->status()->associate(Status::find(2));
 			$payment->member()->associate($myMember);
+			$payment->subscription()->associate(Subscription::find(2));
 			$payment->save();
 
 			return [$this->create('Member', $member[0]), $member[1]];

@@ -18,14 +18,12 @@ class CountryTest extends TestCase
 		$this->runMigration('countries_table');
 		$this->runSeeder(\CountrySeeder::class);
 		
-		$this->assertEquals(253, Country::count());
+		$this->assertEquals(36, Country::count());
 
 		$germany = Country::where('title', 'Deutschland')->first();
 		$this->assertNotNull($germany);
-		$this->assertEquals('DE', $germany->code);
 
-		$mali = Country::where('title', 'Mali')->first();
+		$mali = Country::where('title', 'Irland')->first();
 		$this->assertNotNull($mali);
-		$this->assertEquals('ML', $mali->code);
 	}
 }

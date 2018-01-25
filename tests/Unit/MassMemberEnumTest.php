@@ -17,7 +17,7 @@ class MassMemberEnumBillTest extends UnitTestCase {
 		$this->runSeeder('ConfessionSeeder');
 		$this->runSeeder('WaySeeder');
 		$this->runSeeder('GenderSeeder');
-		
+		$this->runSeeder('NationalitySeeder');
 	}
 
 	public function dataProvider() {

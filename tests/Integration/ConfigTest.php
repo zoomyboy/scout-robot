@@ -3,27 +3,22 @@
 namespace Tests\Integration;
 
 use Tests\IntegrationTestCase;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class ConfigTest extends IntegrationTestCase {
+
+	use DatabaseMigrations;
+
 	public function setUp() {
 		parent::setUp();
 
-		$this->runMigration('confs_table');
-		$this->runMigration('countries_table');
-		$this->runMigration('usergroups_table');
-		$this->runMigration('users_table');
-		$this->runMigration('rights_table');
-		$this->runMigration('right_usergroup_table');
-		$this->runMigration('regions_table');
-		$this->runMigration('images_table');
-		$this->runMigration('units_table');
-		
 		$this->runSeeder('CountrySeeder');
 		$this->runSeeder('UsergroupSeeder');
 		$this->runSeeder('ConfSeeder');
 		$this->runSeeder('RightSeeder');
 		$this->runSeeder('RegionSeeder');
 		$this->runSeeder('UnitSeeder');
+		$this->runSeeder('WaySeeder');
 	}
 
 	/** @test */
@@ -33,7 +28,7 @@ class ConfigTest extends IntegrationTestCase {
 		$this->patchApi('conf/1', [
 			'deadlinenr' => 2,
 			'deadlineunit' => "4",
-			'defaultCountry' => 51,
+			'defaultCountry' => 2,
 			'defaultRegion' => 2,
 			'default_keepdata' => true,
 			'default_sendnewspaper' => true,
@@ -58,7 +53,7 @@ class ConfigTest extends IntegrationTestCase {
 		$this->getApi('info')->assertJson(['conf' => [
 			'deadlinenr' => 2,
 			'deadlineunit_id' => 4,
-			'default_country_id' => "51",
+			'default_country_id' => "2",
 			'default_region_id' => 2,
 			'default_keepdata' => true,
 			'default_sendnewspaper' => true,

@@ -10,6 +10,7 @@
 							<paneltab title="Ansprechpartner" index="2"></paneltab>
 							<paneltab title="PDF-Erstellung" index="3"></paneltab>
 							<paneltab title="E-Mails" index="4"></paneltab>
+							<paneltab title="NaMi" index="5"></paneltab>
 						</div>
 						<panelcontent index="0" active>
 							<vf-text name="groupname" label="Gruppenname"></vf-text>
@@ -18,6 +19,7 @@
 						<panelcontent index="1">
 							<vf-select name="defaultCountry" label="Land" url="/api/country" nullable></vf-select>
 							<vf-select name="defaultRegion" label="Bundesland" url="/api/region" nullable></vf-select>
+							<vf-select name="defaultNationality" label="Staatsangehörigkeit" url="/api/nationality" nullable></vf-select>
 							<vf-checkbox name="default_keepdata" label="Datenweiterverwendung" help="Standardeinstellung für Datenweiterverwendung beim anlegen neuer Mitglieder"></vf-checkbox>
 							<vf-checkbox name="default_sendnewspaper" label="Zeitschriftenversand" help="Standardeinstellung für Zeitschriftenversand beim anlegen neuer Mitglieder"></vf-checkbox>
 						</panelcontent>
@@ -50,6 +52,12 @@
 							<vf-text name="emailBillText" label="Text für Rechnungen" :help="billRememberHelp"></vf-text>
 							<vf-text name="emailRememberText" label="Text für Zahlungserinnerungen" :help="billBodyHelp"></vf-text>
 							<vf-text name="emailGreeting" label="Grußwort" :help="greetingHelp"></vf-text>
+						</panelcontent>
+						<panelcontent index="5">
+							<vf-checkbox name="namiEnabled" label="NaMi Synchronisieren"></vf-checkbox>
+							<vf-text name="namiUser" label="Benutzername" help="Das ist in der Regel deine Mitgliedsnummer"></vf-text>
+							<vf-password name="namiPassword" label="Passwort" help="Das hier ist dein NaMi-Passwort. Wenn du noch kein hast, solltest du einen Zugang beantragen."></vf-password>
+							<vf-text name="namiGroup" label="Gruppieerungsnummer" help="Das ist in der Regel deine Stammesnummer (i.d.R. 6-stellig)"></vf-text>
 						</panelcontent>
 						<vf-submit></vf-submit>
 					</panel>

@@ -12,11 +12,6 @@ class EditProfileTest extends FeatureTestCase {
 	public function setUp() {
 		parent::setUp();
 
-		$this->runMigration('rights_table');
-		$this->runMigration('usergroups_table');
-		$this->runMigration('right_usergroup_table');
-		$this->runMigration('users_table');
-
 		Config::set('seed.default_usergroup', 'SA');
 		Config::set('seed.default_username', 'Admin');
 		Config::set('seed.default_userpw', 'admin22');

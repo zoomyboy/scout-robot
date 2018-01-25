@@ -10,13 +10,6 @@ class ResetPasswordTest extends IntegrationTestCase {
 	public function setUp() {
 		parent::setUp();
 
-		$this->runMigration('users_table');
-		$this->runMigration('usergroups_table');
-		$this->runMigration('rights_table');
-		$this->runMigration('right_usergroup_table');
-		$this->runMigration('password_resets_table');
-		$this->runMigration('images_table');
-
 		$this->runSeeder('UsergroupSeeder');
 	}
 

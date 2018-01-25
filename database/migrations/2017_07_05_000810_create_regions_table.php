@@ -15,6 +15,9 @@ class CreateRegionsTable extends Migration
     {
         Schema::create('regions', function (Blueprint $table) {
             $table->increments('id');
+			$table->string('nami_title')->nullable();
+			$table->integer('nami_id')->nullable();
+			$table->boolean('is_null');
 			$table->string('title');
         });
     }

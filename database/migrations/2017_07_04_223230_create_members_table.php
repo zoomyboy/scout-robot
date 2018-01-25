@@ -18,7 +18,7 @@ class CreateMembersTable extends Migration
 			$table->string('firstname');
 			$table->string('lastname');
 			$table->string('nickname')->nullable();
-			$table->integer('gender_id')->unsigned();
+			$table->integer('gender_id')->unsigned()->nullable();
 			$table->integer('country_id')->unsigned();
 			$table->string('other_country')->nullable();
 			$table->integer('confession_id')->unsigned()->nullable();
@@ -30,7 +30,7 @@ class CreateMembersTable extends Migration
 			$table->string('further_address')->nullable();
 			$table->string('zip');
 			$table->string('city');
-			$table->string('region_id');
+			$table->string('region_id')->nullable();
 			$table->string('phone')->nullable();
 			$table->string('mobile')->nullable();
 			$table->string('business_phone')->nullable();
@@ -39,6 +39,9 @@ class CreateMembersTable extends Migration
 			$table->string('email')->nullable();
 			$table->string('email_parents')->nullable();
 			$table->boolean('active')->default(1);
+			$table->integer('nami_id')->nullable();
+			$table->integer('nationality_id')->unsigned();
+			$table->integer('subscription_id')->nullable();
 			
             $table->timestamps();
         });
