@@ -204,6 +204,9 @@ class Member extends NaMiService {
 			'telefax' => $member->fax,
 			'email' => $member->email,
 			'emailVertretungsberechtigter' => $member->email_parents,
+			'beitragsartId' => ($member->subscription)
+				? $member->subscription->fee->nami_id
+				: null
 		]);
 
 		return is_numeric($response->data) && $response->success === true

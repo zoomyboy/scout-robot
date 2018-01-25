@@ -89,9 +89,11 @@ class NaMiService {
 				case 0:
 					return true;
 				default:
+					\Log::debug('NaMi-Login-Response: '.$response);
 					throw new LoginException('Unknown error', $response->statusCode);
 			}
 		} else {
+			\Log::debug('NaMi-Login-Response: '.$response);
 			throw new LoginException('Unknown error', null);
 		}
 	}

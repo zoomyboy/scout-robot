@@ -17,6 +17,7 @@ class StoreMemberTest extends IntegrationTestCase {
 		parent::setUp();
 
 		$this->runSeeder('ActivitySeeder');
+		$this->runSeeder('FeeSeeder');
 		$this->runSeeder('UsergroupSeeder');
 		$this->runSeeder('GenderSeeder');
 		$this->runSeeder('CountrySeeder');
@@ -31,8 +32,6 @@ class StoreMemberTest extends IntegrationTestCase {
 
 	/** @test */
 	public function it_stores_a_members_membership_for_the_first_time() {
-		Conf::first()->update(['namiEnabled' => true]);
-
 		$member = $this->make('Member', ['nami_id' => null, 'firstname' => 'John']);
 		$member->save();
 
@@ -59,5 +58,32 @@ class StoreMemberTest extends IntegrationTestCase {
 		$this->assertEquals(4, $singleMembership->untergliederungId);
 		$this->assertEquals(Carbon::now()->format('Y-m-d'), Carbon::parse($singleMembership->aktivVon)->format('Y-m-d'));
 		$this->assertNull($singleMembership->aktivBis);
+	}
+
+	/** @test */
+	public function it_stores_a_subscription_with_the_member_when_set() {
+		$member = $this->make('Member', ['nami_id' => null, 'firstname' => 'John']);
+		$member->save();
+
+		$member->memberships()->create([
+			'activity_id' => Activity::where('nami_id', 35)->first()->id,
+			'group_id' => Group::where('nami_id', 4)->first()->id
+		]);
+
+		$sub = new \App\Subscription([
+			'amount' => 5000,
+			'title' => 'Sub',
+		]);
+		$sub->fee()->associate(\App\Fee::find(2));
+		$sub->save();
+		$member->subscription()->associate($sub);
+		$member->save();
+
+		StoreNaMiMember::dispatch($member);
+
+		$namiId = Member::first()->nami_id;
+
+		$namiMember = NaMiMember::single($namiId);
+		$this->assertEquals(2, $namiMember->beitragsartId);
 	}
 }
