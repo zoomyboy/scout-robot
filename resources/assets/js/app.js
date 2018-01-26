@@ -33,6 +33,7 @@ const store = new Vuex.Store({
 				adding: false
 			}
 		},
+		navvisible: true,
 		notification: false,
 		toolbar: [
 			{icon: 'more_vert', children: [
@@ -83,7 +84,13 @@ const store = new Vuex.Store({
 			window.setTimeout(function() {
 				store.notification = false;
 			}, delay);
-		}
+		},
+		togglenav: function(state) {
+			state.navvisible = !state.navvisible;
+		},
+		setnav: function(state, n) {
+			state.navvisible = n;
+		},
 	},
 	getters: {
 		appname: function(state) {

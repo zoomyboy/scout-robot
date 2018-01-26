@@ -1,7 +1,7 @@
 <template>
     <div class="cp-wrap cp-js-App" v-if="loaded">
         <v-app v-if="loaded">
-            <v-navigation-drawer app fixed>
+            <v-navigation-drawer :mobile-break-point="800" v-model="navInternalState" app fixed>
                 <v-toolbar flat>
                     <v-list>
                         <v-list-tile>
@@ -24,7 +24,7 @@
                 </v-list>
             </v-navigation-drawer>
             <v-toolbar color="primary" app flat dark>
-                <v-toolbar-side-icon></v-toolbar-side-icon>
+                <v-toolbar-side-icon @click="navInternalState = !navInternalState" app></v-toolbar-side-icon>
 				<v-toolbar-title class="white--text">{{ apptitle }}</v-toolbar-title>
                 <v-spacer></v-spacer>
                 <v-toolbar-items>
@@ -68,7 +68,7 @@
     export default {
         data: function() {
             return  {
-
+				navInternalState: false
             };
         },
         methods: {
@@ -83,8 +83,14 @@
                 }
             }
         },
+		watch: {
+			navInternalState: function(n) {
+				console.log('UUU');
+				this.$store.commit('setnav', n);
+			}
+		},
         computed: {
-            ...mapState(['toolbar', 'notification', 'apptitle']),
+            ...mapState(['toolbar', 'notification', 'apptitle', 'navvisible']),
             ...mapGetters(['appname', 'loaded'])
         },
         mounted: function() {
