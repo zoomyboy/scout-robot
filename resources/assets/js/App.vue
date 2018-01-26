@@ -25,7 +25,7 @@
             </v-navigation-drawer>
             <v-toolbar color="primary" app flat dark>
                 <v-toolbar-side-icon></v-toolbar-side-icon>
-                <v-toolbar-title class="white--text">Title</v-toolbar-title>
+				<v-toolbar-title class="white--text">{{ apptitle }}</v-toolbar-title>
                 <v-spacer></v-spacer>
                 <v-toolbar-items>
                     <v-menu v-for="(item,key) in toolbar" offset-y left :key="key">
@@ -84,7 +84,7 @@
             }
         },
         computed: {
-            ...mapState(['toolbar', 'notification']),
+            ...mapState(['toolbar', 'notification', 'apptitle']),
             ...mapGetters(['appname', 'loaded'])
         },
         mounted: function() {

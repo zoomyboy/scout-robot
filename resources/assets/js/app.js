@@ -41,6 +41,7 @@ const store = new Vuex.Store({
 			]}
 		],
 		config: false,
+		apptitle: ''
 	},
 	mutations: {
 		setinfo(state, data) {
@@ -55,6 +56,9 @@ const store = new Vuex.Store({
 		},
 		setactions(actions, data) {
 			state.actions = data;
+		},
+		settitle: function(state, title) {
+			state.apptitle = title;
 		},
 		setappname: function(state, appname) {
 			Vue.set(state.config, 'appname', 'aaaa');

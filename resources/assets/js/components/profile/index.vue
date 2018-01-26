@@ -63,6 +63,9 @@
                     vm.$store.commit('errormsg', 'Fehler in Feld '+field+': '+msg);
                 });
             }
+		},
+		created: function() {
+			this.$store.commit('settitle', 'Mein Profil');
 		}
 	};
 </script>

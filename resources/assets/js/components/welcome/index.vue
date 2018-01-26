@@ -17,8 +17,8 @@
 
 			};
 		},
-		mounted: function() {
-
+		created: function() {
+			this.$store.commit('settitle', 'Willkommen');
 		}
 	}
 </script>
