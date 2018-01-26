@@ -11,6 +11,7 @@ let mix = require('laravel-mix');
  |
  */
 
+mix.config.resourceRoot = '/dist';
 
 mix.webpackConfig({
 	resolve: {
@@ -36,7 +37,11 @@ if (mix.inProduction()) {
                     options: mix.config.babel()
                 }]
             }]
-        }
+        },
+		output: {
+			path: path.resolve(__dirname, 'public/dist'),
+			publicPath: '/dist/'
+		}
     });
 }
 
