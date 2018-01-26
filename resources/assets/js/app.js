@@ -36,7 +36,8 @@ const store = new Vuex.Store({
 		notification: false,
 		toolbar: [
 			{icon: 'more_vert', children: [
-				{title: 'Mein Profil', route: 'profile.index', icon: 'fa-user'}
+				{title: 'Mein Profil', route: 'profile.index', icon: 'fa-user'},
+				{title: 'Passwort ändern', route: 'profile.password', icon: 'fa-key'}
 			]}
 		],
 		config: false,

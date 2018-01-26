@@ -48,9 +48,6 @@
             },
             ...mapState(['user'])
         },
-		components: {
-			panel: require('z-ui/panel/panel.vue')
-		},
 		methods: {
 			updateStore(u) {
 				this.$store.commit('updateuser', u);
