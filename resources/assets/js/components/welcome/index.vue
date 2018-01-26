@@ -1,6 +1,6 @@
 <template>
 	<div class="cp-wrap cp-welcome-index">
-
+        <h1>Willkommen bei Scout Robot!</h1>
 	</div>
 </template>
 

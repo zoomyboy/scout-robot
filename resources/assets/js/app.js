@@ -4,34 +4,6 @@ var vueRouter = require('vue-router');
 import VueRouter from 'vue-router';
 Vue.use(VueRouter);
 
-import sidebar from 'z-vue-sidebar';
-Vue.use(sidebar);
-
-import {session, clearSession} from 'zoom-vue-session';
-Vue.use(session);
-
-Vue.component('vLink', require('z-ui/link/link.vue'));
-Vue.component('buttonbar', require('z-ui/link/buttonbar.vue'));
-Vue.component('vfForm', require('z-ui/form/form.vue'));
-Vue.component('vfHidden', require('z-ui/form/fields/hidden.vue'));
-Vue.component('vfText', require('z-ui/form/fields/text.vue'));
-Vue.component('vfSubmit', require('z-ui/form/fields/submit.vue'));
-Vue.component('vfPassword', require('z-ui/form/fields/password.vue'));
-Vue.component('vfSelect', require('z-ui/form/fields/select.vue'));
-Vue.component('vfCheckbox', require('z-ui/form/fields/checkbox.vue'));
-Vue.component('vfCheckboxes', require('z-ui/form/fields/checkboxes.vue'));
-
-window.globalFormOptions = {
-	submitLabel: 'Absenden',
-	texts: {
-		sending: false,
-		unauthorized: 'Du bist nicht autorisiert das zu tun.',
-		notfound: 'Diese Resource wurde nicht gefunden.'
-	}
-};
-
-let store = require('./full.store.js').default;
-
 import routes from './route/app.js';
 const router = new VueRouter({
 	routes,
@@ -40,31 +12,102 @@ const router = new VueRouter({
 
 import {mapState} from 'vuex';
 
+import Vuex from 'vuex';
+Vue.use(Vuex);
+
+import Vuetify from 'vuetify'
+Vue.use(Vuetify)
+import 'vuetify/dist/vuetify.min.css'
+
+import merge from 'merge';
+
+import validator from './mixins/validator.js';
+Vue.mixin(validator);
+
+const store = new Vuex.Store({
+	state: {
+		user: false,
+		actions: [],
+		tables: {
+			payment: {
+				adding: false
+			}
+		},
+		notification: false,
+		toolbar: [
+			{icon: 'more_vert', children: [
+				{title: 'Mein Profil', route: 'profile.index', icon: 'fa-user'}
+			]}
+		],
+		config: false,
+	},
+	mutations: {
+		setinfo(state, data) {
+			state.user = data.user;
+			state.config = data.conf;
+		},
+		updateuser(state, data) {
+			state.user = merge(state.user, data);
+		},
+		updateconfig(state, data) {
+			state.config = data;
+		},
+		setactions(actions, data) {
+			state.actions = data;
+		},
+		setappname: function(state, appname) {
+			Vue.set(state.config, 'appname', 'aaaa');
+			state.loaded = true;
+		},
+		errormsg: function(store, message, delay) {
+			if (delay === undefined) {delay = 3000;}
+			store.notification = {
+				message,
+				color: 'error'
+			};
+			window.setTimeout(function() {
+				store.notification = false;
+			}, delay);
+		},
+		successmsg: function(store, message, delay) {
+			if (delay === undefined) {delay = 3000;}
+			store.notification = {
+				message,
+				color: 'success'
+			};
+			window.setTimeout(function() {
+				store.notification = false;
+			}, delay);
+		}
+	},
+	getters: {
+		appname: function(state) {
+			return (state.config.appname != undefined) ? state.config.appname : '';
+		},
+		loaded: function(state) {
+			return state.user != false && state.config != false;
+		}
+	},
+	actions: {
+		getinfo() {
+			return new Promise((resolve, reject) => {
+				axios.get('/api/info').then((ret) => {
+					resolve(ret.data);
+				}).catch((error) => {
+					reject(error);
+				});
+			});
+		}
+	}
+});
+
+import App from './App.vue';
+
 const app = window.app = new Vue({
-	mixins: [clearSession],
-	data: {
-		entries: require('./entry/app.js'),
-		entryfooter: require('./entry/footer.js')
-	},
-	components: {
-		appfooter: require('z-ui/footer.vue'),
-		footerlink: require('z-vue-sidebar/footerlink.vue'),
-		dropdown: require('z-ui/dropdown/dropdown.vue'),
-		dropdownlink: require('z-ui/dropdown/dropdownlink.vue'),
-		statusbar: require('z-ui/statusbar.vue'),
-		pagefooter: require('z-vue-sidebar/pagefooter.vue'),
-		sMenu: require('z-vue-sidebar/menu.vue'),
-	},
+	el: '#app',
 	computed: mapState(['user']),
 	router,
 	store,
-	created() {
-		this.$store.dispatch('getinfo').then((data) => {
-			this.$store.commit('setinfo', data);
-		});
-	}
+	render: (h) => h(App)
 })
-
-app.$mount('#app');
-
 

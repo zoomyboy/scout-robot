@@ -30,7 +30,8 @@ class ProfileController extends Controller
 	public function infoForCurrentUser() {
 		return response()->json([
 			'conf' => Conf::first()->toArray(),
-			'user' => auth()->guard('api')->user()->load(['usergroup.rights'])->toArray()
+            'user' => auth()->guard('api')->user()->load(['usergroup.rights'])->toArray(),
+            'app' => array_only(config('app'), ['name'])
 		]);
 	}
 }

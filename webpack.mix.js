@@ -11,7 +11,6 @@ let mix = require('laravel-mix');
  |
  */
 
-mix.config.resourceRoot = 'dist/';
 
 mix.webpackConfig({
 	resolve: {
@@ -23,10 +22,6 @@ mix.webpackConfig({
 			'vuestrapStyle.less': path.resolve(__dirname, 'node_modules/z-vuestrap2/less/style.less')
 		}
 	},
-	output: {
-		path: path.resolve(__dirname, 'public/dist'),
-		publicPath: '/dist/'
-	}
 });
 
 if (mix.inProduction()) {
@@ -46,5 +41,4 @@ if (mix.inProduction()) {
 }
 
 mix.js('resources/assets/js/app.js', 'public/js')
-	.js('resources/assets/js/full.js', 'public/js')
-	.browserSync({proxy: 'http://scout-robot.dev'});
+	.js('resources/assets/js/full.js', 'public/js');
