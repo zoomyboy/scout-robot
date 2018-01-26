@@ -11,22 +11,8 @@ let mix = require('laravel-mix');
  |
  */
 
-mix.config.resourceRoot = '/dist';
+mix.config.resourceRoot = 'dist/';
 
-mix.webpackConfig({
-	resolve: {
-		alias: {
-			'sidebarStyle.less': path.resolve(__dirname, 'resources/assets/less/style.less'),
-			'uiStyle.less': path.resolve(__dirname, 'resources/assets/less/style.less'),
-			'fullpageStyle.less': path.resolve(__dirname, 'resources/assets/less/style.less'),
-			'inputmask.dependencyLib': 'vue-inputmask/3rd/inputmask.dependencyLib',
-			'vuestrapStyle.less': path.resolve(__dirname, 'node_modules/z-vuestrap2/less/style.less')
-		}
-	},
-});
-
-if (mix.inProduction()) {
-    mix.version();
     mix.webpackConfig({
         module: {
             rules: [{
@@ -43,7 +29,6 @@ if (mix.inProduction()) {
 			publicPath: '/dist/'
 		}
     });
-}
 
 mix.js('resources/assets/js/app.js', 'public/js')
 	.js('resources/assets/js/full.js', 'public/js');

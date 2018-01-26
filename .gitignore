@@ -1,5 +1,7 @@
 /node_modules
 /storage/*.key
+/public/dist
+/public/mix-manifest.json
 /vendor
 /.idea
 /.vagrant

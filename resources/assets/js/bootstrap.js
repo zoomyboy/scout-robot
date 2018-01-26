@@ -12,7 +12,4 @@ if (token) {
 	console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
 }
 
-import InputMask from 'vue-inputmask';
-Vue.use(InputMask);
-
 require('font-awesome-webpack');
