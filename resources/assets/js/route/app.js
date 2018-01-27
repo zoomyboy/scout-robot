@@ -3,7 +3,7 @@
 // const memberIndex = () => import('../components/member/index.vue');
 // const memberAdd = () => import('../components/member/add.vue');
 // const memberEdit = () => import('../components/member/edit.vue');
-// const configIndex = () => import('../components/config/index.vue');
+const configIndex = () => import('../components/config/index.vue');
 const profileIndex = () => import('../components/profile/index.vue');
 const profilePassword = () => import('../components/profile/password.vue');
 const welcome = () => import('../components/welcome/index.vue');
@@ -43,12 +43,11 @@ module.exports = [
 // 		props: { heading: { title: 'Mitglied bearbeiten' } },
 // 		components: { default: memberEdit, heading }
 // 	},
-// 	{
-// 		path: '/config',
-// 		name: 'config.index',
-// 		props: { heading: { title: 'Konfiguration' } },
-// 		components: { default: configIndex, heading }
-// 	},
+{
+	path: '/config',
+	name: 'config.index',
+	component: configIndex
+},
 {
 	path: '/profile',
 	name: 'profile.index',

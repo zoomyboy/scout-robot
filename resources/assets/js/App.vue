@@ -12,13 +12,13 @@
                     </v-list>
                 </v-toolbar>
                 <v-divider></v-divider>
-                <v-list dense class="pt-0">
-                    <v-list-tile @click="">
+                <v-list dense :class="'pt-'+index" :key="index" v-for="(item, index) in navbar">
+					<v-list-tile @click="visitMenu(item)">
                         <v-list-tile-action>
-                            <v-icon>fa-user</v-icon>
+							<v-icon>{{ item.icon }}</v-icon>
                         </v-list-tile-action>
                         <v-list-tile-content>
-                            <v-list-tile-title>Benutzer</v-list-tile-title>
+							<v-list-tile-title>{{ item.title }}</v-list-tile-title>
                         </v-list-tile-content>
                     </v-list-tile>
                 </v-list>
@@ -90,7 +90,7 @@
 			}
 		},
         computed: {
-            ...mapState(['toolbar', 'notification', 'apptitle', 'navvisible']),
+            ...mapState(['toolbar', 'notification', 'apptitle', 'navvisible', 'navbar']),
             ...mapGetters(['appname', 'loaded'])
         },
         mounted: function() {

@@ -41,13 +41,24 @@ const store = new Vuex.Store({
 				{title: 'Passwort ändern', route: 'profile.password', icon: 'fa-key'}
 			]}
 		],
+		navbar: [
+			{icon: 'fa-cog', title: 'Konfiguration', route: 'config.index'}
+		],
 		config: false,
-		apptitle: ''
+		apptitle: '',
+		fees: false,
+		countries: false,
+		regions: false,
+		nationalities: false
 	},
 	mutations: {
 		setinfo(state, data) {
 			state.user = data.user;
 			state.config = data.conf;
+			state.regions = data.regions;
+			state.countries = data.countries;
+			state.fees = data.fees;
+			state.nationalities = data.nationalities;
 		},
 		updateuser(state, data) {
 			state.user = merge(state.user, data);
