@@ -1,21 +1,11 @@
 // var heading = require('z-ui/heading/appheading.vue');
 
 module.exports = [
-// 	{
-// 		path: '/login',
-// 		name: 'login.index',
-// 		props: {
-// 			heading: {
-// 				title: 'Einloggen',
-// 				line: true,
-// 				small: true
-// 			}
-// 		},
-// 		components: {
-// 			default: require('../components/login/login.vue'),
-// 			heading
-// 		}
-// 	},
+{
+	path: '/login',
+	name: 'login.index',
+	component: require('../components/login/login.vue')
+},
 // 	{
 // 		path: '/password/reset',
 // 		name: 'newpw',

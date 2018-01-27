@@ -38,4 +38,10 @@ class ProfileController extends Controller
             'app' => array_only(config('app'), ['name'])
 		]);
 	}
+
+	public function freeinfo() {
+		return response()->json([
+            'app' => array_only(config('app'), ['name'])
+		]);
+	}
 }
