@@ -1,5 +1,5 @@
 <template>
-	<div class="cp-member cp-wrap">
+<!--	<div class="cp-member cp-wrap">
 		<grid>
 			<article>
 				<panel title="Übersicht">
@@ -29,7 +29,7 @@
 				<payment ref="payment" :member="member" v-if="member" @closeinfo="member = false; side = false" @changepayment="reloadmember"></payment>
 			</aside>
 		</grid>
-	</div>
+	</div> -->
 </template>
 
 <script>
@@ -61,20 +61,6 @@
 				return h;
 			}
 		},
-		components: {
-			panel: function(resolve) {
-				require(['z-ui/panel/panel.vue'], resolve);
-			},
-			grid: function(resolve) {
-				require(['z-ui/grid/grid.vue'], resolve);
-			},
-			vTable: function(resolve) {
-				require(['z-ui/table/table.vue'], resolve);
-			},
-			payment: function(resolve) {
-				require(['./payment.vue'], resolve);
-			}
-		},
 		methods: {
 			getStrikesAttribute(value) {
 				if (value == 0) {
@@ -104,7 +90,10 @@
 			axios.get('/api/member/table').then(function(data) {
 				vm.members = data.data;
 			});
-		}
+		},
+		created: function() {
+			this.$store.commit('settitle', 'Mitglieder-Übersicht');
+		},
 	}
 </script>
 

@@ -1,6 +1,6 @@
 // const heading = require('z-ui/heading/appheading.vue');
 // 
-// const memberIndex = () => import('../components/member/index.vue');
+const memberIndex = () => import('../components/member/index.vue');
 // const memberAdd = () => import('../components/member/add.vue');
 // const memberEdit = () => import('../components/member/edit.vue');
 const configIndex = () => import('../components/config/index.vue');
@@ -19,12 +19,11 @@ module.exports = [
 	name: 'welcome',
 	component: welcome
 },
-// 	{
-// 		path: '/member',
-// 		name: 'member.index',
-// 		props: { heading: { title: 'Mitglieder-Übersicht' } },
-// 		components: { default: memberIndex, heading }
-// 	},
+{
+	path: '/member',
+	name: 'member.index',
+	component: memberIndex
+},
 // 	{
 // 		path: '/mass',
 // 		name: 'mass.index',

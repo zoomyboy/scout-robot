@@ -42,7 +42,8 @@ const store = new Vuex.Store({
 			]}
 		],
 		navbar: [
-			{icon: 'fa-cog', title: 'Konfiguration', route: 'config.index'}
+			{icon: 'fa-users', title: 'Mitglieder', route: 'member.index'},
+			{icon: 'fa-cog', title: 'Konfiguration', route: 'config.index'},
 		],
 		config: false,
 		apptitle: '',
