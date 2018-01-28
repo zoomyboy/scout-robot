@@ -7,6 +7,7 @@ use App\Http\Requests\ProfileUpdateRequest;
 use App\Http\Requests\ProfilePasswordUpdateRequest;
 use App\User;
 use App\Conf;
+use App\Unit;
 
 class ProfileController extends Controller
 {
@@ -35,6 +36,7 @@ class ProfileController extends Controller
             'fees' => \App\Fee::get()->toArray(),
             'nationalities' => \App\Nationality::get()->toArray(),
             'user' => auth()->guard('api')->user()->load(['usergroup.rights'])->toArray(),
+    		'timeunits' => Unit::ofType('date')->get()->toArray(),
             'app' => array_only(config('app'), ['name'])
 		]);
 	}

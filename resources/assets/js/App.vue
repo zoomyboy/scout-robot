@@ -85,7 +85,6 @@
         },
 		watch: {
 			navInternalState: function(n) {
-				console.log('UUU');
 				this.$store.commit('setnav', n);
 			}
 		},

@@ -49,7 +49,8 @@ const store = new Vuex.Store({
 		fees: false,
 		countries: false,
 		regions: false,
-		nationalities: false
+		nationalities: false,
+		timeunits: false
 	},
 	mutations: {
 		setinfo(state, data) {
@@ -59,6 +60,7 @@ const store = new Vuex.Store({
 			state.countries = data.countries;
 			state.fees = data.fees;
 			state.nationalities = data.nationalities;
+			state.timeunits = data.timeunits;
 		},
 		updateuser(state, data) {
 			state.user = merge(state.user, data);
