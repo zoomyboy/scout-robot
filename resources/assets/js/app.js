@@ -45,7 +45,7 @@ const store = new Vuex.Store({
 			{icon: 'fa-users', title: 'Mitglieder', route: 'member.index'},
 			{icon: 'fa-cog', title: 'Konfiguration', route: 'config.index'},
 		],
-		config: false,
+		config: {},
 		apptitle: '',
 		fees: false,
 		countries: false,
@@ -62,6 +62,10 @@ const store = new Vuex.Store({
 			state.fees = data.fees;
 			state.nationalities = data.nationalities;
 			state.timeunits = data.timeunits;
+			state.genders = data.genders;
+			state.ways = data.ways;
+			state.confessions = data.confessions;
+			state.activities = data.activities;
 		},
 		updateuser(state, data) {
 			state.user = merge(state.user, data);
@@ -76,7 +80,7 @@ const store = new Vuex.Store({
 			state.apptitle = title;
 		},
 		setappname: function(state, appname) {
-			Vue.set(state.config, 'appname', 'aaaa');
+			Vue.set(state.config, 'appname', appname);
 			state.loaded = true;
 		},
 		errormsg: function(store, message, delay) {

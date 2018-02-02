@@ -1,9 +1,15 @@
 export default {
     methods: {
-        validateLength: function() {
+        validateRequired: function() {
             return function(v) {
                 if (typeof v == "undefined") {return 'Dieses Feld ist erforderlich';}
                 return (v.length > 0) || 'Dieses Feld ist erforderlich.';
+            };
+        },
+        validateSelected: function() {
+            return function(v) {
+                if (typeof v == "undefined") {return 'Dieses Feld ist erforderlich';}
+                return (parseInt(v) && v > 0) || 'Dieses Feld ist erforderlich.';
             };
         },
         validateMin: function(min) {

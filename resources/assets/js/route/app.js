@@ -1,7 +1,7 @@
 // const heading = require('z-ui/heading/appheading.vue');
 // 
 const memberIndex = () => import('../components/member/index.vue');
-// const memberAdd = () => import('../components/member/add.vue');
+const memberAdd = () => import('../components/member/add.vue');
 // const memberEdit = () => import('../components/member/edit.vue');
 const configIndex = () => import('../components/config/index.vue');
 const profileIndex = () => import('../components/profile/index.vue');
@@ -30,12 +30,11 @@ module.exports = [
 // 		props: { heading: { title: 'Massenversand' } },
 // 		components: { default: mass, heading }
 // 	},
-// 	{
-// 		path: '/member/add',
-// 		name: 'member.add',
-// 		props: { heading: { title: 'Mitglied hinzufügen' } },
-// 		components: { default: memberAdd, heading }
-// 	},
+ 	{
+ 		path: '/member/add',
+ 		name: 'member.add',
+ 		component: memberAdd
+ 	},
 // 	{
 // 		path: '/member/:id/edit',
 // 		name: 'member.edit',
