@@ -51,10 +51,7 @@ Route::resource('gender', 'GenderController');
 
 Route::get('info', 'ProfileController@infoForCurrentUser');
 
-Route::get('member/{member}/payments', 'PaymentController@index');
-Route::post('member/{member}/payments', 'PaymentController@store');
-Route::patch('member/{member}/payments/{payment}', 'PaymentController@update');
-Route::delete('payment/{payment}', 'PaymentController@destroy');
+Route::resource('member.payment', 'PaymentController');
 
 Route::get('/status', 'StatusController@index');
 

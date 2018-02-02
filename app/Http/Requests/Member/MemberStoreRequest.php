@@ -14,11 +14,6 @@ class MemberStoreRequest extends Request
 
 	public $model = Member::class;
 
-    public function authorize()
-    {
-		return auth()->guard('api')->user()->can('store', Member::class);
-    }
-
 	public function rules() {
 		$ret = [
 			'firstname' => 'required',

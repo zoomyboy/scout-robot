@@ -11,11 +11,6 @@ class MemberDeleteRequest extends Request
 
 	public $model = Member::class;
 
-    public function authorize()
-    {
-		return auth()->guard('api')->user()->can('delete', $this->route('member'));
-    }
-
 	public function rules() {
 		return [
 			'id' => 'required|numeric|exists:members,id'
