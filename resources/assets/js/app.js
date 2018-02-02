@@ -43,7 +43,6 @@ const store = new Vuex.Store({
 		],
 		navbar: [
 			{icon: 'fa-users', title: 'Mitglieder', route: 'member.index'},
-			{icon: 'fa-money', title: 'Beiträge', route: 'subscription.index'},
 			{icon: 'fa-cog', title: 'Konfiguration', route: 'config.index'},
 		],
 		config: {},
@@ -80,9 +79,6 @@ const store = new Vuex.Store({
 		settitle: function(state, title) {
 			state.apptitle = title;
 		},
-        setsubscriptions: function(state, sub) {
-            Vue.set(state, 'subscriptions', sub);
-        },
 		setappname: function(state, appname) {
 			Vue.set(state.config, 'appname', appname);
 			state.loaded = true;
