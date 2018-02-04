@@ -5,7 +5,7 @@
             <v-subheader>Herzlich Willkommen bei Scout Robot. Bitte gebe deine Logindaten ein.</v-subheader>
             <v-container fluid>
                 <v-text-field name="email" label="E-Mail-Adresse" id="email" required :rules="[validateEmail()]" v-model="values.email"></v-text-field>
-                <v-text-field name="password" label="Passwort" id="password" required :rules="[validateLength()]" v-model="values.password" type="password"></v-text-field>
+                <v-text-field name="password" label="Passwort" id="password" required :rules="[validateRequired()]" v-model="values.password" type="password"></v-text-field>
             </v-container>
             <v-btn :disabled="!valid" @click="submit" color="primary">Absenden</v-btn>
         </v-form>
