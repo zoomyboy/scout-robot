@@ -217,6 +217,9 @@ export default {
 
             axios.patch('/api/conf/1', this.values).then((ret) => {
                 vm.$store.commit('successmsg', 'Konfiguration gespeichert');
+                this.$store.dispatch('getinfo').then((data) => {
+                    this.$store.commit('setinfo', data);
+                });
             }).catch((error) => {
                 var field = Object.keys(error.response.data)[0];
                 var msg = error.response.data[Object.keys(error.response.data)[0]];
