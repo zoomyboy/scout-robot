@@ -20,6 +20,8 @@ class SubscriptionController extends Controller
 
 	public function store(SubscriptionStoreRequest $request) {
 		$request->persist();
+
+        return response()->json(Subscription::with('fee')->get()->toArray());
 	}
 
 	public function update(Subscription $sub, SubscriptionUpdateRequest $request) {
