@@ -6,13 +6,13 @@
             </v-toolbar-items>
         </v-toolbar>
         <v-divider></v-divider>
-        <v-dialog v-model="adding" persistent max-width="600px">
+        <v-dialog v-model="adding" max-width="600px">
             <v-card>
                 <v-card-title>Hinzufügen</v-card-title>
                 <v-container>
                     <v-form v-model="addValid">
                         <v-text-field v-model="add.title" required label="Name" :rules="[validateRequired()]"></v-text-field>
-                        <v-text-field v-model="add.amount" required label="Beitrag" :rules="[validateRequired()]" mask="###,##"></v-text-field>
+                        <v-text-field v-model="add.amount" required label="Beitrag" :rules="[validateRequired(), validateCurrency()]"></v-text-field>
                         <v-select 
                             :items="fees"
                             v-model="add.fee"

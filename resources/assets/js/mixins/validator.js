@@ -22,6 +22,11 @@ export default {
             return function(v) {
                 return /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/.test(v) || 'Das hier ist keine richtige E-Mail-Adresse';
             };
+        },
+        validateCurrency: function() {
+            return function(v) {
+                return /^[0-9]+,[0-9]{2}$/.test(v) || 'Beiträge müssen im Format XXXX,XX angegeben werden.';
+            }
         }
     }
 }
