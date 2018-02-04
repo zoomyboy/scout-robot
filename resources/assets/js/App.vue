@@ -94,10 +94,6 @@
         },
         mounted: function() {
             var vm = this;
-
-            axios.get('/api/info').then(function(ret) {
-                vm.$store.commit('setappname', ret.data.app.name);
-            });
         },
         created() {
             this.$store.dispatch('getinfo').then((data) => {

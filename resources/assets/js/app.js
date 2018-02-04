@@ -66,6 +66,7 @@ const store = new Vuex.Store({
 			state.ways = data.ways;
 			state.confessions = data.confessions;
 			state.activities = data.activities;
+            this.commit('setappname', data.app.name);
 		},
 		updateuser(state, data) {
 			state.user = merge(state.user, data);
