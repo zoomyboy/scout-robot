@@ -260,9 +260,9 @@
 
             this.values.sendnewspaper = this.config.default_sendnewspaper;
             this.values.keepdata = this.config.default_keepdata;
-            this.values.nationality = this.config.default_nationality.id;
-            this.values.country = this.config.default_country.id;
-            this.values.region = this.config.default_region.id;
+            this.values.nationality = (this.config.default_nationality) ? this.config.default_nationality.id : null;
+            this.values.country = (this.config.default_country) ? this.config.default_country.id : null;
+            this.values.region = (this.config.default_region) ? this.config.default_region.id : null;
         }
     }
 </script>
