@@ -43,7 +43,9 @@
             <v-content>
                 <v-container fluid>
 					<v-alert :color="notification.color" v-if="notification" icon="check_circle" value="notification !== false">
-						{{ notification.message }}
+                        <div v-for="msg in notification.message">
+                            {{ msg }}
+                        </div>
 					</v-alert>
                     <router-view></router-view>
                 </v-container>

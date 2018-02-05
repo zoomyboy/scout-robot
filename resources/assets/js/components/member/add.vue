@@ -245,10 +245,9 @@
         methods: {
             submit: function() {
                 var vm = this;
-                console.log(this.values);return;
 
                 axios.post('/api/member', this.values).then((ret) => {
-                    vm.$store.commit('successMsg', 'Mitglied hinzugefügt');
+                    vm.$store.commit('successmsg', 'Mitglied hinzugefügt');
                 }).catch((error) => vm.showErrors(error));
             }
         },

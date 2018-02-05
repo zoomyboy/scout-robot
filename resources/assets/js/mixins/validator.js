@@ -33,11 +33,11 @@ export default {
             var errors = [];
             var vm = this;
 
-            Object.keys(res.response.data.errors).forEach(function(key) {
-                errors.push('Fehler in Feld '+(vm.$refs[key] ? vm.$refs[key].$props.label : key)+': '+res.response.data.errors[key]);
+            Object.keys(res.response.data).forEach(function(key) {
+                errors.push('Fehler in Feld '+(vm.$refs[key] ? vm.$refs[key].$props.label : key)+': '+res.response.data[key]);
             });
 
-            vm.$store.commit('errorMessage', errors, 5000);
+            vm.$store.commit('errormsg', errors, 5000);
         }
     }
 }
