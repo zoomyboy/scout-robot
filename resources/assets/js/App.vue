@@ -12,7 +12,7 @@
                     </v-list>
                 </v-toolbar>
                 <v-divider></v-divider>
-                <v-list dense :class="'pt-'+index" :key="index" v-for="(item, index) in navbar">
+                <v-list dense :key="index" v-for="(item, index) in navbar">
 					<v-list-tile @click="visitMenu(item)">
                         <v-list-tile-action>
 							<v-icon>{{ item.icon }}</v-icon>

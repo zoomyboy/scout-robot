@@ -44,6 +44,7 @@ const store = new Vuex.Store({
         navbar: [
             {icon: 'fa-users', title: 'Mitglieder', route: 'member.index'},
             {icon: 'fa-money', title: 'Beiträge', route: 'subscription.index'},
+            {icon: 'fa-refresh', title: 'NaMi-Abruf', route: 'nami.get'},
             {icon: 'fa-cog', title: 'Konfiguration', route: 'config.index'},
         ],
         config: {},

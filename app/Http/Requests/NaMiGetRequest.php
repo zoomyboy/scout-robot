@@ -19,7 +19,10 @@ class NaMiGetRequest extends Request
      */
     public function rules()
     {
-        return [];
+        return [
+            'active' => 'required',
+            'inactive' => 'required'
+        ];
     }
 
 	public function customRules() {
@@ -31,6 +34,20 @@ class NaMiGetRequest extends Request
 	}
 
 	public function persist($model = null) {
-		SyncAllNaMiMembers::dispatch();
+        if (!$this->active && !$this->inactive) {$filter = [];}
+
+        if (!$this->active && $this->inactive) {
+            $filter = ['status' => 'Inaktiv'];
+        }
+
+        if ($this->active && !$this->inactive) {
+            $filter = ['status' => 'Aktiv'];
+        }
+
+        if ($this->active && $this->inactive) {
+            $filter = ['status' => 'Aktiv|Inaktiv'];
+        }
+
+		SyncAllNaMiMembers::dispatch($filter);
 	}
 }

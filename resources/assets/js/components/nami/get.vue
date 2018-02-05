@@ -1,13 +1,15 @@
 <template>
-	<div class="cp-wrap cp-nami-get">
-		<grid>
-			<article>
-				<panel title="Mitglieder abrufen">
-					<v-link @click="sync" icon="refresh">Synchronisieren</v-link>
-				</panel>
-			</article>
-		</grid>
-	</div>
+    <v-card color="grey lighten-4">
+        <v-form v-model="valid" @submit.prevent="submit">
+            <v-container grid-list-md class="pt-4 pl-4 pr-4" fluid>
+                <v-checkbox label="Aktive Mitglieder" v-model="values.active"></v-checkbox>
+                <v-checkbox label="Inaktive Mitglieder" v-model="values.inactive"></v-checkbox>
+            </v-container>
+            <div class="pa-4">
+                <v-btn :disabled="!valid" type="submit" color="primary" class="ma-0">Synchronisation starten</v-btn>
+            </div>
+        </v-form>
+    </v-card>
 </template>
 
 <style lang="less">
@@ -20,19 +22,24 @@
 	export default {
 		data: function() {
 			return  {
-
+                valid: true,
+                values: {
+                    active: true,
+                    inactive: false
+                }
 			};
 		},
 		components:  {
-			grid: require('z-ui/grid/grid.vue'),
-			panel: require('z-ui/panel/panel.vue'),
 		},
 		methods: {
-			sync: function() {
-				axios.post('/api/nami/getmembers').then(function() {
+			submit: function() {
+                axios.post('/api/nami/getmembers', this.values).then(function() {
 
 				});
 			}
+		},
+		created: function() {
+			this.$store.commit('settitle', 'NaMi-Abruf');
 		},
 		mounted: function() {
 

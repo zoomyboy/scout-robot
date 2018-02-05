@@ -20,6 +20,11 @@
 				<v-flex md6 lg4>
 					<v-text-field dark v-model="filter.location" label="Adresse/PLZ/Ort"></v-text-field>
 				</v-flex>
+                <v-flex xs12>
+                    <v-subheader>Status</v-subheader>
+                    <v-checkbox v-model="filter.active" label="Aktiv"></v-checkbox>
+                    <v-checkbox v-model="filter.inactive" label="Inaktiv"></v-checkbox>
+                </v-flex>
 			</v-layout>
 		</v-container>
 		<v-divider v-if="filter"></v-divider>
@@ -69,7 +74,9 @@
 				side: false,
 				filter: {
 					location: '',
-					name: ''
+					name: '',
+                    active: true,
+                    inactive: false
 				},
 				filterVisible: false
 			};
@@ -104,6 +111,8 @@
 				return this.members.filter((m) => {
 					var hasLocation = true;
 					var hasName = true;
+					var activeState = true;
+					var inactiveState = true;
 
 					if (vm.filter.name == '' && vm.filter.location == '') {
 						hasName = true;
@@ -115,6 +124,9 @@
 					if (vm.filter.location != '') {
 						hasLocation = (m.address + m.zip + m.city).toLowerCase().indexOf(vm.filter.location.toLowerCase()) !== -1;
 					}
+
+                    if (vm.filter.active == false && m.active) {return false;}
+                    if (vm.filter.inactive == false && !m.active) {return false;}
 
 					return hasLocation && hasName;
 				});

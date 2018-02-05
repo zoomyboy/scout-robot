@@ -59,7 +59,7 @@ class SubscriptionTest extends IntegrationTestCase {
 		$this->postApi('subscription', [
 			'title' => 'Beitrag',
 			'fee' => 2,
-			'amount' => '100,00'
+			'amount' => '10000'
 		])
 			->assertSuccess();
 
@@ -77,7 +77,7 @@ class SubscriptionTest extends IntegrationTestCase {
 		$this->postApi('subscription', [
 			'title' => 'Beitrag',
 			'fee' => null,
-			'amount' => '100,00'
+			'amount' => '10000'
 		])
 			->assertSuccess();
 
@@ -97,7 +97,7 @@ class SubscriptionTest extends IntegrationTestCase {
 		$this->postApi('subscription', [
 			'title' => null,
 			'fee' => 2,
-			'amount' => '100,00'
+			'amount' => '10000'
 		])
 			->assertValidationFailedWith('title');
 
@@ -125,7 +125,7 @@ class SubscriptionTest extends IntegrationTestCase {
 		$this->patchApi('subscription/'.$sub->id, [
 			'title' => 'Beitrag',
 			'fee' => 2,
-			'amount' => '100,00'
+			'amount' => '10000'
 		])
 			->assertSuccess();
 
@@ -148,7 +148,7 @@ class SubscriptionTest extends IntegrationTestCase {
 		$this->patchApi('subscription/'.$sub->id, [
 			'title' => null,
 			'fee' => 2,
-			'amount' => '100,00'
+			'amount' => '10000'
 		])
 			->assertValidationFailedWith('title');
 
@@ -169,7 +169,7 @@ class SubscriptionTest extends IntegrationTestCase {
 		$this->patchApi('subscription/'.$sub->id, [
 			'title' => 'Beitrag',
 			'fee' => null,
-			'amount' => '100,00'
+			'amount' => '10000'
 		])
 			->assertSuccess();
 

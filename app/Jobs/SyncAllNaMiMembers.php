@@ -15,14 +15,16 @@ class SyncAllNaMiMembers implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    public $filter;
+
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($filter = [])
     {
-        //
+        $this->filter = $filter;
     }
 
     /**
@@ -32,7 +34,7 @@ class SyncAllNaMiMembers implements ShouldQueue
      */
     public function handle()
     {
-		$members = NaMiMember::all();
+		$members = NaMiMember::all($this->filter);
 
 		foreach($members as $member) {
 			$namiMember = NaMiMember::single($member->id);

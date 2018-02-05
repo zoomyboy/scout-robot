@@ -14,7 +14,7 @@ class SubscriptionStoreRequest extends Request
 	public function rules() {
 		$ret = [
 			'title' => 'required',
-			'amount' => 'required|numeric'
+			'amount' => 'required|integer'
 		];
 
 		if (!is_null($this->fee)) {

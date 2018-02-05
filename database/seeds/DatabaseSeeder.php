@@ -25,7 +25,11 @@ class DatabaseSeeder extends Seeder
         $this->call(StatusSeeder::class);
         $this->call(ConfSeeder::class);
         $this->call(WaySeeder::class);
-        $this->call(MemberSeeder::class);
+
+        if (app()->environment() != 'local' && app()->environment() != 'production') {
+            $this->call(MemberSeeder::class);
+        }
+
         $this->call(PaymentSeeder::class);
         $this->call(UnitSeeder::class);
     }

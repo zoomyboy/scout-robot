@@ -8,7 +8,7 @@ const profileIndex = () => import('../components/profile/index.vue');
 const profilePassword = () => import('../components/profile/password.vue');
 const welcome = () => import('../components/welcome/index.vue');
 // const mass = () => import('../components/mass/index.vue');
-// const namiGet = () => import('../components/nami/get.vue');
+const namiGet = () => import('../components/nami/get.vue');
 const subscriptionIndex = () => import('../components/subscription/index.vue');
 // const subscriptionAdd = () => import('../components/subscription/add.vue');
 // const subscriptionEdit = () => import('../components/subscription/edit.vue');
@@ -62,12 +62,11 @@ module.exports = [
 //      props: { heading: { title: 'Benutzer-Übersicht' } },
 //      components: { default: profilePassword, heading }
 //  },
-//  {
-//      path: '/nami',
-//      name: 'nami.index',
-//      props: { heading: { title: 'NaMi-Abruf' } },
-//      components: { default: namiGet, heading }
-//  },
+{
+    path: '/nami',
+    name: 'nami.get',
+    component: namiGet,
+},
     {
         path: '/subscription',
         name: 'subscription.index',

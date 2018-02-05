@@ -44,7 +44,12 @@ class NaMiFake {
 				];
 			}
 
-			return $this->successResponse($this->members);
+            return $this->successResponse(array_map(function($m) {
+                return (object) [
+                    'id' => $m->id,
+                    'entries_status' => $m->status
+                ];
+            }, $this->members));
 		}
 
 		if ($url == '/ica/rest/nami/gruppierungen/filtered-for-navigation/gruppierung/node/root') {

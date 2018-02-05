@@ -28,10 +28,39 @@ class ImportMembersTest extends FeatureTestCase {
 
 		\App\Conf::first()->update(['namiEnabled' => true]);
 
-		$this->postApi('nami/getmembers', [])
+		$this->postApi('nami/getmembers', ['active' => true, 'inactive' => true])
 			->assertSuccess();
 
 		Queue::assertPushed(SyncAllNaMiMembers::class);
+	}
+
+	/** @test */
+	public function it_synchs_only_active_members() {
+		$this->authAsApi();
+
+		\App\Conf::first()->update(['namiEnabled' => true]);
+
+		$this->postApi('nami/getmembers', ['active' => true, 'inactive' => false])
+			->assertSuccess();
+
+        Queue::assertPushed(SyncAllNaMiMembers::class, function($q) {
+            return $q->filter == ['status' => 'Aktiv'];       
+        });
+	}
+
+
+	/** @test */
+	public function it_synchs_only_inactive_members() {
+		$this->authAsApi();
+
+		\App\Conf::first()->update(['namiEnabled' => true]);
+
+		$this->postApi('nami/getmembers', ['inactive' => true, 'active' => true])
+			->assertSuccess();
+
+        Queue::assertPushed(SyncAllNaMiMembers::class, function($q) {
+            return $q->filter == ['status' => 'Aktiv|Inaktiv'];       
+        });
 	}
 
 	/** @test */
@@ -42,7 +71,7 @@ class ImportMembersTest extends FeatureTestCase {
 
 		\App\Conf::first()->update(['namiEnabled' => false]);
 
-		$this->postApi('nami/getmembers', [])
+		$this->postApi('nami/getmembers', ['active' => true, 'inactive' => true])
 			->assertValidationFailedWith('error');
 
 		Queue::assertNotPushed(SyncAllNaMiMembers::class);
