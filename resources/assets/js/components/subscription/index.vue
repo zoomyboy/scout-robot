@@ -84,7 +84,6 @@
 	export default {
 		data: function() {
 			return  {
-				subscriptions: [],
                 adding: false,
                 addValid: false,
                 editValid: false,
@@ -98,7 +97,7 @@
 			};
 		},
         computed: {
-            ...mapState(['fees'])
+            ...mapState(['fees', 'subscriptions'])
         },
 		components: {
 		},
@@ -117,7 +116,6 @@
 
                 axios.post('/api/subscription', data).then(function(ret) {
                     vm.$store.commit('setsubscriptions', ret.data);
-                    vm.subscriptions = ret.data;
                     vm.adding = false;
                 }).catch((err) => this.showErrors(err));
             },
@@ -133,7 +131,6 @@
 
                 axios.patch('/api/subscription/'+this.edit.id, data).then(function(ret) {
                     vm.$store.commit('setsubscriptions', ret.data);
-                    vm.subscriptions = ret.data;
                     vm.editing = false;
                 }).catch((err) => this.showErrors(err));
             },
@@ -149,10 +146,6 @@
         },
 		mounted: function() {
 			var vm = this;
-
-			axios.get('/api/subscription').then(function(data) {
-				vm.subscriptions = data.data;
-			});
 		}
 	}
 </script>

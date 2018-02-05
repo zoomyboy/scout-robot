@@ -39,6 +39,7 @@ class ProfileController extends Controller
             'fees' => \App\Fee::get()->toArray(),
             'ways' => \App\Way::get()->toArray(),
             'nationalities' => \App\Nationality::get()->toArray(),
+            'subscriptions' => \App\Subscription::with('fee')->get()->toArray(),
             'user' => auth()->guard('api')->user()->load(['usergroup.rights'])->toArray(),
     		'timeunits' => Unit::ofType('date')->get()->toArray(),
     		'genders' => Gender::where('is_null', false)->get()->toArray(),

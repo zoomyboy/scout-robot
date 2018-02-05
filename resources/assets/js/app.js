@@ -52,6 +52,7 @@ const store = new Vuex.Store({
         countries: false,
         regions: false,
         nationalities: false,
+        subscriptions: false,
         timeunits: false
     },
     mutations: {
@@ -67,6 +68,7 @@ const store = new Vuex.Store({
             state.ways = data.ways;
             state.confessions = data.confessions;
             state.activities = data.activities;
+            state.subscriptions = data.subscriptions;
             this.commit('setappname', data.app.name);
         },
         updateuser(state, data) {
