@@ -9,6 +9,7 @@
         <v-dialog v-model="adding" max-width="600px">
             <v-card>
                 <v-card-title>Hinzufügen</v-card-title>
+                <v-divider></v-divider>
                 <v-container>
                     <v-form v-model="addValid">
                         <v-text-field v-model="add.title" required label="Name" :rules="[validateRequired()]"></v-text-field>
@@ -22,6 +23,27 @@
                         >
                         </v-select>
                         <v-btn :disabled="!addValid" @click="triggerAdd" class="primary ma-0">Absenden</v-btn>
+                    </v-form>
+                </v-container>
+            </v-card>
+        </v-dialog>
+        <v-dialog v-model="editing" max-width="600px">
+            <v-card>
+                <v-card-title>Bearbeiten von Beitrag {{ edit.title }}</v-card-title>
+                <v-divider></v-divider>
+                <v-container>
+                    <v-form v-model="editValid">
+                        <v-text-field v-model="edit.title" required label="Name" :rules="[validateRequired()]"></v-text-field>
+                        <v-text-field v-model="edit.amount" required label="Beitrag" :rules="[validateRequired(), validateCurrency()]"></v-text-field>
+                        <v-select 
+                            :items="fees"
+                            v-model="edit.fee_id"
+                            label="NaMi-Beitrag"
+                            item-text="title"
+                            item-value="id"
+                        >
+                        </v-select>
+                        <v-btn :disabled="!editValid" @click="triggerEdit" class="primary ma-0">Absenden</v-btn>
                     </v-form>
                 </v-container>
             </v-card>
@@ -41,7 +63,7 @@
                 <td>{{ prop.item.fee.title }}</td>
                 <td>
                     <v-btn-toggle>
-                        <v-btn @click=""><v-icon>fa-pencil</v-icon></v-btn>
+                        <v-btn @click="showEdit(prop.item)"><v-icon>fa-pencil</v-icon></v-btn>
                     </v-btn-toggle>
                 </td>
             </template>
@@ -58,6 +80,7 @@
 <script>
     import accounting from 'accounting';
     import {mapState} from 'vuex';
+    import merge from 'merge';
 
 	export default {
 		data: function() {
@@ -65,11 +88,14 @@
 				subscriptions: [],
                 adding: false,
                 addValid: false,
+                editValid: false,
                 add: {
                     fee: null,
                     amount: '',
                     title: ''
-                }
+                },
+                edit: {},
+                editing: false
 			};
 		},
         computed: {
@@ -84,11 +110,38 @@
             triggerAdd: function() {
                 var vm = this;
 
-                axios.post('/api/subscription', this.add).then(function(ret) {
+                var data = merge(
+                    this.add,
+                    {amount: accounting.unformat(this.add.amount)}
+                );
+
+                axios.post('/api/subscription', data).then(function(ret) {
                     vm.$store.commit('setsubscriptions', ret.data);
                     vm.subscriptions = ret.data;
                     vm.adding = false;
-                }).catch((err) => showErrors(err));
+                }).catch((err) => this.showErrors(err));
+            },
+            triggerEdit: function() {
+                var vm = this;
+
+                var data = merge(
+                    this.edit,
+                    {amount: accounting.unformat(this.edit.amount)}
+                );
+                data = {amount: data.amount, title: data.title, fee: data.fee_id};
+
+                axios.patch('/api/subscription/'+this.edit.id, data).then(function(ret) {
+                    vm.$store.commit('setsubscriptions', ret.data);
+                    vm.subscriptions = ret.data;
+                    vm.editing = false;
+                }).catch((err) => this.showErrors(err));
+            },
+            showEdit: function(item) {
+                this.editing = true;
+                this.edit = merge(
+                    item,
+                    {amount: accounting.formatMoney(item.amount / 100, '', 2, ",", ",")}
+                );
             }
         },
 		mounted: function() {

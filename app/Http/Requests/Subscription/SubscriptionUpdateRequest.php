@@ -14,7 +14,7 @@ class SubscriptionUpdateRequest extends Request
 	public function rules() {
 		$ret = [
 			'title' => 'required',
-			'amount' => 'required|regex:/^[0-9]+,[0-9]+$/'
+			'amount' => 'required|numeric'
 		];
 
 		if (!is_null($this->fee)) {
@@ -25,7 +25,7 @@ class SubscriptionUpdateRequest extends Request
 	}
 
 	public function modifyFillables($fill = null) {
-		$fill['amount'] = str_replace(',', '.', $fill['amount']) * 100;
+		$fill['amount'] = intVal($fill['amount']);
 
 		return $fill;
 	}

@@ -27,6 +27,17 @@ export default {
             return function(v) {
                 return /^[0-9]+,[0-9]{2}$/.test(v) || 'Beiträge müssen im Format XXXX,XX angegeben werden.';
             }
+        },
+        //Can be pased directly in the catch callback of axios
+        showErrors: function(res, error) {
+            var errors = [];
+            var vm = this;
+
+            Object.keys(res.response.data.errors).forEach(function(key) {
+                errors.push('Fehler in Feld '+(vm.$refs[key] ? vm.$refs[key].$props.label : key)+': '+res.response.data.errors[key]);
+            });
+
+            vm.$store.commit('errorMessage', errors, 5000);
         }
     }
 }
