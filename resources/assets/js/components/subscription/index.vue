@@ -37,7 +37,7 @@
                         <v-text-field v-model="edit.amount" required label="Beitrag" :rules="[validateRequired(), validateCurrency()]"></v-text-field>
                         <v-select 
                             :items="fees"
-                            v-model="edit.fee_id"
+                            v-model="edit.fee"
                             label="NaMi-Beitrag"
                             item-text="title"
                             item-value="id"
@@ -80,7 +80,6 @@
 <script>
     import accounting from 'accounting';
     import {mapState} from 'vuex';
-    import merge from 'merge';
 
 	export default {
 		data: function() {
@@ -110,10 +109,11 @@
             triggerAdd: function() {
                 var vm = this;
 
-                var data = merge(
-                    this.add,
-                    {amount: accounting.unformat(this.add.amount)}
-                );
+                var data = {
+                    amount: accounting.unformat(this.add.amount),
+                    title: this.add.title,
+                    fee: this.add.fee
+                };
 
                 axios.post('/api/subscription', data).then(function(ret) {
                     vm.$store.commit('setsubscriptions', ret.data);
@@ -124,11 +124,12 @@
             triggerEdit: function() {
                 var vm = this;
 
-                var data = merge(
-                    this.edit,
-                    {amount: accounting.unformat(this.edit.amount)}
-                );
-                data = {amount: data.amount, title: data.title, fee: data.fee_id};
+                var data = {
+                    id: this.edit.id,
+                    amount: accounting.unformat(this.edit.amount),
+                    title: this.edit.title,
+                    fee: this.edit.fee
+                };
 
                 axios.patch('/api/subscription/'+this.edit.id, data).then(function(ret) {
                     vm.$store.commit('setsubscriptions', ret.data);
@@ -138,10 +139,12 @@
             },
             showEdit: function(item) {
                 this.editing = true;
-                this.edit = merge(
-                    item,
-                    {amount: accounting.formatMoney(item.amount / 100, '', 2, ",", ",")}
-                );
+                this.edit = {
+                    id: item.id,
+                    amount: accounting.formatMoney(item.amount / 100, '', 2, ",", ","),
+                    title: item.title,
+                    fee: item.fee_id
+                };
             }
         },
 		mounted: function() {
