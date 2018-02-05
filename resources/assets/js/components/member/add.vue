@@ -45,13 +45,13 @@
                                     <v-text-field v-model="values.city" label="Stadt" :rules="[validateRequired()]" required></v-text-field>
                                 </v-flex>
                                 <v-flex md6>
-                                    <v-menu full-width>
+                                    <v-menu full-width :close-on-content-click="false">
                                         <v-text-field slot="activator" ref="birthday" :rules="[validateRequired()]" v-model="values.birthday" label="Geburtsdatum" required></v-text-field>
                                         <v-date-picker v-model="values.birthday" no-title scrollable></v-date-picker>
                                     </v-menu>
                                 </v-flex>
                                 <v-flex md6>
-                                    <v-menu full-width>
+                                    <v-menu full-width :close-on-content-click="false">
                                         <v-text-field slot="activator" ref="joined_at" :rules="[validateRequired()]" v-model="values.joined_at" label="Eintrittsdatum" required></v-text-field>
                                         <v-date-picker v-model="values.joined_at" no-title scrollable></v-date-picker>
                                     </v-menu>
@@ -119,6 +119,17 @@
                                         item-value="id"
                                         required
                                         :rules="[validateSelected()]"
+                                    >
+                                    </v-select>
+                                    <v-select
+                                        :items="subscriptions"
+                                        v-model="values.subscription"
+                                        label="Beitrag"
+                                        item-text="title"
+                                        item-value="id"
+                                        :required="subscriptionRequired"
+                                        :clearable="!subscriptionRequired"
+                                        :rules="subscriptionRules"
                                     >
                                     </v-select>
                                 </v-flex>
@@ -238,9 +249,39 @@
                 }
 
                 return filteredActivities.shift().groups;
-
             },
-            ...mapState(['config', 'genders', 'nationalities', 'countries', 'regions', 'ways', 'confessions', 'activities'])
+            subscriptionRequired: function() {
+                if(!this.values.activity) {
+                    return false;
+                }
+
+                var act = this.activities.filter((act) => {
+                    return act.id == this.values.activity;
+                }).shift();
+
+                if (!act) {
+                    return false;
+                }
+
+                return act.is_payable;
+            },
+            subscriptionRules: function() {
+                if(!this.values.activity) {
+                    return [];
+                }
+
+                var act = this.activities.filter((act) => {
+                    return act.id == this.values.activity;
+                }).shift();
+
+                if (!act) {
+                    return [];
+                }
+
+                if (!act.is_payable) {return [];}
+                return [this.validateSelected()];
+            },
+            ...mapState(['config', 'genders', 'nationalities', 'countries', 'regions', 'ways', 'confessions', 'activities', 'subscriptions'])
         },
         methods: {
             submit: function() {
