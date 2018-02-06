@@ -37,7 +37,7 @@ class Member extends Model
 		return $this->paymentsNotPaid->map(function($p) {
 			return $p->subscription->amount;
 		})->sum();
-	}
+    }
 
 	//---------------------------------- Relations ----------------------------------
 	public function country() {

@@ -8,6 +8,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use App\Member;
+use App\Facades\NaMi\NaMiMember;
 
 class UpdateNaMiMember implements ShouldQueue
 {
@@ -34,6 +35,6 @@ class UpdateNaMiMember implements ShouldQueue
      */
     public function handle()
     {
-        //
+		NaMiMember::patch($this->member);
     }
 }

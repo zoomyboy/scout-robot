@@ -13,4 +13,8 @@ class Fee extends Model
 	public $casts = [
 		'nami_id' => 'integer'
 	];
+
+    public function subscriptions() {
+        return $this->hasMany(Subscription::class);
+    }
 }

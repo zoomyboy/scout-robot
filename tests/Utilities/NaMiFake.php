@@ -186,6 +186,22 @@ class NaMiFake {
 		}
 	}
 
+    public function put($url, $data) {
+		preg_match_all('#^/ica/rest/nami/mitglied/filtered-for-navigation/gruppierung/gruppierung/([0-9]+)/([0-9]+)$#', $url, $matches);
+		if (isset($matches[1][0]) && isset($matches[2][0]) && is_numeric($matches[1][0]) && is_numeric($matches[2][0])) {
+			$memberId = $matches[2][0];
+            $this->updateMember($memberId, $data);
+
+			return (object) [
+    			"success" => true,
+    			"data" => $data,
+    			"responseType" => "OK",
+    			"message" => "Update successful",
+    			"title" => null
+			];
+        }
+    }
+
 	public function successResponse($data) {
 		return (object) [
 			"success" => true,

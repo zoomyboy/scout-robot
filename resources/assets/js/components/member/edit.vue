@@ -1,95 +1,256 @@
 <template>
-	<div class="cp-wrap cp-member-edit">
-		<vf-form redirect="member.index" method="patch" :url="'/api/member/'+$route.params.id" :action="'/api/member/'+$route.params.id" msg="Mitglied erfolgreich bearbeitet">
-			<grid><article>
-				<panel>
-					<div slot="tabs" class="tabs">
-						<tab title="Stammdaten" index="0" active></tab>
-						<tab title="Sonstiges" index="1"></tab>
-					</div>
-					<panelcontent index="0" active>
-						<vf-select url="/api/gender" name="gender" label="Geschlecht" nullable></vf-select>
-						<div class="row">
-							<div class="col-md-6"><vf-text name="firstname" label="Vorname"></vf-text></div>
-							<div class="col-md-6"><vf-text name="lastname" label="Nachname"></vf-text></div>
-						</div>
-						<div class="row">
-							<div class="col-md-6"><vf-date label="Geburtsdatum" name="birthday"></vf-date></div>
-							<div class="col-md-6"><vf-date name="joined_at" label="Eintrittsdatum"></vf-date></div>
-						</div>
-						<div class="row">
-							<div class="col-md-6"><vf-text name="address" label="Adresse"></vf-text></div>
-							<div class="col-md-6"><vf-text name="further_address" label="Addresszusatz"></vf-text></div>
-						</div>
-						<div class="row">
-							<div class="col-md-6"><vf-text name="zip" label="PLZ"></vf-text></div>
-							<div class="col-md-6"><vf-text name="city" label="Stadt"></vf-text></div>
-						</div>
-						<div class="row">
-							<div class="col-md-6"><vf-text name="phone" label="Telefonnummer" :mask="{mask: '+99 999 9{1,}'}" value="+49"></vf-text></div>
-							<div class="col-md-6"><vf-text name="mobile" label="Handynummer" :mask="{mask: '+99 999 9{1,}'}" value="+49"></vf-text></div>
-						</div>
-						<vf-text name="email" label="E-Mail-Adresse"></vf-text>
-					</panelcontent>
-					<panelcontent index="1">
-						<vf-text name="nickname" label="Spitzname"></vf-text>
-						<div class="row">
-							<div class="col-md-6">
-								<vf-select name="nationality" url="/api/nationality" label="Staatsangehörigkeit" :value="config.default_nationality"></vf-select>
-							</div>
-							<div class="col-md-6">
-								<vf-text name="other_country" label="Andere Staatsangehörigkeit"></vf-text>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-md-6">
-								<vf-select name="region" url="/api/region" label="Bundesland" :value="config.default_region" nullable></vf-select>
-							</div>
-							<div class="col-md-6">
-								<vf-select name="country" url="/api/country" label="Land" :value="config.default_country"></vf-select>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-md-6"><vf-text name="business_phone" label="Geschäftliche Nummer" :mask="{mask: '+99 999 9{1,}'}" value="+49"></vf-text></div>
-							<div class="col-md-6"><vf-text name="fax" label="Fax"></vf-text></div>
-						</div>
-						<vf-text name="email_parents" label="E-Mail-Adresse Erziehungsberechtigter"></vf-text>
-						<div class="row">
-							<div class="col-md-6"><vf-select name="way" label="Rechnung versenden über..." url="/api/way"></vf-select></div>
-							<div class="col-md-6"><vf-select name="confession" label="Konfession" url="/api/confession" nullable></vf-select></div>
-						</div>
-						<vf-checkbox label="Datenweiterverwendung" name="keepdata" help="Wenn dieses Feld aktiviert wird, wird ein Mitglied beim Löschen zu den abgemeldeten Mitgliedern hinzugefügt, sodass dessen Daten noch eingesehen werden können. Wird das Mitglied mit NaMi synchronisiert, wird der Status dort auf 'inaktiv' gesetzt und auch dort bleiben die Daten bestehen.<br>Ist dieses Feld deaktiviert, werden die Daten komplett gelöscht.<br>Der Standardwert kann allgemein unter der globalen Konfiguration eingestellt werden."></vf-checkbox>
-						<vf-checkbox label="Zeitschriftenversand" name="sendnewspaper" help="Wenn dieses Feld aktiviert wird, bekommt ein Mitglied die Mittendrin-Zeitschrift zugesendet. Der Standardwert kann allgemein unter der globalen Konfiguration eingestellt werden."></vf-checkbox>
-					</panelcontent>
-					<vf-submit></vf-submit>
-				</panel>
-			</article></grid>
-		</vf-form>
-	</div>
+    <v-card color="grey lighten-4">
+        <v-form v-model="valid">
+            <v-tabs v-model="active" centered>
+                <v-tabs-bar class="blue darken-2" dark>
+                    <v-tabs-item key="tab-general" href="#tab-general" ripple>Allgemein</v-tabs-item>
+                    <v-tabs-item key="tab-contact" href="#tab-contact" ripple>Kontakt</v-tabs-item>
+                    <v-tabs-item key="tab-system" href="#tab-system" ripple>System</v-tabs-item>
+                    <v-tabs-item key="tab-misc" href="#tab-misc" ripple>Sonstiges</v-tabs-item>
+                    <v-tabs-slider color="yellow"></v-tabs-slider>
+                </v-tabs-bar>
+                <v-tabs-items>
+
+                    <!-- Allgemein -->
+                    <v-tabs-content key="tab-general" id="tab-general">
+                        <v-container grid-list-md class="pt-4 pl-4 pr-4" fluid>
+                            <v-layout row wrap>
+                                <v-flex md12>
+                                    <v-select
+                                        :items="genders"
+                                        v-model="values.gender"
+                                        label="Geschlecht"
+                                        item-text="title"
+                                        item-value="id"
+                                        clearable
+                                    >
+                                    </v-select>
+                                </v-flex>
+                                <v-flex md6>
+                                    <v-text-field v-model="values.firstname" label="Vorname" :rules="[validateRequired()]" required></v-text-field>
+                                </v-flex>
+                                <v-flex md6>
+                                    <v-text-field v-model="values.lastname" label="Nachname" :rules="[validateRequired()]" required></v-text-field>
+                                </v-flex>
+                                <v-flex md6>
+                                    <v-text-field v-model="values.address" label="Adresse" :rules="[validateRequired()]" required></v-text-field>
+                                </v-flex>
+                                <v-flex md6>
+                                    <v-text-field v-model="values.further_address" label="Adresszusatz"></v-text-field>
+                                </v-flex>
+                                <v-flex md6>
+                                    <v-text-field v-model="values.zip" label="PLZ" :rules="[validateRequired()]" required></v-text-field>
+                                </v-flex>
+                                <v-flex md6>
+                                    <v-text-field v-model="values.city" label="Stadt" :rules="[validateRequired()]" required></v-text-field>
+                                </v-flex>
+                                <v-flex md6>
+                                    <v-menu full-width :close-on-content-click="false">
+                                        <v-text-field slot="activator" ref="birthday" :rules="[validateRequired()]" v-model="values.birthday" label="Geburtsdatum" required></v-text-field>
+                                        <v-date-picker v-model="values.birthday" no-title scrollable></v-date-picker>
+                                    </v-menu>
+                                </v-flex>
+                                <v-flex md6>
+                                    <v-menu full-width :close-on-content-click="false">
+                                        <v-text-field slot="activator" ref="joined_at" :rules="[validateRequired()]" v-model="values.joined_at" label="Eintrittsdatum" required></v-text-field>
+                                        <v-date-picker v-model="values.joined_at" no-title scrollable></v-date-picker>
+                                    </v-menu>
+                                </v-flex>
+                            </v-layout>
+                        </v-container>
+                    </v-tabs-content>
+
+                    <!-- Kontakt -->
+                    <v-tabs-content key="tab-contact" id="tab-contact">
+                        <v-container grid-list-md class="pt-4 pl-4 pr-4" fluid>
+                            <v-layout row wrap>
+                                <v-flex md6>
+                                    <v-text-field v-model="values.phone" label="Telefonnummer"></v-text-field>
+                                </v-flex>
+                                <v-flex md6>
+                                    <v-text-field v-model="values.mobile" label="Mobilfunknummer"></v-text-field>
+                                </v-flex>
+                                <v-flex md6>
+                                    <v-text-field v-model="values.business_phone" label="Gesch. Nummer"></v-text-field>
+                                </v-flex>
+                                <v-flex md6>
+                                    <v-text-field v-model="values.email" label="E-Mail-Adresse"></v-text-field>
+                                </v-flex>
+                                <v-flex md6>
+                                    <v-text-field v-model="values.email_parents" label="E-Mail-Adresse Erz. Berechtigter"></v-text-field>
+                                </v-flex>
+                                <v-flex md6>
+                                    <v-text-field v-model="values.fax" label="Fax"></v-text-field>
+                                </v-flex>
+                            </v-layout>
+                        </v-container>
+                    </v-tabs-content>
+                       
+                    <!-- System -->
+                    <v-tabs-content key="tab-system" id="tab-system">
+                        <v-container grid-list-md class="pt-4 pl-4 pr-4" fluid>
+                            <v-layout row wrap>
+                                <v-flex md6>
+                                    <v-select
+                                        :items="ways"
+                                        v-model="values.way"
+                                        label="Rechnung versenden über"
+                                        item-text="title"
+                                        item-value="id"
+                                        :rules="[validateSelected()]"
+                                        required
+                                    >
+                                    </v-select>
+                                    <v-select
+                                        :items="subscriptions"
+                                        v-model="values.subscription"
+                                        label="Beitrag"
+                                        item-text="title"
+                                        item-value="id"
+                                        clearable
+                                    >
+                                    </v-select>
+                                </v-flex>
+                                <v-flex md6>
+                                    <v-switch v-model="values.keepdata" label="Datenweiterverwendung" hint="Wenn dieses Feld aktiviert wird, wird ein Mitglied beim Löschen zu den abgemeldeten Mitgliedern hinzugefügt, sodass dessen Daten noch eingesehen werden können. Wird das Mitglied mit NaMi synchronisiert, wird der Status dort auf 'inaktiv' gesetzt und auch dort bleiben die Daten bestehen.<br>Ist dieses Feld deaktiviert, werden die Daten komplett gelöscht.<br>Der Standardwert kann allgemein unter der globalen Konfiguration eingestellt werden." persistent-hint></v-switch>
+                                    <v-switch v-model="values.sendnewspaper" label="Zeitschriftenversand" hint="Wenn dieses Feld aktiviert wird, bekommt ein Mitglied die Mittendrin-Zeitschrift zugesendet. Der Standardwert kann allgemein unter der globalen Konfiguration eingestellt werden." persistent-hint></v-switch>
+                                </v-flex>
+                            </v-layout>
+                        </v-container>
+                    </v-tabs-content>
+
+                    <!-- Sonstiges -->
+                    <v-tabs-content key="tab-misc" id="tab-misc">
+                        <v-container grid-list-md class="pt-4 pl-4 pr-4" fluid>
+                            <v-layout row wrap>
+                                <v-flex md6>
+                                    <v-text-field v-model="values.nickname" label="Spitzname"></v-text-field>
+                                </v-flex>
+                                <v-flex md6>
+                                    <v-text-field v-model="values.other_country" label="Andere Staatsangehörigeit"></v-text-field>
+                                </v-flex>
+                                <v-flex md6>
+                                    <v-select
+                                        :items="regions"
+                                        v-model="values.region"
+                                        label="Bundesland"
+                                        item-text="title"
+                                        item-value="id"
+                                        clearable
+                                        required
+                                        :rules="[validateSelected()]"
+                                    >
+                                    </v-select>
+                                </v-flex>
+                                <v-flex md6>
+                                    <v-select
+                                        :items="nationalities"
+                                        v-model="values.nationality"
+                                        label="Staatsangehörigeit"
+                                        item-text="title"
+                                        item-value="id"
+                                        clearable
+                                        required
+                                        :rules="[validateSelected()]"
+                                    >
+                                    </v-select>
+                                </v-flex>
+                                <v-flex md6>
+                                    <v-select
+                                        :items="countries"
+                                        v-model="values.country"
+                                        label="Land"
+                                        item-text="title"
+                                        item-value="id"
+                                        clearable
+                                        required
+                                        :rules="[validateSelected()]"
+                                    >
+                                    </v-select>
+                                </v-flex>
+                                <v-flex md6>
+                                    <v-select
+                                        :items="confessions"
+                                        v-model="values.confession"
+                                        label="Konfession"
+                                        item-text="title"
+                                        item-value="id"
+                                    >
+                                    </v-select>
+                                </v-flex>
+                            </v-layout>
+                        </v-container>
+                    </v-tabs-content>
+                </v-tabs-items>
+            </v-tabs>
+            <div class="pa-4">
+                <v-btn :disabled="!valid" @click="submit" color="primary" class="ma-0">Absenden</v-btn>
+            </div>
+        </v-form>
+    </v-card>
 </template>
 
-<style type="less">
-	.cp-member-edit form, .cp-member-edit .form-container {
-		height: 100%;
-	}
-
-	.form-container form:last-child {
-		display: none;
-	}
-</style>
-
 <script>
-	import {mapState} from 'vuex';
+    import {mapState} from 'vuex';
+    import moment from 'moment';
 
-	export default {
-		computed: mapState(['config']),
-		components: {
-			tabs: require('z-ui/panel/tabs.vue'),
-			tab: require('z-ui/panel/tab.vue'),
-			panel: require('z-ui/panel/panel.vue'),
-			grid: require('z-ui/grid/grid.vue'),
-			vfDate: require('z-ui/form/fields/date.vue'),
-			panelcontent: require('z-ui/panel/content.vue'),
-		}
-	}
+    export default {
+        data: function() {
+            return {
+                valid: true,
+                active: 'tab-general',
+                values: {}
+            }
+        },
+        computed: {
+            ...mapState(['config', 'genders', 'nationalities', 'countries', 'regions', 'ways', 'confessions', 'activities', 'subscriptions'])
+        },
+        methods: {
+            submit: function() {
+                var vm = this;
+
+                axios.patch('/api/member/'+this.$route.params.id, this.values).then((ret) => {
+                    vm.$store.commit('successmsg', 'Mitglied bearbeitet');
+                    this.$router.push({name: 'member.index'});
+                }).catch((error) => vm.showErrors(error));
+            }
+        },
+        mounted: function() {
+            var vm = this;
+
+            axios.get('/api/member/'+this.$route.params.id).then((ret) => {
+                vm.member = ret.data;
+                vm.$store.commit('settitle', 'Mitglied '+ret.data.firstname+' '+ret.data.lastname+' bearbeiten');
+
+                vm.$set(vm.values, 'firstname', ret.data.firstname);
+                vm.$set(vm.values, 'lastname', ret.data.lastname);
+                vm.$set(vm.values, 'address', ret.data.address);
+                vm.$set(vm.values, 'zip', ret.data.zip);
+                vm.$set(vm.values, 'city', ret.data.city);
+                vm.$set(vm.values, 'further_address', ret.data.further_address);
+                vm.$set(vm.values, 'birthday', moment(ret.data.birthday).format('YYYY-MM-DD'));
+                vm.$set(vm.values, 'joined_at', moment(ret.data.joined_at).format('YYYY-MM-DD'));
+                vm.$set(vm.values, 'gender', ret.data.gender_id);
+
+                vm.$set(vm.values, 'phone', ret.data.phone);
+                vm.$set(vm.values, 'mobile', ret.data.mobile);
+                vm.$set(vm.values, 'fax', ret.data.fax);
+                vm.$set(vm.values, 'email', ret.data.email);
+                vm.$set(vm.values, 'business_phone', ret.data.business_phone);
+                vm.$set(vm.values, 'email_parents', ret.data.email_parents);
+                vm.$set(vm.values, 'way', ret.data.way_id);
+                vm.$set(vm.values, 'subscription', ret.data.subscription_id);
+                vm.$set(vm.values, 'keepdata', ret.data.keepdata);
+                vm.$set(vm.values, 'sendnewspaper', ret.data.sendnewspaper);
+
+                vm.$set(vm.values, 'nickname', ret.data.nickname);
+                vm.$set(vm.values, 'other_country', ret.data.other_country);
+                vm.$set(vm.values, 'region', ret.data.region_id);
+                vm.$set(vm.values, 'nationality', ret.data.nationality_id);
+                vm.$set(vm.values, 'confession', ret.data.confession_id);
+                vm.$set(vm.values, 'country', ret.data.country_id);
+            });
+
+        }
+    }
 </script>

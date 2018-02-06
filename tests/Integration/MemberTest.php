@@ -170,7 +170,7 @@ class MemberTest extends IntegrationTestCase {
 			->assertSuccess();
 	}
 
-	public function validationDataProvider() {
+	public function validationStoreDataProvider() {
 		return [
 			'one' => [['nationality' => null], ['nationality']],
 			'two' => [['country' => null], ['country']],
@@ -197,11 +197,18 @@ class MemberTest extends IntegrationTestCase {
 		];
 	}
 
+	public function validationUpdateDataProvider() {
+		return [
+			'one' => [['nationality' => null], ['nationality']],
+			'two' => [['country' => null], ['country']],
+		];
+	}
+
 	/**
 	 * @test
-	 * @dataProvider validationDataProvider
+	 * @dataProvider validationStoreDataProvider
 	 */
-	public function it_should_add_validations_on_create($fields, $valid) {
+	public function it_should_add_validations_on_store($fields, $valid) {
 		$this->withExceptionHandling();
 
 		$this->authAsApi();
@@ -228,7 +235,7 @@ class MemberTest extends IntegrationTestCase {
 
 	/**
 	 * @test
-	 * @dataProvider validationDataProvider
+	 * @dataProvider validationUpdateDataProvider
 	 */
 	public function it_should_add_validations_on_update($fields, $valid) {
 		$this->withExceptionHandling();

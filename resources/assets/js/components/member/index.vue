@@ -52,7 +52,7 @@
 				<td>{{ prop.item.city }}</td>
 				<td>
 					<v-btn-toggle>
-						<v-btn @click="$router.go({name: 'member.index'})"><v-icon>fa-pencil</v-icon></v-btn>
+                        <v-btn @click="$router.push({name: 'member.edit', params: {id: prop.item.id}})"><v-icon>fa-pencil</v-icon></v-btn>
 						<v-btn><v-icon>fa-close</v-icon></v-btn>
 					</v-btn-toggle>
 				</td>

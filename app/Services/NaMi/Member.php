@@ -61,6 +61,64 @@ class Member extends NaMiService {
     }
 
     /**
+     * Writes a local member to nami that already exists
+     */
+    public function patch(MemberModel $member) {
+        $existingMember = $this->single($member->nami_id);
+        $group = NaMi::getConfig()->namiGroup;
+
+        $gender = $member->gender
+            ? $member->gender->nami_id 
+            : \App\Gender::where('is_null', true)->first()->nami_id
+        ;
+
+        $region = $member->region
+            ? $member->region->nami_id 
+            : \App\Region::where('is_null', true)->first()->nami_id
+        ;
+
+        $nationality = $member->nationality->nami_id;
+        $confession = $member->confession
+            ? $member->confession->nami_id
+            : null;
+
+        $response = NaMi::put('/ica/rest/nami/mitglied/filtered-for-navigation/gruppierung/gruppierung/'.$group.'/'.$member->nami_id, [
+            'vorname' => $member->firstname,
+            'nachname' => $member->lastname,
+            'eintrittsdatum' => $member->joined_at->format('Y-m-d').'T00:00:00',
+            'geburtsDatum' => $member->birthday->format('Y-m-d').'T00:00:00',
+            'geschlechtId' => $gender,
+            'staatsangehoerigkeitId' => $nationality,
+            'strasse' => $member->address,
+            'plz' => $member->zip,
+            'regionId' => $region,
+            'ort' => $member->city,
+            'landId' => $member->country->nami_id,
+            'spitzname' => $member->nickname,
+            'staatsangehoerigkeitText' => $member->other_country,
+            'konfessionId' => $confession,
+            'konfessionId' => $confession,
+            'wiederverwendenFlag' => $member->keepdata,
+            'zeitschriftenversand' => $member->sendnewspaper,
+            'nameZusatz' => $member->further_address,
+            'telefon1' => $member->phone,
+            'telefon2' => $member->mobile,
+            'telefon3' => $member->business_phone,
+            'telefax' => $member->fax,
+            'email' => $member->email,
+            'version' => $existingMember->version,
+            'emailVertretungsberechtigter' => $member->email_parents,
+            'beitragsartId' => ($member->subscription)
+                ? $member->subscription->fee->nami_id
+                : null
+        ]);
+
+        return is_numeric($response->data) && $response->success === true
+            ? $response->data
+            : false;
+    }
+
+    /**
      * Imports a member from nami and stores it locally
      * Caution: This will always create a new member, no matter if it exists already!
      *
@@ -78,6 +136,12 @@ class Member extends NaMiService {
 
         $country = \App\Country::where('nami_id', $data->landId)->first();
         $nationality = \App\Nationality::where('nami_id', $data->staatsangehoerigkeitId)->first();
+
+        $sub = null;
+        $fee = \App\Fee::where('nami_id', $data->beitragsartId)->first();
+        if (!is_null($fee) && !is_null($fee->subscriptions->first())) {
+            $sub = $fee->subscriptions->first();
+        }
 
         $m = new \App\Member([
             'firstname' => $data->vorname,
@@ -109,6 +173,7 @@ class Member extends NaMiService {
         $m->way()->associate(NaMi::getConfig()->defaultWay->id);
         $m->confession()->associate($confession);
         $m->nationality()->associate($nationality);
+        $m->subscription()->associate($sub);
 
         $m->save();
 

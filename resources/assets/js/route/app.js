@@ -2,7 +2,7 @@
 // 
 const memberIndex = () => import('../components/member/index.vue');
 const memberAdd = () => import('../components/member/add.vue');
-// const memberEdit = () => import('../components/member/edit.vue');
+const memberEdit = () => import('../components/member/edit.vue');
 const configIndex = () => import('../components/config/index.vue');
 const profileIndex = () => import('../components/profile/index.vue');
 const profilePassword = () => import('../components/profile/password.vue');
@@ -35,12 +35,11 @@ module.exports = [
         name: 'member.add',
         component: memberAdd
     },
-//  {
-//      path: '/member/:id/edit',
-//      name: 'member.edit',
-//      props: { heading: { title: 'Mitglied bearbeiten' } },
-//      components: { default: memberEdit, heading }
-//  },
+{
+    path: '/member/:id/edit',
+    name: 'member.edit',
+    component: memberEdit
+},
 {
     path: '/config',
     name: 'config.index',

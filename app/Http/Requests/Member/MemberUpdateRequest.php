@@ -27,27 +27,11 @@ class MemberUpdateRequest extends Request
 			'country' => 'required|exists:countries,id',
 			'way' => 'required|exists:ways,id',
 			'nationality' => 'required|exists:nationalities,id',
-			'activity' => 'required|exists:activities,id'
 		];
 
 		if ($this->input('email')) {
 			$ret['email'] = 'email';
 		}
-
-		if (is_null(\App\Activity::where('id', $this->activity)->first())) {
-			return $ret;
-		}
-
-		if (\App\Activity::where('id', $this->activity)->first()->is_payable) {
-			$ret['subscription'] = 'required';
-		}
-
-		$ret['group'] = [
-			'required',
-			Rule::in(Group::whereHas('activities', function($q) {
-				return $q->where('id', $this->activity);
-			})->get()->pluck('id')->toArray())
-		];
 
 		return $ret;
 	}
