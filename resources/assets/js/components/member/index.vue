@@ -1,5 +1,8 @@
 <template>
 	<div class="v-comp">
+        <v-dialog fullscreen v-model="paymentsModal">
+            <payments @close="paymentsModal = false" :member="payments"></payments>
+        </v-dialog>
 		<v-toolbar class="blue darken-3" dark>
 			<v-toolbar-items>
 				<v-btn @click="$router.push({name: 'member.add'})" class="" flat>Hinzufügen</v-btn>
@@ -53,6 +56,7 @@
 				<td>
 					<v-btn-toggle>
                         <v-btn @click="$router.push({name: 'member.edit', params: {id: prop.item.id}})"><v-icon>fa-pencil</v-icon></v-btn>
+                        <v-btn @click="paymentsModal = true; payments = prop.item"><v-icon>fa-money</v-icon></v-btn>
 						<v-btn><v-icon>fa-close</v-icon></v-btn>
 					</v-btn-toggle>
 				</td>
@@ -70,7 +74,8 @@
 				],
 				member: false,
 				members: false,
-				payments: false,
+                payments: {},
+                paymentsModal: false,
 				side: false,
 				filter: {
 					location: '',
@@ -91,6 +96,9 @@
 				}
 			}
 		},
+        components: {
+            payments: require('./payments.vue')
+        },
 		computed: {
 			headings: function() {
 				var h = [

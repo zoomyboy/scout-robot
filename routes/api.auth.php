@@ -46,6 +46,7 @@ Route::resource('conf', 'ConfController');
 Route::get('member/table', 'MemberController@table');
 Route::get('member/{member}/table', 'MemberController@tableOne');
 Route::ApiResource('member', 'MemberController');
+Route::ApiResource('member.payments', 'MemberPaymentsController');
 
 Route::resource('gender', 'GenderController');
 

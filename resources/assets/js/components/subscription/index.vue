@@ -102,9 +102,6 @@
 		components: {
 		},
         methods: {
-            money: function(m) {
-                return accounting.formatMoney(m / 100, '€', 2, ",", ",", '%v %s');
-            },
             triggerAdd: function() {
                 var vm = this;
 

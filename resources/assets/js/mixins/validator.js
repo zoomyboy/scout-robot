@@ -1,3 +1,5 @@
+import accounting from 'accounting';
+
 export default {
     methods: {
         validateRequired: function() {
@@ -38,6 +40,9 @@ export default {
             });
 
             vm.$store.commit('errormsg', errors, 5000);
-        }
+        },
+        money: function(m) {
+            return accounting.formatMoney(m / 100, '€', 2, ",", ",", '%v %s');
+        },
     }
 }

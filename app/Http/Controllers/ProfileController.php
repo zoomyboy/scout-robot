@@ -37,6 +37,7 @@ class ProfileController extends Controller
             'activities' => \App\Activity::with('groups')->get()->toArray(),
             'confessions' => \App\Confession::get()->toArray(),
             'fees' => \App\Fee::get()->toArray(),
+            'statuses' => \App\Status::get()->toArray(),
             'ways' => \App\Way::get()->toArray(),
             'nationalities' => \App\Nationality::get()->toArray(),
             'subscriptions' => \App\Subscription::with('fee')->get()->toArray(),
