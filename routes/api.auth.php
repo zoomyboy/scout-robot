@@ -52,8 +52,6 @@ Route::resource('gender', 'GenderController');
 
 Route::get('info', 'ProfileController@infoForCurrentUser');
 
-Route::resource('member.payment', 'PaymentController');
-
 Route::get('/status', 'StatusController@index');
 
 Route::resource('file', 'FileController');

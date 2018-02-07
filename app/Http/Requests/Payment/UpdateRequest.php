@@ -2,10 +2,13 @@
 
 namespace App\Http\Requests\Payment;
 
-use Illuminate\Validation\Rule;
 use Zoomyboy\BaseRequest\Request;
+use Illuminate\Validation\Rule;
+use App\Status;
+use App\Subscription;
+use App\Payment;
 
-class PaymentUpdateRequest extends Request {
+class UpdateRequest extends Request {
 	public $model = \App\Payment::class;
 
 	public function rules() {
@@ -16,21 +19,23 @@ class PaymentUpdateRequest extends Request {
 					->where('id', '!=', $this->route('payment')->id);
 			})],
 			'status' => 'required|exists:statuses,id',
-			'member' => 'required|exists:members,id',
-			'amount' => 'required|regex:/^[0-9]+,[0-9]+$/'
+			'subscription' => 'required|exists:subscriptions,id',
 		];
 	}
 
 	public function messages() {
 		return [
-			'amount.regex' => 'Der Betrag muss das Format "99,99" haben',
 			'nr.unique' =>  'Dieses Jahr existiert bereits'
 		];
 	}
 
-	public function modifyFillables($fill = null) {
-		$fill['amount'] = str_replace(',', '.', $fill['amount']) * 100;
+    public function persist($model = null) {
+        $model->fill(['nr' => $this->nr]);
 
-		return $fill;
-	}
+        $model->status()->associate(Status::find($this->status));
+        $model->subscription()->associate(Subscription::find($this->subscription));
+        $model->save();
+
+        return $model;
+    }
 }

@@ -32,11 +32,41 @@
                 </v-container>
             </v-card>
         </v-dialog>
+        <v-dialog v-model="editdialog" max-width="400px">
+            <v-card>
+                <v-card-title>Zahlung {{ edit.nr }} bearbeiten</v-card-title>
+                <v-divider></v-divider>
+                <v-container>
+                    <v-form v-model="editValid">
+                        <v-text-field v-model="edit.nr" required label="Name" :rules="[validateRequired()]"></v-text-field>
+                        <v-select 
+                            :items="statuses"
+                            v-model="edit.status"
+                            label="Status"
+                            item-text="title"
+                            item-value="id"
+                            required
+                            :rules="[validateSelected()]"
+                        >
+                        </v-select>
+                        <v-select 
+                            :items="subscriptions"
+                            v-model="edit.subscription"
+                            label="Beitrag"
+                            item-text="title"
+                            item-value="id"
+                            required
+                            :rules="[validateSelected()]"
+                        >
+                        </v-select>
+                        <v-btn :disabled="!editValid" @click="triggerEdit" class="primary ma-0">Absenden</v-btn>
+                    </v-form>
+                </v-container>
+            </v-card>
+        </v-dialog>
         <v-toolbar dark color="primary">
-            <v-btn icon flat @click.native="$emit('close')" dark>
-                <v-icon>close</v-icon>
-            </v-btn>
-            <v-btn dark flat @click="adddialog=true" icon class="green darken-2"><v-icon>fa-plus</v-icon></v-btn>
+            <v-btn @click.native="$emit('close')" icon dark flat><v-icon>close</v-icon></v-btn>
+            <v-btn @click="adddialog=true" icon dark><v-icon>fa-plus</v-icon></v-btn>
             <v-toolbar-title>Beiträge für Mitglied {{ member.firstname }} {{ member.lastname }} bearbeiten</v-toolbar-title>
             <v-spacer></v-spacer>
         </v-toolbar>
@@ -59,7 +89,7 @@
                     <td>{{ prop.item.subscription.title }} ({{ money(prop.item.subscription.amount) }})</td>
                     <td>
                         <v-btn-toggle>
-                            <v-btn @click="$router.push({name: 'member.edit', params: {id: prop.item.id}})"><v-icon>fa-pencil</v-icon></v-btn>
+                            <v-btn @click="editdialog=true; editModel(prop.item)"><v-icon>fa-pencil</v-icon></v-btn>
                             <v-btn><v-icon>fa-close</v-icon></v-btn>
                         </v-btn-toggle>
                     </td>
@@ -88,7 +118,15 @@
                     nr: '',
                     status: null,
                     subscription: null
-                }
+                },
+                editdialog: false,
+                editValid: false,
+                edit: {
+                    id: -1,
+                    nr: '',
+                    status: null,
+                    subscription: null
+                },
             };
         },
         watch: {
@@ -114,12 +152,28 @@
                     vm.adddialog = false;
                 });
             },
+            triggerEdit: function() {
+                var vm = this;
+
+                axios.patch('/api/member/'+this.member.id+'/payments/'+this.edit.id, this.edit).then((ret) => {
+                    vm.getPayments(vm.member);
+                    vm.editdialog = false;
+                });
+            },
             getPayments: function(m) {
                 var vm = this;
 
                 axios.get('/api/member/'+m.id+'/payments').then((ret) => {
                     vm.payments = ret.data;
                 });
+            },
+            editModel: function(payment) {
+                this.edit = {
+                    id: payment.id,
+                    nr: payment.nr,
+                    status: payment.status_id,
+                    subscription: payment.subscription_id
+                };
             }
         },
         mounted: function() {
