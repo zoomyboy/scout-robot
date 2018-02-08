@@ -12,6 +12,9 @@ const router = new VueRouter({
 
 import {mapState} from 'vuex';
 
+import Vuelidate from 'vuelidate'
+Vue.use(Vuelidate)
+
 import Vuex from 'vuex';
 Vue.use(Vuex);
 

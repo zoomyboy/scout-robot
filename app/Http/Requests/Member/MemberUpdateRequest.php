@@ -34,7 +34,19 @@ class MemberUpdateRequest extends Request
 		}
 
 		return $ret;
-	}
+    }
+
+    public function customRules() {
+        if ($this->email == '' && $this->email_parents == '' && $this->way == 1) {
+            return [
+                'way' => 'Du musst entweder eine der beiden E-Mails angeben oder als Zahlungsweg Post auswählen.',
+                'email' => 'Du musst entweder eine der beiden E-Mails angeben oder als Zahlungsweg Post auswählen.',
+                'email_parents' => 'Du musst entweder eine der beiden E-Mails angeben oder als Zahlungsweg Post auswählen.'
+            ];
+        }
+
+        return [];
+    }
 
     public function persist($model = null) {
         $this->oldmodel = $model->getAttributes();

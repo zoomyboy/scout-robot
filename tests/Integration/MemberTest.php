@@ -136,7 +136,8 @@ class MemberTest extends IntegrationTestCase {
 			[
 				[],
 				['activity' => 35, 'group' => 1],
-				['activity' => 35, 'group' => 1]
+				['activity' => 35, 'gro,up' => 1],
+			    ['email' => '', 'email_parents' => '', 'way' => 2]
 			]
 		];
 	}
@@ -201,6 +202,7 @@ class MemberTest extends IntegrationTestCase {
 		return [
 			'one' => [['nationality' => null], ['nationality']],
 			'two' => [['country' => null], ['country']],
+			'noEmailsButEmailWaySet' => [['email' => '', 'email_parents' => '', 'way' => 1], ['way', 'email', 'email_parents']],
 		];
 	}
 
