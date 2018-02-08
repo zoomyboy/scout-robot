@@ -86,13 +86,13 @@
                                 <v-flex xs12 sm6>
                                     <v-text-field name="letterIban" label="IBAN" id="letterIban" validate-on-blur v-model="values.letterIban"></v-text-field>
                                 </v-flex>
-								<v-flex xs12 sm6>
-									<v-text-field name="letterBic" label="BIC" id="letterBic" validate-on-blur v-model="values.letterBic"></v-text-field>
+                                <v-flex xs12 sm6>
+                                    <v-text-field name="letterBic" label="BIC" id="letterBic" validate-on-blur v-model="values.letterBic"></v-text-field>
                                 </v-flex>
-								<v-flex xs12 sm6>
-									<v-text-field name="letterFrom" label="Absender in Rechnungen" id="letterFrom" validate-on-blur v-model="values.letterFrom"></v-text-field>
+                                <v-flex xs12 sm6>
+                                    <v-text-field name="letterFrom" label="Absender in Rechnungen" id="letterFrom" validate-on-blur v-model="values.letterFrom"></v-text-field>
                                 </v-flex>
-								<v-flex xs12 sm6>
+                                <v-flex xs12 sm6>
                                     <v-text-field name="letterZweck" label="Verwendungszweck" id="letterZweck" validate-on-blur v-model="values.letterZweck"></v-text-field>
                                 </v-flex>
                                 <v-flex xs12 sm6>
@@ -102,48 +102,48 @@
                             <v-layout row>
                                 <v-checkbox label="Familien standardmäßig zusammenführen" name="includeFamilies" v-model="includeFamilies" id="includeFamilies"></v-checkbox>
                             </v-layout>
-							<v-layout row wrap>
-								<v-flex xs12><v-subheader class="pr-0 pl-0">Standard-Deadline</v-subheader></v-flex>
-								<v-flex xs12 sm6>
-									<v-text-field name="deadlinenr" label="Anzahl" id="deadlinenr" validate-on-blur v-model="values.deadlinenr"></v-text-field>
-								</v-flex>
-								<v-flex xs12 sm6>
-									<v-select
-										:items="timeunits"
-										v-model="values.deadlineunit"
-										label="Einheit"
-										item-text="title"
-										item-value="id"
-										hint="Einheit für die Deadline"
-										clearable
-									>
-									</v-select>
-								</v-flex>
-							</v-layout>
+                            <v-layout row wrap>
+                                <v-flex xs12><v-subheader class="pr-0 pl-0">Standard-Deadline</v-subheader></v-flex>
+                                <v-flex xs12 sm6>
+                                    <v-text-field name="deadlinenr" label="Anzahl" id="deadlinenr" validate-on-blur v-model="values.deadlinenr"></v-text-field>
+                                </v-flex>
+                                <v-flex xs12 sm6>
+                                    <v-select
+                                        :items="timeunits"
+                                        v-model="values.deadlineunit"
+                                        label="Einheit"
+                                        item-text="title"
+                                        item-value="id"
+                                        hint="Einheit für die Deadline"
+                                        clearable
+                                    >
+                                    </v-select>
+                                </v-flex>
+                            </v-layout>
                         </v-container>
                     </v-tabs-content>
 
                     <!-- E-Mails -->
                     <v-tabs-content key="tab-email" id="tab-email">
                         <v-container grid-list-md class="pt-4 pl-4 pr-4">
-							<v-text-field name="emailHeading" label="Überschrift" id="emailHeading" validate-on-blur v-model="values.emailHeading"></v-text-field>
-							<v-text-field name="emailBillText" label="Text für Rechnungen" id="emailBillText" validate-on-blur multi-line v-model="values.emailBillText"></v-text-field>
-							<v-text-field name="emailRememberText" label="Text für Zahlungserinnerungen" id="emailRememberText" multi-line validate-on-blur v-model="values.emailRememberText"></v-text-field>
-							<v-text-field name="emailGreeting" label="Grußwort" id="emailGreeting" validate-on-blur v-model="values.emailGreeting"></v-text-field>
-						</v-container>
-					</v-tabs-content>
+                            <v-text-field name="emailHeading" label="Überschrift" id="emailHeading" validate-on-blur v-model="values.emailHeading"></v-text-field>
+                            <v-text-field name="emailBillText" label="Text für Rechnungen" id="emailBillText" validate-on-blur multi-line v-model="values.emailBillText"></v-text-field>
+                            <v-text-field name="emailRememberText" label="Text für Zahlungserinnerungen" id="emailRememberText" multi-line validate-on-blur v-model="values.emailRememberText"></v-text-field>
+                            <v-text-field name="emailGreeting" label="Grußwort" id="emailGreeting" validate-on-blur v-model="values.emailGreeting"></v-text-field>
+                        </v-container>
+                    </v-tabs-content>
 
                     <!-- NaMi -->
                     <v-tabs-content key="tab-nami" id="tab-nami">
                         <v-container grid-list-md class="pt-4 pl-4 pr-4">
                             <v-checkbox label="NaMi Synchronisieren" name="namiEnabled" v-model="namiEnabled" id="namiEnabled"></v-checkbox>
-							<v-flex wrap row>
-								<v-text-field name="namiUser" label="Mitgliedsnummer" id="namiUser" validate-on-blur v-model="values.namiUser"></v-text-field>
-								<v-text-field type="password" name="namiPassword" label="Passwort" id="namiPassword" validate-on-blur v-model="values.namiPassword"></v-text-field>
-								<v-text-field name="namiGroup" label="Mitgliedsnummer" id="namiGroup" validate-on-blur v-model="values.namiGroup"></v-text-field>
-							</v-flex>
-						</v-container>
-					</v-tabs-content>
+                            <v-flex wrap row>
+                                <v-text-field name="namiUser" label="Mitgliedsnummer" id="namiUser" validate-on-blur v-model="values.namiUser"></v-text-field>
+                                <v-text-field type="password" name="namiPassword" label="Passwort" id="namiPassword" validate-on-blur v-model="values.namiPassword"></v-text-field>
+                                <v-text-field name="namiGroup" label="Mitgliedsnummer" id="namiGroup" validate-on-blur v-model="values.namiGroup"></v-text-field>
+                            </v-flex>
+                        </v-container>
+                    </v-tabs-content>
                 </v-tabs-items>
             </v-tabs>
             <div class="pa-4">
@@ -180,9 +180,9 @@ export default {
                 website: this.config.website,
                 default_keepdata: this.default_keepdata,
                 default_sendnewspaper: this.default_sendnewspaper,
-				defaultCountry: this.config.default_country ? this.config.default_country : null,
-				defaultRegion: this.config.default_region ? this.config.default_region : null,
-				defaultNationality: this.config.default_nationality ? this.config.default_nationality : null,
+                defaultCountry: this.config.default_country ? this.config.default_country : null,
+                defaultRegion: this.config.default_region ? this.config.default_region : null,
+                defaultNationality: this.config.default_nationality ? this.config.default_nationality : null,
                 personName: this.config.personName,
                 personMail: this.config.personMail,
                 personTel: this.config.personTel,
@@ -206,7 +206,7 @@ export default {
                 namiUser: this.config.namiUser,
                 namiPassword: this.config.namiPassword,
                 namiGroup: this.config.namiGroup,
-				files: []
+                files: []
             };
         },
         ...mapState(['config', 'nationalities', 'countries', 'regions', 'timeunits'])
@@ -232,9 +232,9 @@ export default {
     },
     mounted: function() {
         this.default_keepdata = this.config.default_keepdata;
-		this.default_sendnewspaper = this.config.default_sendnewspaper;
-		this.includeFamilies = this.config.includeFamilies;
-		this.namiEnabled = this.config.namiEnabled;
+        this.default_sendnewspaper = this.config.default_sendnewspaper;
+        this.includeFamilies = this.config.includeFamilies;
+        this.namiEnabled = this.config.namiEnabled;
     }
 };
 </script>

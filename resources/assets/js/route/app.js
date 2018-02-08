@@ -7,7 +7,7 @@ const configIndex = () => import('../components/config/index.vue');
 const profileIndex = () => import('../components/profile/index.vue');
 const profilePassword = () => import('../components/profile/password.vue');
 const welcome = () => import('../components/welcome/index.vue');
-// const mass = () => import('../components/mass/index.vue');
+const mass = () => import('../components/mass/index.vue');
 const namiGet = () => import('../components/nami/get.vue');
 const subscriptionIndex = () => import('../components/subscription/index.vue');
 // const subscriptionAdd = () => import('../components/subscription/add.vue');
@@ -24,12 +24,11 @@ module.exports = [
     name: 'member.index',
     component: memberIndex
 },
-//  {
-//      path: '/mass',
-//      name: 'mass.index',
-//      props: { heading: { title: 'Massenversand' } },
-//      components: { default: mass, heading }
-//  },
+{
+    path: '/mass',
+    name: 'mass.index',
+    component: mass
+},
     {
         path: '/member/add',
         name: 'member.add',

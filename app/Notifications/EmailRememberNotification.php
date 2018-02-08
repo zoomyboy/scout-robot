@@ -59,7 +59,7 @@ class EmailRememberNotification extends Notification
 	{
 		$greeting = 'Sehr geehrte Familie '.$this->member->lastname.',';
 
-		$body = $this->generateView($this->config->emailBillText, ['members' => $this->generateMemberString()]);
+		$body = $this->generateView($this->config->emailRememberText, ['members' => $this->generateMemberString()]);
 
         $message = (new MailMessage)
 			->greeting($greeting)

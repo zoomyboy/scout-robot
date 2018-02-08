@@ -91,13 +91,17 @@ class Member extends Model
 
 	public function scopeHasNotPaidPayments($q) {
 		return $q->whereHas('payments', function($q) {
-			return $q->whereIn('status_id', [1])->where('amount', '>', 0);
+            return $q->whereIn('status_id', [1])->whereHas('subscription', function($sq) {
+                return $sq->where('amount', '>', 0);
+            });
 		});
 	}
 
 	public function scopeHasReceivedPayments($q) {
 		return $q->whereHas('payments', function($q) {
-			return $q->whereIn('status_id', [2])->where('amount', '>', 0);
+            return $q->whereIn('status_id', [2])->whereHas('subscription', function($sq) {
+                return $sq->where('amount', '>', 0);
+            });
 		});
 	}
 
