@@ -15,7 +15,7 @@ class UpdateRequest extends Request {
 		return [
 			'nr' => ['required', 'numeric', Rule::unique('payments')->where(function($query) {
 				return $query
-					->where('member_id', $this->member)
+					->where('member_id', $this->route('member')->id)
 					->where('id', '!=', $this->route('payment')->id);
 			})],
 			'status' => 'required|exists:statuses,id',

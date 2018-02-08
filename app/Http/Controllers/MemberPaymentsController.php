@@ -25,4 +25,8 @@ class MemberPaymentsController extends Controller
 
         return response()->json($payment->toArray());
     }
+
+    public function destroy(Member $member, Payment $payment) {
+        $payment->delete();
+    }
 }

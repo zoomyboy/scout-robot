@@ -34,14 +34,14 @@
         </v-dialog>
         <v-dialog v-model="editdialog" max-width="400px">
             <v-card>
-                <v-card-title>Zahlung {{ edit.nr }} bearbeiten</v-card-title>
+                <v-card-title>Zahlung {{ editData.nr }} bearbeiten</v-card-title>
                 <v-divider></v-divider>
                 <v-container>
                     <v-form v-model="editValid">
-                        <v-text-field v-model="edit.nr" required label="Name" :rules="[validateRequired()]"></v-text-field>
+                        <v-text-field v-model="editData.nr" required label="Name" :rules="[validateRequired()]"></v-text-field>
                         <v-select 
                             :items="statuses"
-                            v-model="edit.status"
+                            v-model="editData.status"
                             label="Status"
                             item-text="title"
                             item-value="id"
@@ -51,7 +51,7 @@
                         </v-select>
                         <v-select 
                             :items="subscriptions"
-                            v-model="edit.subscription"
+                            v-model="editData.subscription"
                             label="Beitrag"
                             item-text="title"
                             item-value="id"
@@ -61,6 +61,20 @@
                         </v-select>
                         <v-btn :disabled="!editValid" @click="triggerEdit" class="primary ma-0">Absenden</v-btn>
                     </v-form>
+                </v-container>
+            </v-card>
+        </v-dialog>
+        <v-dialog v-model="deletedialog" max-width="400px">
+            <v-card>
+                <v-card-title>Zahlung {{ deleteData.nr }} löschen</v-card-title>
+                <v-divider></v-divider>
+                <v-container>
+                    Möchtest du Zahlung löschen?
+                </v-container>
+                <v-divider></v-divider>
+                <v-container>
+                    <v-btn color="primary darken-3" @click="deletedialog = false" dark outline>Abbrechen</v-btn>
+                    <v-btn color="red darken-3" @click="triggerDelete()" dark outline>Löschen</v-btn>
                 </v-container>
             </v-card>
         </v-dialog>
@@ -90,7 +104,7 @@
                     <td>
                         <v-btn-toggle>
                             <v-btn @click="editdialog=true; editModel(prop.item)"><v-icon>fa-pencil</v-icon></v-btn>
-                            <v-btn><v-icon>fa-close</v-icon></v-btn>
+                            <v-btn @click="deletedialog=true; deleteModel(prop.item)"><v-icon>fa-trash</v-icon></v-btn>
                         </v-btn-toggle>
                     </td>
                 </template>
@@ -121,11 +135,16 @@
                 },
                 editdialog: false,
                 editValid: false,
-                edit: {
+                editData: {
                     id: -1,
                     nr: '',
                     status: null,
                     subscription: null
+                },
+                deletedialog: false,
+                deleteData: {
+                    id: -1,
+                    nr: ''
                 },
             };
         },
@@ -155,9 +174,17 @@
             triggerEdit: function() {
                 var vm = this;
 
-                axios.patch('/api/member/'+this.member.id+'/payments/'+this.edit.id, this.edit).then((ret) => {
+                axios.patch('/api/member/'+this.member.id+'/payments/'+this.editData.id, this.editData).then((ret) => {
                     vm.getPayments(vm.member);
                     vm.editdialog = false;
+                });
+            },
+            triggerDelete: function() {
+                var vm = this;
+
+                axios.delete('/api/member/'+this.member.id+'/payments/'+this.deleteData.id).then((ret) => {
+                    vm.getPayments(vm.member);
+                    vm.deletedialog = false;
                 });
             },
             getPayments: function(m) {
@@ -168,12 +195,15 @@
                 });
             },
             editModel: function(payment) {
-                this.edit = {
+                this.editData = {
                     id: payment.id,
                     nr: payment.nr,
                     status: payment.status_id,
                     subscription: payment.subscription_id
                 };
+            },
+            deleteModel: function(payment) {
+                this.deleteData = {nr: payment.nr, id: payment.id};
             }
         },
         mounted: function() {
