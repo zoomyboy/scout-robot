@@ -21,7 +21,7 @@ class OwnCollection extends \Illuminate\Database\Eloquent\Collection {
 
 			$sumForCurrentPayment = $item->payments()->whereIn('status_id', $statusIds)->get()->reduce(function($zCarry, $zItem) use ($carry) {
 				$zCarry = $zCarry ?: 0;
-				return $zCarry + $zItem->amount;
+				return $zCarry + $zItem->subscription->amount;
 			});
 
 			return $carry + $sumForCurrentPayment;

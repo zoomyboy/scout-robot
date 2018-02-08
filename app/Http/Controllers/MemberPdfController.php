@@ -11,9 +11,9 @@ use App\Services\Pdf\Remember as RememberPdfService;
 use App\Queries\BillPdfQuery;
 use App\Queries\RememberPdfQuery;
 
-class PdfController extends Controller
+class MemberPdfController extends Controller
 {
-	public function bill(Member $member) {
+	public function bill(Member $member, Request $request) {
 		$members = request()->includeFamilies === "true" ? Member::family($member)->get()->groupBy('lastname') : (new OwnCollection([$member]))->groupBy('lastname');
 		$service = new BillPdfService($members, ['deadline' => request()->deadline]);
 

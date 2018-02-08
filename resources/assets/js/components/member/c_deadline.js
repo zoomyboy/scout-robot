@@ -10,7 +10,7 @@ export default function() {
 	var units = ['', 'days', 'weeks', 'months', 'years'];
 
 	if (this.config.deadlineunit.id >= 1 && this.config.deadlineunit.id <= 4) {
-		return now.add(this.config.deadlinenr, units[this.config.deadlineunit.id]).format('DD.MM.YYYY');
+		return now.add(this.config.deadlinenr, units[this.config.deadlineunit.id]).format('YYYY-MM-DD');
 	}
 
 	return '';

@@ -80,11 +80,47 @@
         </v-dialog>
         <v-toolbar dark color="primary">
             <v-btn @click.native="$emit('close')" icon dark flat><v-icon>close</v-icon></v-btn>
-            <v-btn @click="adddialog=true" icon dark><v-icon>fa-plus</v-icon></v-btn>
             <v-toolbar-title>Beiträge für Mitglied {{ member.firstname }} {{ member.lastname }} bearbeiten</v-toolbar-title>
             <v-spacer></v-spacer>
         </v-toolbar>
         <v-container>
+            <v-toolbar class="blue darken-3" dark>
+                <v-toolbar-items>
+                    <v-btn @click="adddialog=true" flat>Hinzufügen</v-btn>
+                    <v-btn @click="billDialog = !billDialog; rememberDialog = false" flat>
+                        <v-icon v-if="!billDialog">fa-money</v-icon><v-icon v-if="billDialog">fa-close</v-icon>
+                        &nbsp;&nbsp;
+                        <span v-if="!billDialog">Rechnung erstellen</span><span v-if="billDialog">Schließen</span>
+                    </v-btn>
+                    <v-btn @click="rememberDialog=!rememberDialog; billDialog = false" flat>
+                        <v-icon v-if="!rememberDialog">fa-money</v-icon><v-icon v-if="rememberDialog">fa-close</v-icon>
+                        &nbsp;&nbsp;
+                        <span v-if="!rememberDialog">Erinnerung erstellen</span><span v-if="rememberDialog">Schließen</span>
+                    </v-btn>
+                </v-toolbar-items>
+            </v-toolbar>
+    		<v-divider></v-divider>
+    		<v-container  class="pr-4 pl-4 grey darken-2" v-if="billDialog" grid-list-md fluid dark>
+                <v-form @submit.prevent="displayBill">
+                    <v-checkbox v-model="includeFamilies" label="Familien einbeziehen" dark></v-checkbox>
+                    <v-menu full-width :close-on-content-click="false">
+                        <v-text-field slot="activator" ref="deadline" v-model="deadline" label="Deadline" dark></v-text-field>
+                        <v-date-picker v-model="deadline" no-title scrollable></v-date-picker>
+                    </v-menu>
+                    <v-btn type="submit" class="primary" dark>Rechnung öffnen</v-btn>
+                </v-form>
+            </v-container>
+    		<v-container  class="pr-4 pl-4 grey darken-2" v-if="rememberDialog" grid-list-md fluid dark>
+                <v-form @submit.prevent="displayRemember">
+                    <v-checkbox v-model="includeFamilies" label="Familien einbeziehen" dark></v-checkbox>
+                    <v-menu full-width :close-on-content-click="false">
+                        <v-text-field slot="activator" ref="deadline" v-model="deadline" label="Deadline" dark></v-text-field>
+                        <v-date-picker v-model="deadline" no-title scrollable></v-date-picker>
+                    </v-menu>
+                    <v-btn type="submit" class="primary" dark>Erinnerung öffnen</v-btn>
+                </v-form>
+            </v-container>
+            <v-divider></v-divider>
             <v-data-table
                 v-bind:headers="[
                     {text: 'Nr', value: 'nr', align: 'left'},
@@ -146,6 +182,10 @@
                     id: -1,
                     nr: ''
                 },
+                billDialog: false,
+                rememberDialog: false,
+                includeFamilies: false,
+                deadline: ''
             };
         },
         watch: {
@@ -154,7 +194,7 @@
             }
         },
         computed: {
-            ...mapState(['statuses', 'subscriptions'])
+            ...mapState(['statuses', 'subscriptions', 'config'])
         },
         props: {
             member: {
@@ -204,10 +244,30 @@
             },
             deleteModel: function(payment) {
                 this.deleteData = {nr: payment.nr, id: payment.id};
+            },
+            dl: require('./c_deadline.js').default,
+            displayBill: function() {
+                axios.post('/member/'+this.member.id+'/billpdf', {
+                    includeFamilies: this.includeFamilies,
+                    deadline: this.deadline
+                }).then((ret) => {
+                    window.open(ret.data);
+                });
+            },
+            displayRemember: function() {
+                axios.post('/member/'+this.member.id+'/rememberpdf', {
+                    includeFamilies: this.includeFamilies,
+                    deadline: this.deadline
+                }).then((ret) => {
+                    window.open(ret.data);
+                });
             }
         },
         mounted: function() {
             var vm = this;
+
+            vm.includeFamilies = this.config.includeFamilies;
+            vm.deadline = this.dl();
         }
     }
 </script>
