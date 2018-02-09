@@ -44,13 +44,19 @@ class EmailBillRequest extends Request
 			});
 
 			foreach($members as $member) {
-				$member->first()->notify(new EmailBillNotification($member->first(), $this->includeFamilies, $this->deadline, $membersThatGetBill[$member[0]->lastname.$member[0]->zip.$member[0]->city]));
+                $firstMember = $member->first();
+                $firstMember->notify(new EmailBillNotification(
+                    $firstMember,
+                    $this->includeFamilies,
+                    $this->deadline,
+                    $membersThatGetBill[$firstMember->lastname.$firstMember->zip.$firstMember->city]
+                ));
 
 				if (!$this->updatePayments) {
 					return;
 				}
 
-				foreach($membersThatGetBill[$member[0]->lastname.$member[0]->zip.$member[0]->city] as $paymentMember) {
+				foreach($membersThatGetBill[$firstMember->lastname.$firstMember->zip.$firstMember->city] as $paymentMember) {
 					$paymentMember->payments()->where('status_id', '1')->get()->each(function($p) {
 						$p->status()->associate(Status::find(2));
 						$p->save();
