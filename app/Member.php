@@ -6,11 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 use App\Collections\OwnCollection;
 use Illuminate\Notifications\Notifiable;
 use App\Events\MemberCreated;
+use App\Relations\HasSameRelation;
 
 class Member extends Model
 {
 
 	use Notifiable;
+    use HasSameRelation;
 
 	public $fillable = ['firstname', 'lastname', 'nickname', 'other_country', 'birthday', 'joined_at', 'keepdata', 'sendnewspaper', 'address', 'further_address', 'zip', 'city', 'phone', 'mobile', 'business_phone', 'fax', 'email', 'email_parents', 'nami_id', 'active'];
 
@@ -79,6 +81,10 @@ class Member extends Model
 	public function subscription() {
 		return $this->belongsTo(Subscription::class);
 	}
+
+    public function familyMembers() {
+        return $this->hasSame(['lastname', 'city', 'plz', 'city']);
+    }
 
 	//----------------------------------- Scopes ------------------------------------
 	public function scopeFamily($q, $member) {
