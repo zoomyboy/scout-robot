@@ -6,6 +6,7 @@ use Zoomyboy\BaseRequest\Request;
 use App\User;
 use App\Notifications\EmailRememberNotification;
 use App\Member;
+use App\Queries\RememberPdfQuery;
 
 class EmailRememberRequest extends Request
 {
@@ -30,14 +31,14 @@ class EmailRememberRequest extends Request
 		if ($this->wayEmail) {$ways[] = 1;}
 		if ($this->wayPost) {$ways[] = 2;}
 
-		$query = Member::whereIn('way_id', $ways)->hasReceivedPayments();
+		$allMembers = RememberPdfQuery::members()->filterWays($ways)->get();
 
 		if ($this->includeFamilies) {
-			$members = $query->get()->groupBy(function($m) {
+			$members = $allMembers->groupBy(function($m) {
 				return $m->lastname.$m->zip.$m->city.$m->email;
 			});
 
-			$membersThatGetBill = $query->get()->groupBy(function($m) {
+			$membersThatGetBill = $allMembers->groupBy(function($m) {
 				return $m->lastname.$m->zip.$m->city;
 			});
 
@@ -48,7 +49,7 @@ class EmailRememberRequest extends Request
 			return;
 		}
 
-		foreach($query->get() as $member) {
+		foreach($allMembers as $member) {
 			$member->notify(new EmailRememberNotification($member, $this->includeFamilies, $this->deadline, collect([$member])));
 		}
 	}

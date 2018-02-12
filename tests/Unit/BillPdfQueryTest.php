@@ -36,7 +36,7 @@ class BillPdfQueryTest extends UnitTestCase {
 		]);
 
 		$query = new BillPdfQuery();
-		$this->assertCount(0, BillPdfQuery::singleMember()->get());
+		$this->assertCount(0, BillPdfQuery::members()->get());
 	}
 
 	/** @test */
@@ -54,7 +54,7 @@ class BillPdfQueryTest extends UnitTestCase {
 		$this->make('Payment', ['status_id' => 2])->member()->associate($members[1])->save();
 
 		$query = new BillPdfQuery();
-		$this->assertCount(0, BillPdfQuery::singleMember()->get());
+		$this->assertCount(0, BillPdfQuery::members()->get());
 	}
 
 	/** @test */
@@ -74,7 +74,7 @@ class BillPdfQueryTest extends UnitTestCase {
 		$this->make('Payment', ['status_id' => 1, 'subscription_id' => $sub->id])->member()->associate($members[1])->save();
 
 		$query = new BillPdfQuery();
-		$this->assertCount(0, BillPdfQuery::singleMember()->get());
+		$this->assertCount(0, BillPdfQuery::members()->get());
 	}
 
     public function validPaymentDataProvider() {
@@ -106,7 +106,7 @@ class BillPdfQueryTest extends UnitTestCase {
 
         $this->assertEquals(
             $expected,
-            BillPdfQuery::singleMember()->filterWays($ways)->get()->pluck('id')->sort()->values()->toArray()
+            BillPdfQuery::members()->filterWays($ways)->get()->pluck('id')->sort()->values()->toArray()
         );
 	}
 
@@ -126,7 +126,7 @@ class BillPdfQueryTest extends UnitTestCase {
 		$this->make('Payment', ['status_id' => 1])->member()->associate($members[3])->save();
 		$this->make('Payment', ['status_id' => 1])->member()->associate($members[4])->save();
 
-		$query = BillPdfQuery::singleMember();
+		$query = BillPdfQuery::members();
 		$this->assertEquals([2,1,4,3,5], $query->get()->pluck('id')->toArray());
 	}
 }

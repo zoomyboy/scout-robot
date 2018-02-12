@@ -7,6 +7,7 @@ use App\User;
 use App\Notifications\EmailBillNotification;
 use App\Member;
 use App\Status;
+use App\Queries\BillPdfQuery;
 
 class EmailBillRequest extends Request
 {
@@ -32,7 +33,8 @@ class EmailBillRequest extends Request
 		if ($this->wayEmail) {$ways[] = 1;}
 		if ($this->wayPost) {$ways[] = 2;}
 
-		$query = Member::whereIn('way_id', $ways)->hasNotPaidPayments();
+		$query = BillPdfQuery::members()->filterWays($ways);
+
 
 		if ($this->includeFamilies) {
 			$members = $query->get()->groupBy(function($m) {

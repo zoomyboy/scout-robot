@@ -31,8 +31,8 @@ class RememberPdfQueryTest extends UnitTestCase {
 			['way_id' => 1]
 		]);
 
-		$query = new RememberPdfQuery();
-		$this->assertEquals(0, $query->handle()->count());
+		$query = RememberPdfQuery::members()->get();
+		$this->assertCount(0, $query);
 	}
 
 	/** @test */
@@ -49,8 +49,8 @@ class RememberPdfQueryTest extends UnitTestCase {
 		$this->make('Payment', ['status_id' => 3])->member()->associate($members[1])->save();
 		$this->make('Payment', ['status_id' => 1])->member()->associate($members[1])->save();
 
-		$query = new RememberPdfQuery();
-		$this->assertEquals(0, $query->handle()->count());
+		$query = RememberPdfQuery::members()->get();
+		$this->assertCount(0, $query);
 	}
 
 	/** @test */
@@ -69,12 +69,23 @@ class RememberPdfQueryTest extends UnitTestCase {
 		$this->make('Payment', ['status_id' => 3, 'subscription_id' => $sub->id])->member()->associate($members[1])->save();
 		$this->make('Payment', ['status_id' => 1, 'subscription_id' => $sub->id])->member()->associate($members[1])->save();
 
-		$query = new RememberPdfQuery();
-		$this->assertEquals(0, $query->handle()->count());
+		$query = RememberPdfQuery::members()->get();
+		$this->assertCount(0, $query);
 	}
 
-	/** @test */
-	public function it_gets_all_members_with_valid_payment_and_filters_for_way() {
+    public function validPaymentDataProvider() {
+        return [
+            [[1,2], [1,2,3,4,5]],
+            [[1], [1,3,5]],
+            [[2], [2,4]],
+        ];
+    }
+
+    /**
+     * @test
+     * @dataProvider validPaymentDataProvider
+     */
+	public function it_gets_all_members_with_valid_payment_and_filters_for_way($ways, $expected) {
 		$members = $this->createMany('Member', 5, [
 			['way_id' => 1],
 			['way_id' => 2],
@@ -89,10 +100,8 @@ class RememberPdfQueryTest extends UnitTestCase {
 		$this->make('Payment', ['status_id' => 2])->member()->associate($members[3])->save();
 		$this->make('Payment', ['status_id' => 2])->member()->associate($members[4])->save();
 
-		$query = new RememberPdfQuery();
-		$this->assertEquals([1,2,3,4,5], $query->handle([1,2])->get()->pluck('id')->sort()->values()->toArray());
-		$this->assertEquals([1,3,5], $query->handle([1])->get()->pluck('id')->sort()->values()->toArray());
-		$this->assertEquals([2,4], $query->handle([2])->get()->pluck('id')->sort()->values()->toArray());
+		$result = RememberPdfQuery::members()->filterWays($ways)->get()->pluck('id')->sort()->values()->toArray();
+        $this->assertEquals($expected, $result);
 	}
 
 	/** @test */
@@ -111,7 +120,7 @@ class RememberPdfQueryTest extends UnitTestCase {
 		$this->make('Payment', ['status_id' => 2])->member()->associate($members[3])->save();
 		$this->make('Payment', ['status_id' => 2])->member()->associate($members[4])->save();
 
-		$query = new RememberPdfQuery();
-		$this->assertEquals([2,1,4,3,5], $query->handle([1,2])->get()->pluck('id')->toArray());
+		$data = RememberPdfQuery::members()->get();
+		$this->assertEquals([2,1,4,3,5], $data->pluck('id')->toArray());
 	}
 }

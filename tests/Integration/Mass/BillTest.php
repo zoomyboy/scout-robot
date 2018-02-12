@@ -140,15 +140,15 @@ class BillTest extends IntegrationTestCase {
 			],
 			[
 				[
-					[['firstname' => 'John', 'lastname' => 'Doe', 'zip' => '12345', 'city' => 'SG', 'address' => 'Str 2', 'way_id' => '1', 'email' => 'john1@example.com'], true, [0,1]],
 					[['firstname' => 'Jane', 'lastname' => 'Doe', 'zip' => '12345', 'city' => 'SG', 'address' => 'Str 2', 'way_id' => '2', 'email' => 'john2@example.com'], true, [0,1]],
+					[['firstname' => 'John', 'lastname' => 'Doe', 'zip' => '12345', 'city' => 'SG', 'address' => 'Str 2', 'way_id' => '1', 'email' => 'john1@example.com'], true, [0,1]],
 				],
 				'families' => true, 'email' => true, 'post' => true,
 			],
 			[
 				[
 					[['firstname' => 'John', 'lastname' => 'Doe', 'zip' => '12345', 'city' => 'SG', 'address' => 'Str 2', 'way_id' => '1', 'email' => 'john1@example.com'], true, [0,1]],
-					[['firstname' => 'Jane', 'lastname' => 'Doe', 'zip' => '12345', 'city' => 'SG', 'address' => 'Str 2', 'way_id' => '2', 'email' => 'john1@example.com'], false],
+					[['firstname' => 'Juhn', 'lastname' => 'Doe', 'zip' => '12345', 'city' => 'SG', 'address' => 'Str 2', 'way_id' => '2', 'email' => 'john1@example.com'], false],
 				],
 				'families' => true, 'email' => true, 'post' => true,
 			],
