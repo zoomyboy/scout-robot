@@ -15,8 +15,6 @@ Auth::routes();
 Route::get('/login', ['as' => 'login', 'uses' => 'Auth\LoginController@showLoginForm']);
 Route::get('/logout', ['as' => 'logout', 'uses' => 'Auth\LoginController@logout']);
 
-Route::post('member/{member}/billpdf', 'MemberPdfController@bill');
-Route::post('member/{member}/rememberpdf', 'MemberPdfController@remember');
 
 Route::post('/pdf/bill', 'MemberPdfController@allBill');
 Route::post('/pdf/remember', 'MemberPdfController@allRemember');

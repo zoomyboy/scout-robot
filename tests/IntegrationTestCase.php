@@ -37,4 +37,14 @@ class IntegrationTestCase extends \Tests\TestCase {
 			$user->usergroup->rights()->attach($right);
 		});
 	}
+
+    public function createPayment(\App\Member $member, $values) {
+        $member->payments()->save(
+            (new \App\Payment([
+                'nr' => $values['nr']
+            ]))
+            ->subscription()->associate(\App\Subscription::find($values['subscription']))
+            ->status()->associate(\App\Status::find($values['status']))
+        );
+    }
 }

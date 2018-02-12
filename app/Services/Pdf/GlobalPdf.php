@@ -67,8 +67,9 @@ class GlobalPdf {
     }
 
     public function save($filename) {
-        $this->pdf->output('F', public_path('pdf/'.$filename));
+        $contents = $this->pdf->output('S', '/tmp/file.pdf');
+        $file = \Storage::disk('public')->put('pdf/'.$filename, $contents);
 
-        return url('pdf/'.$filename);
+        return \Storage::disk('public')->url('pdf/'.$filename);
     }
 }

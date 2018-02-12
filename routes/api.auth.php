@@ -45,8 +45,11 @@ Route::resource('conf', 'ConfController');
 
 Route::get('member/table', 'MemberController@table');
 Route::get('member/{member}/table', 'MemberController@tableOne');
+Route::post('member/{member}/billpdf', 'MemberPdfController@bill');
+Route::post('member/{member}/rememberpdf', 'MemberPdfController@remember');
 Route::apiResource('member', 'MemberController');
 Route::apiResource('member.payments', 'MemberPaymentsController');
+
 
 Route::resource('gender', 'GenderController');
 
