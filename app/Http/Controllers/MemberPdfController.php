@@ -14,8 +14,12 @@ use App\Queries\RememberPdfQuery;
 class MemberPdfController extends Controller
 {
 	public function bill(Member $member, Request $request) {
-		$members = request()->includeFamilies === "true" ? Member::family($member)->get()->groupBy('lastname') : (new OwnCollection([$member]))->groupBy('lastname');
-		$service = new BillPdfService($members, ['deadline' => request()->deadline]);
+        $members = request()->includeFamilies === "true"
+            ? Member::family($member)->get()
+            : (new OwnCollection([$member]))
+        ;
+
+		$service = new BillPdfService($members->groupBy('lastname'), ['deadline' => request()->deadline]);
 
 		return $service->handle(str_slug('Rechnung für '.$member->lastname).'.pdf');
     }
