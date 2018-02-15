@@ -10,6 +10,8 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use App\Facades\NaMi\NaMiMember;
 use App\Facades\NaMi\NaMiMembership;
 use App\Member;
+use \App\Events\Import\MemberCreated;
+use \App\Events\Import\MemberUpdated;
 
 class SyncAllNaMiMembers implements ShouldQueue
 {
@@ -34,23 +36,26 @@ class SyncAllNaMiMembers implements ShouldQueue
      */
     public function handle()
     {
-		$members = NaMiMember::all($this->filter);
+        $members = NaMiMember::all($this->filter);
 
-		foreach($members as $member) {
-			$namiMember = NaMiMember::single($member->id);
+        foreach($members as $i => $member) {
+            $namiMember = NaMiMember::single($member->id);
 
-			if (Member::nami($namiMember->id)->first() != null) {
-				NaMiMember::update(Member::nami($namiMember->id)->first(), $namiMember);
-				return;
-			}
+            if (Member::nami($namiMember->id)->exists()) {
+                $member = NaMiMember::update(Member::nami($namiMember->id)->first(), $namiMember);
+                event(new MemberUpdated($member, $i+1, count($members)));
+                continue;
+            }
 
-			$member = NaMiMember::importMember($namiMember);	
+            $member = NaMiMember::importMember($namiMember);
 
-			if ($member == null) {
-				return false;
-			}
+            if ($member == null) {
+                return false;
+            }
 
-			NaMiMember::importMemberships($member);
-		}
+            NaMiMember::importMemberships($member);
+
+            event(new MemberCreated($member, $i+1, count($members)));
+        }
     }
 }

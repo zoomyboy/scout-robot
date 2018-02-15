@@ -33,9 +33,11 @@
 		},
 		methods: {
 			submit: function() {
-                axios.post('/api/nami/getmembers', this.values).then(function() {
+                var vm = this;
 
-				});
+                axios.post('/api/nami/getmembers', this.values).then(function() {
+                    vm.$store.commit('successmsg', 'Import wurde beauftragt. Das kann einige Zeit dauern …');
+                }).catch((error) => vm.showErrors(error));
 			}
 		},
 		created: function() {

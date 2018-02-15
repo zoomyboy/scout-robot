@@ -27,7 +27,13 @@ import merge from 'merge';
 import validator from './mixins/validator.js';
 Vue.mixin(validator);
 
+import echo from './mixins/echo.js';
+Vue.mixin(echo);
+
+import progress from './vuex/progress.js';
+
 const store = new Vuex.Store({
+    modules: { progress },
     state: {
         user: false,
         actions: [],

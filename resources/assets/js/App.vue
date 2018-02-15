@@ -13,19 +13,23 @@
                 </v-toolbar>
                 <v-divider></v-divider>
                 <v-list dense :key="index" v-for="(item, index) in navbar">
-					<v-list-tile @click="visitMenu(item)">
+                    <v-list-tile @click="visitMenu(item)">
                         <v-list-tile-action>
-							<v-icon>{{ item.icon }}</v-icon>
+                            <v-icon>{{ item.icon }}</v-icon>
                         </v-list-tile-action>
                         <v-list-tile-content>
-							<v-list-tile-title>{{ item.title }}</v-list-tile-title>
+                            <v-list-tile-title>{{ item.title }}</v-list-tile-title>
                         </v-list-tile-content>
                     </v-list-tile>
                 </v-list>
             </v-navigation-drawer>
             <v-toolbar color="primary" app flat dark>
                 <v-toolbar-side-icon @click="navInternalState = !navInternalState" app></v-toolbar-side-icon>
-				<v-toolbar-title class="white--text">{{ apptitle }}</v-toolbar-title>
+                <v-toolbar-title class="white--text">{{ apptitle }}</v-toolbar-title>
+                <v-progress-circular v-if="firstRunning != null" :size="40" :width="6" :rotate="-90" :value="firstRunning.amount" color="orange" class="ml-3">
+                    {{ firstRunning.amount }}
+                </v-progress-circular>
+                <v-toolbar-title v-if="firstRunning != null" class="white--text body-2">{{ firstRunning.message }}</v-toolbar-title>
                 <v-spacer></v-spacer>
                 <v-toolbar-items>
                     <v-menu v-for="(item,key) in toolbar" offset-y left :key="key">
@@ -42,11 +46,11 @@
             </v-toolbar>
             <v-content>
                 <v-container fluid>
-					<v-alert :color="notification.color" v-if="notification" icon="check_circle" value="notification !== false">
+                    <v-alert :color="notification.color" v-if="notification" icon="check_circle" value="notification !== false">
                         <div v-for="msg in notification.message">
                             {{ msg }}
                         </div>
-					</v-alert>
+                    </v-alert>
                     <router-view></router-view>
                 </v-container>
             </v-content>
@@ -70,7 +74,7 @@
     export default {
         data: function() {
             return  {
-				navInternalState: false
+                navInternalState: false
             };
         },
         methods: {
@@ -85,17 +89,19 @@
                 }
             }
         },
-		watch: {
-			navInternalState: function(n) {
-				this.$store.commit('setnav', n);
-			}
-		},
+        watch: {
+            navInternalState: function(n) {
+                this.$store.commit('setnav', n);
+            }
+        },
         computed: {
             ...mapState(['toolbar', 'notification', 'apptitle', 'navvisible', 'navbar']),
-            ...mapGetters(['appname', 'loaded'])
+            ...mapGetters(['appname', 'loaded', 'firstRunning'])
         },
         mounted: function() {
             var vm = this;
+
+            this.listenOnChannels();
         },
         created() {
             this.$store.dispatch('getinfo').then((data) => {
