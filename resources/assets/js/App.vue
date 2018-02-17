@@ -22,6 +22,13 @@
                         </v-list-tile-content>
                     </v-list-tile>
                 </v-list>
+                <v-bottom-nav :value="true" color="transparent">
+                    <v-form method="post" action="/logout">
+                        <v-btn color="primary darken-3" flat type="submit">
+                            <span>Abmelden</span><v-icon>fa-sign-out</v-icon>
+                        </v-btn>
+                    </v-form>
+                </v-bottom-nav>
             </v-navigation-drawer>
             <v-toolbar color="primary" app flat dark>
                 <v-toolbar-side-icon @click="navInternalState = !navInternalState" app></v-toolbar-side-icon>
