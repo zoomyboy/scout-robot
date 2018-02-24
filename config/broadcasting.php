@@ -17,6 +17,8 @@ return [
 
     'default' => env('BROADCAST_DRIVER', 'null'),
 
+    'socket_host' => env('SOCKET_HOST', 'localhost:6001'),
+
     /*
     |--------------------------------------------------------------------------
     | Broadcast Connections

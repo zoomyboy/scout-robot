@@ -8,7 +8,7 @@ export default {
 
             window.Echo = new Echo({
                 broadcaster: 'socket.io',
-                host: '127.0.0.1:6001'
+                host: document.querySelector('meta[name="socket_host"]').getAttribute('content')
             });
 
             window.Echo.channel('import')
