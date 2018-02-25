@@ -86,7 +86,7 @@
         <v-container>
             <v-toolbar class="blue darken-3" dark>
                 <v-toolbar-items>
-                    <v-btn @click="adddialog=true; add = {status: 1, nr: '', subscription: 2}" flat>Hinzufügen</v-btn>
+                    <v-btn @click="adddialog=true; add = {status: 1, nr: '', subscription: member.subscription_id}" flat>Hinzufügen</v-btn>
                     <v-btn @click="billDialog = !billDialog; rememberDialog = false" flat>
                         <v-icon v-if="!billDialog">fa-money</v-icon><v-icon v-if="billDialog">fa-close</v-icon>
                         &nbsp;&nbsp;

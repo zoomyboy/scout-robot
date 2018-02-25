@@ -36,7 +36,7 @@ class MemberController extends Controller
 	public function table() {
 		
 		return response()->json(Member::orderByRaw('lastname, firstname')->select([
-			'active', 'address', 'zip', 'city', 'firstname', 'id', 'joined_at', 'lastname'
+			'active', 'address', 'zip', 'city', 'firstname', 'id', 'joined_at', 'lastname', 'subscription_id'
 		])->get()->each(function($member) {
 			$member->append('strikes');
 		})->toArray());
