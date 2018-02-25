@@ -14,7 +14,7 @@ use App\Queries\RememberPdfQuery;
 class MemberPdfController extends Controller
 {
 	public function bill(Member $member, Request $request) {
-        $members = request()->includeFamilies === "true"
+        $members = request()->includeFamilies === true
             ? Member::family($member)->get()
             : (new OwnCollection([$member]))
         ;
@@ -30,7 +30,7 @@ class MemberPdfController extends Controller
 			request()->wayPost == "true" ? 2 : false
 		]);
 
-		$groupBy = request()->includeFamilies === "true"
+		$groupBy = request()->includeFamilies === true
 			? function($m) {return $m->lastname.$m->plz.$m->city.$m->address;}
 			: function($m) {return $m->firstname.$m->lastname.$m->plz.$m->city.$m->address;}
 		;
@@ -43,7 +43,7 @@ class MemberPdfController extends Controller
 
 
 	public function remember(Member $member) {
-		$members = request()->includeFamilies === "true" ? Member::family($member)->get()->groupBy('lastname') : (new OwnCollection([$member]))->groupBy('lastname');
+		$members = request()->includeFamilies === true ? Member::family($member)->get()->groupBy('lastname') : (new OwnCollection([$member]))->groupBy('lastname');
 		$service = new RememberPdfService($members, ['deadline' => request()->deadline]);
 
 		return $service->handle(str_slug('Erinnerung für '.$member->lastname).'.pdf');
