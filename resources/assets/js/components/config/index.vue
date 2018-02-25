@@ -140,7 +140,7 @@
                             <v-flex wrap row>
                                 <v-text-field name="namiUser" label="Mitgliedsnummer" id="namiUser" validate-on-blur v-model="values.namiUser"></v-text-field>
                                 <v-text-field type="password" name="namiPassword" label="Passwort" id="namiPassword" validate-on-blur v-model="values.namiPassword"></v-text-field>
-                                <v-text-field name="namiGroup" label="Mitgliedsnummer" id="namiGroup" validate-on-blur v-model="values.namiGroup"></v-text-field>
+                                <v-text-field name="namiGroup" label="Gruppierungsnummer" id="namiGroup" validate-on-blur v-model="values.namiGroup"></v-text-field>
                             </v-flex>
                         </v-container>
                     </v-tabs-content>
