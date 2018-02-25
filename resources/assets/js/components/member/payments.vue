@@ -37,8 +37,8 @@
                 <v-card-title>Zahlung {{ editData.nr }} bearbeiten</v-card-title>
                 <v-divider></v-divider>
                 <v-container>
-                    <v-form v-model="editValid">
-                        <v-text-field v-model="editData.nr" @submit.prevent="triggerEdit" required label="Name" :rules="[validateRequired()]"></v-text-field>
+                    <v-form v-model="editValid" @submit.prevent="triggerEdit">
+                        <v-text-field v-model="editData.nr" required label="Name" :rules="[validateRequired()]"></v-text-field>
                         <v-select 
                             :items="statuses"
                             v-model="editData.status"
