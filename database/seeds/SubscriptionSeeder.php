@@ -11,6 +11,8 @@ class SubscriptionSeeder extends Seeder
      */
     public function run()
     {
-        factory(\App\Subscription::class, 3)->create();
+        \App\Fee::find(1)->subscriptions()->create(['title' => 'Voll', 'amount' => 5000]);
+        \App\Fee::find(2)->subscriptions()->create(['title' => 'Familie', 'amount' => 4000]);
+        \App\Fee::find(3)->subscriptions()->create(['title' => 'Sozial', 'amount' => 3500]);
     }
 }
