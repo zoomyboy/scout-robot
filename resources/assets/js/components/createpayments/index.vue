@@ -6,7 +6,7 @@
                     <v-text-field name="nr" v-model="values.nr" label="Nummer der Zahlung" hint="In der Regel die Jahreszahl" persistent-hint :rules="[validateRequired()]"></v-text-field>
                 </v-container>
                 <div class="pa-4">
-                    <v-btn :disabled="!valid" type="submit" color="primary" class="ma-0">Synchronisation starten</v-btn>
+                    <v-btn :disabled="!valid" type="submit" color="primary" class="ma-0">Zahlungen erstellen</v-btn>
                 </div>
             </v-form>
         </v-card>
@@ -34,8 +34,10 @@
         },
         methods: {
             submit: function() {
-                axios.post('/api/payments/batch', this.values).then((ret) => {
+                var vm = this;
 
+                axios.post('/api/payments/batch', this.values).then((ret) => {
+                    vm.$store.commit('successmsg', 'Zahlungen wurden erstellt!');
                 });
             }
         },

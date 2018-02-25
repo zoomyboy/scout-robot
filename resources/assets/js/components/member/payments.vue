@@ -5,7 +5,7 @@
                 <v-card-title>Zahlung Hinzufügen</v-card-title>
                 <v-divider></v-divider>
                 <v-container>
-                    <v-form v-model="addValid">
+                    <v-form v-model="addValid" @submit.prevent="triggerAdd">
                         <v-text-field v-model="add.nr" required label="Name" :rules="[validateRequired()]"></v-text-field>
                         <v-select 
                             :items="statuses"
@@ -27,7 +27,7 @@
                             :rules="[validateSelected()]"
                         >
                         </v-select>
-                        <v-btn :disabled="!addValid" @click="triggerAdd" class="primary ma-0">Absenden</v-btn>
+                        <v-btn :disabled="!addValid" type="submit" class="primary ma-0">Absenden</v-btn>
                     </v-form>
                 </v-container>
             </v-card>
@@ -38,7 +38,7 @@
                 <v-divider></v-divider>
                 <v-container>
                     <v-form v-model="editValid">
-                        <v-text-field v-model="editData.nr" required label="Name" :rules="[validateRequired()]"></v-text-field>
+                        <v-text-field v-model="editData.nr" @submit.prevent="triggerEdit" required label="Name" :rules="[validateRequired()]"></v-text-field>
                         <v-select 
                             :items="statuses"
                             v-model="editData.status"
@@ -59,7 +59,7 @@
                             :rules="[validateSelected()]"
                         >
                         </v-select>
-                        <v-btn :disabled="!editValid" @click="triggerEdit" class="primary ma-0">Absenden</v-btn>
+                        <v-btn :disabled="!editValid" type="submit" class="primary ma-0">Absenden</v-btn>
                     </v-form>
                 </v-container>
             </v-card>
@@ -86,7 +86,7 @@
         <v-container>
             <v-toolbar class="blue darken-3" dark>
                 <v-toolbar-items>
-                    <v-btn @click="adddialog=true" flat>Hinzufügen</v-btn>
+                    <v-btn @click="adddialog=true; add = {status: 1, nr: '', subscription: 2}" flat>Hinzufügen</v-btn>
                     <v-btn @click="billDialog = !billDialog; rememberDialog = false" flat>
                         <v-icon v-if="!billDialog">fa-money</v-icon><v-icon v-if="billDialog">fa-close</v-icon>
                         &nbsp;&nbsp;
