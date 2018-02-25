@@ -247,7 +247,7 @@
             },
             dl: require('./c_deadline.js').default,
             displayBill: function() {
-                axios.post('/member/'+this.member.id+'/billpdf', {
+                axios.post('/api/member/'+this.member.id+'/billpdf', {
                     includeFamilies: this.includeFamilies,
                     deadline: this.deadline
                 }).then((ret) => {
@@ -255,7 +255,7 @@
                 });
             },
             displayRemember: function() {
-                axios.post('/member/'+this.member.id+'/rememberpdf', {
+                axios.post('/api/member/'+this.member.id+'/rememberpdf', {
                     includeFamilies: this.includeFamilies,
                     deadline: this.deadline
                 }).then((ret) => {
