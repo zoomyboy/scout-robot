@@ -71,6 +71,7 @@
                                 <v-flex xs12 sm6><v-text-field name="personTel" label="Telefonnummer" id="personTel" validate-on-blur v-model="values.personTel"></v-text-field></v-flex>
                                 <v-flex xs12 sm6><v-text-field name="personFunction" label="Funktion" id="personFunction" validate-on-blur v-model="values.personFunction"></v-text-field></v-flex>
                                 <v-flex xs12 sm6><v-text-field name="personAddress" label="Adresse" id="personAddress" validate-on-blur v-model="values.personAddress"></v-text-field></v-flex>
+                                <v-flex xs12 sm6><v-text-field name="personZip" label="PLZ" id="personZip" validate-on-blur v-model="values.personZip"></v-text-field></v-flex>
                                 <v-flex xs12 sm6><v-text-field name="personCity" label="Stadt" id="personCity" validate-on-blur v-model="values.personCity"></v-text-field></v-flex>
                             </v-layout>
                         </v-container>
@@ -188,6 +189,7 @@ export default {
                 personTel: this.config.personTel,
                 personFunction: this.config.personFunction,
                 personAddress: this.config.personAddress,
+                personZip: this.config.personZip,
                 personCity: this.config.personCity,
                 letterKontoName: this.config.letterKontoName,
                 letterIban: this.config.letterIban,
