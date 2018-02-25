@@ -55,6 +55,7 @@ const store = new Vuex.Store({
             {icon: 'fa-money', title: 'Beiträge', route: 'subscription.index'},
             {icon: 'fa-envelope-o', title: 'Massenversand', route: 'mass.index'},
             {icon: 'fa-refresh', title: 'NaMi-Abruf', route: 'nami.get'},
+            {icon: 'fa-money', title: 'Zahlungen erstellen', route: 'createpayments.index'},
             {icon: 'fa-cog', title: 'Konfiguration', route: 'config.index'},
         ],
         config: {},

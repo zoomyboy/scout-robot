@@ -95,6 +95,10 @@ class Member extends Model
 			->where('address', $member->address);
 	}
 
+    public function scopeActive($q) {
+        return $q->where('active', true);
+    }
+
 	/**
 	 * Filter by members that are synched with nami id
 	 */
