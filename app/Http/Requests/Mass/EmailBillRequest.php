@@ -55,7 +55,7 @@ class EmailBillRequest extends Request
                 ));
 
 				if (!$this->updatePayments) {
-					return;
+					continue;
 				}
 
 				foreach($membersThatGetBill[$firstMember->lastname.$firstMember->zip.$firstMember->city] as $paymentMember) {

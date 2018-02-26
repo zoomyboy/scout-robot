@@ -85,7 +85,13 @@
             this.$on('open', function(way, type) {
                 vm.type = type;
                 vm.way = way;
-                vm.open = true;
+                if (vm.realMessages.length == 0) {
+                    window.setTimeout(function() {
+                    vm.$emit('resolve');
+                    }, 0);
+                } else {
+                    vm.open = true;
+                }
             });
         }
     }

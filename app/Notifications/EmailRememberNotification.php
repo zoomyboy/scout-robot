@@ -69,7 +69,7 @@ class EmailRememberNotification extends Notification
 			->subcopy('Der Stammesvorstand')
 			->heading(Conf::first()->emailHeading ?: '');
 
-		$members = $this->family === "true"
+		$members = $this->family === true
 			? $this->members->groupBy('lastname')
 			: (new OwnCollection([$this->member]))->groupBy('lastname');
 
@@ -79,7 +79,7 @@ class EmailRememberNotification extends Notification
 		$service = new RememberPdfService($members, ['deadline' => $this->deadline, 'family' => $this->family]);
 		$service->handle($filename);
 
-		$message->attach(public_path('pdf/'.$filename));
+		$message->attach(public_path('storage/pdf/'.$filename));
 
 		return $message;
     }
@@ -91,11 +91,15 @@ class EmailRememberNotification extends Notification
 			return '';
 		}
 
-		$last = $members->pop();
+        $memberNames = $members->map(function($m) {
+            return $m->firstname.' '.$m->lastname;
+        });
 
-		return implode(', ', $members->map(function($m) {return $m->firstname.' '.$m->lastname;})->toArray())
-			.(($members->count()) ? ' und ' : '')
-			.$last->firstname.' '.$last->lastname;
+		$last = $memberNames->pop();
+
+		return implode(', ', $memberNames->toArray())
+			.(($memberNames->count() >= 1) ? ' und ' : '')
+			.$last;
 	}
 
     /**

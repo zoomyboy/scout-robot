@@ -54,6 +54,10 @@ class NaMiService {
         @unlink($this->getCookie());
 
         $handle = curl_init($this->getBaseUrl().'/ica/pages/login.jsp');
+        if (!env('NAMI_SSL')) {
+            curl_setopt($handle, CURLOPT_SSL_VERIFYHOST, 0);
+            curl_setopt($handle, CURLOPT_SSL_VERIFYPEER, 0);
+        }
         curl_setopt($handle, CURLOPT_FOLLOWLOCATION, true);
         curl_setopt ($handle, CURLOPT_POST, 1);
         curl_setopt($handle, CURLOPT_RETURNTRANSFER, 1);
@@ -62,6 +66,10 @@ class NaMiService {
         curl_close($handle);
 
         $handle = curl_init($this->getBaseUrl().'/ica/rest/nami/auth/manual/sessionStartup');
+        if (!env('NAMI_SSL')) {
+            curl_setopt($handle, CURLOPT_SSL_VERIFYHOST, 0);
+            curl_setopt($handle, CURLOPT_SSL_VERIFYPEER, 0);
+        }
         curl_setopt($handle, CURLOPT_FOLLOWLOCATION, true);
         curl_setopt($handle, CURLOPT_POSTFIELDS, 'Login=API&redirectTo=./app.jsp&username='.$this->username().'&password='.$this->password());
         curl_setopt ($handle, CURLOPT_POST, 1);
@@ -145,6 +153,10 @@ class NaMiService {
             $handle = curl_init($this->getBaseUrl().$url);
 
             curl_setopt($handle, CURLOPT_FOLLOWLOCATION, true);
+            if (!env('NAMI_SSL')) {
+                curl_setopt($handle, CURLOPT_SSL_VERIFYHOST, 0);
+                curl_setopt($handle, CURLOPT_SSL_VERIFYPEER, 0);
+            }
             curl_setopt($handle, CURLOPT_POSTFIELDS, '');
             curl_setopt ($handle, CURLOPT_POST, 0);
             curl_setopt($handle, CURLOPT_RETURNTRANSFER, 1);
@@ -164,6 +176,10 @@ class NaMiService {
             $handle = curl_init($this->getBaseUrl().$url);
 
             curl_setopt($handle, CURLOPT_CUSTOMREQUEST, 'POST');
+            if (!env('NAMI_SSL')) {
+                curl_setopt($handle, CURLOPT_SSL_VERIFYHOST, 0);
+                curl_setopt($handle, CURLOPT_SSL_VERIFYPEER, 0);
+            }
             curl_setopt($handle, CURLOPT_POSTFIELDS, json_encode($fields));
             curl_setopt($handle, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt ($handle, CURLOPT_COOKIEJAR, $this->getCookie());
@@ -186,6 +202,10 @@ class NaMiService {
             $handle = curl_init($this->getBaseUrl().$url);
 
             curl_setopt($handle, CURLOPT_CUSTOMREQUEST, 'PUT');
+            if (!env('NAMI_SSL')) {
+                curl_setopt($handle, CURLOPT_SSL_VERIFYHOST, 0);
+                curl_setopt($handle, CURLOPT_SSL_VERIFYPEER, 0);
+            }
             curl_setopt($handle, CURLOPT_POSTFIELDS, json_encode($fields));
             curl_setopt($handle, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt ($handle, CURLOPT_COOKIEJAR, $this->getCookie());
