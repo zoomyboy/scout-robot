@@ -19,7 +19,7 @@ class GlobalPdf {
 
     public function header($member) {
         if (Conf::first()->files->count()) {
-            $this->pdf->Image(storage_path('app/'.$this->config->files->first()->filename), $this->pdf->GetPageWidth() - 45, 5, 40);
+            $this->pdf->Image(storage_path('app/public/'.$this->config->files->first()->filename), $this->pdf->GetPageWidth() - 45, 5, 40);
         }
 
         $this->pdf->SetTextColor(0,0,0);

@@ -34,6 +34,11 @@ class Member extends Model
 		return new OwnCollection($models);
 	}
 
+    public function routeNotificationForMail()
+    {
+        return ($this->email_parents) ? $this->email_parents : $this->email;
+    }
+
 	//----------------------------------- Getters -----------------------------------
 	public function getStrikesAttribute() {
 		return $this->paymentsNotPaid->map(function($p) {
