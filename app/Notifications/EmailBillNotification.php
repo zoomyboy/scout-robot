@@ -13,10 +13,10 @@ use App\Collections\OwnCollection;
 use App\Conf;
 use Illuminate\Support\Facades\Blade;
 
-class EmailBillNotification extends Notification
+class EmailBillNotification extends Notification implements ShouldQueue
 {
 	use Queueable;
-	use GeneratesBlade;
+    use GeneratesBlade;
 
 	public $member;
 	public $family;
