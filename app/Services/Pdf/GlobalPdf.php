@@ -34,9 +34,9 @@ class GlobalPdf {
         $this->pdf->Cell(0, 8, utf8_decode($this->config->letterFrom), 0, 1);
 
         $this->pdf->setFont('OpenSans', '', 10);
-        $this->pdf->Cell(0, 5, utf8_decode('Familie '.$member->lastname), 0, 1);
-        $this->pdf->Cell(0, 5, utf8_decode($member->address), 0, 1);
-        $this->pdf->Cell(0, 5, utf8_decode($member->zip.' '.$member->city), 0, 1);
+        foreach($member->realAddress as $addressPart) {
+            $this->pdf->Cell(0, 5, utf8_decode($addressPart), 0, 1);
+        }
 
         $this->pdf->Image(resource_path('img/start.png'), 12, 70, 7);
 

@@ -14,7 +14,7 @@ class Member extends Model
 	use Notifiable;
     use HasSameRelation;
 
-	public $fillable = ['firstname', 'lastname', 'nickname', 'other_country', 'birthday', 'joined_at', 'keepdata', 'sendnewspaper', 'address', 'further_address', 'zip', 'city', 'phone', 'mobile', 'business_phone', 'fax', 'email', 'email_parents', 'nami_id', 'active'];
+	public $fillable = ['firstname', 'lastname', 'nickname', 'other_country', 'birthday', 'joined_at', 'keepdata', 'sendnewspaper', 'address', 'further_address', 'zip', 'city', 'phone', 'mobile', 'business_phone', 'fax', 'email', 'email_parents', 'nami_id', 'active', 'letter_address'];
 
 	public $dates = ['joined_at', 'birthday'];
 
@@ -44,6 +44,12 @@ class Member extends Model
 		return $this->paymentsNotPaid->map(function($p) {
 			return $p->subscription->amount;
 		})->sum();
+    }
+
+    public function getRealAddressAttribute() {
+        return is_null($this->letter_address)
+            ? ['Familie '.$this->lastname, $this->address, $this->zip.' '.$this->city]
+            : explode("\n", $this->letter_address);
     }
 
 	//---------------------------------- Relations ----------------------------------

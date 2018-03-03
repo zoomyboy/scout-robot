@@ -91,7 +91,10 @@ class RememberTest extends FeatureTestCase {
 		$this->authAsApi();
 
 		$members = array_map(function($member) {
-			$myMember = $this->create('Member', $member);
+            $myMember = $this->create(
+                'Member', 
+                array_merge($member, ['email_parents' => null])
+            );
 			$payment = new Payment(['amount' => '1000', 'nr' => '2015']);
 			$payment->status()->associate(Status::find(2));
 			$payment->subscription()->associate(Subscription::find(3));

@@ -200,6 +200,9 @@
                                     >
                                     </v-select>
                                 </v-flex>
+                                <v-flex md6>
+                                    <v-text-field v-model="values.letter_address" label="Brief-Adresse" hint="Ist dieses Feld gefüllt, wird diese Adresse in Briefen verwendet anstatt der gegebenen." persistent-hint multi-line></v-text-field>
+                                </v-flex>
                             </v-layout>
                         </v-container>
                     </v-tabs-content>

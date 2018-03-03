@@ -178,6 +178,9 @@
                                     >
                                     </v-select>
                                 </v-flex>
+                                <v-flex md6>
+                                    <v-text-field v-model="values.letter_address" label="Brief-Adresse" hint="Ist dieses Feld gefüllt, wird diese Adresse in Briefen verwendet anstatt der gegebenen." persistent-hint multi-line></v-text-field>
+                                </v-flex>
                             </v-layout>
                         </v-container>
                     </v-tabs-content>
@@ -242,6 +245,7 @@
                 vm.$set(vm.values, 'subscription', ret.data.subscription_id);
                 vm.$set(vm.values, 'keepdata', ret.data.keepdata);
                 vm.$set(vm.values, 'sendnewspaper', ret.data.sendnewspaper);
+                vm.$set(vm.values, 'letter_address', ret.data.letter_address);
 
                 vm.$set(vm.values, 'nickname', ret.data.nickname);
                 vm.$set(vm.values, 'other_country', ret.data.other_country);
