@@ -105,4 +105,11 @@ interface LetterContentInterface {
      * @param date $deadline
      */
     public function getMiddleText($member, $deadline);
+
+    /**
+     * Gets outro below the bank details
+     *
+     * @return string
+     */
+    public function getOutroText();
 }

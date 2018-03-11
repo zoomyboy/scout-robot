@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use \FPDF;
-use App\Member;
 use App\Collections\OwnCollection;
+use App\Member;
 use App\Pdf\Generator\Bill as BillPdfService;
 use App\Pdf\Generator\Remember as RememberPdfService;
+use App\Pdf\Repositories\BillContentRepository;
 use App\Queries\BillPdfQuery;
 use App\Queries\RememberPdfQuery;
+use Illuminate\Http\Request;
+use \FPDF;
 
 class MemberPdfController extends Controller
 {
@@ -21,7 +22,8 @@ class MemberPdfController extends Controller
 
 		$service = app()->makeWith(BillPdfService::class, [
             'members' => $members->groupBy('lastname'),
-            'atts' => ['deadline' => request()->deadline]
+            'atts' => ['deadline' => request()->deadline],
+            'content' =>new BillContentRepository()
         ]);
 
 		return $service->handle(str_slug('Rechnung für '.$member->lastname).'.pdf');

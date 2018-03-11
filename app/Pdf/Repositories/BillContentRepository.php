@@ -197,4 +197,13 @@ class BillContentRepository implements LetterContentInterface
 
         return $text;
     }
+
+    /**
+     * Gets outro below the bank details
+     *
+     * @return string
+     */
+    public function getOutroText() {
+        return 'Bitte nehmen Sie zur Kenntnis, dass der für jedes Mitglied obligatorische Versicherungsschutz über die DPSG nur dann für Ihr Kind / Ihre Kinder gilt, wenn der Mitgliedsbeitrag bezahlt wurde. Wenn dies nicht geschieht, müssen wir Ihr Kind / Ihre Kinder von allen Pfadfinderaktionen ausschließen. Dazu gehören sowohl die Gruppenstunden sowie Tagesaktionen als auch mehrtägige Lager. Bei Fragen zur Rechnung können Sie mich auch persönlich erreichen unter:';
+    }
 }

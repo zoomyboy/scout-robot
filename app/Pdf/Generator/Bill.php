@@ -2,6 +2,7 @@
 
 namespace App\Pdf\Generator;
 
+use App\Pdf\Interfaces\LetterContentInterface;
 use App\Pdf\Interfaces\LetterSidebarInterface;
 use App\Pdf\Repositories\BillContentRepository;
 use App\Pdf\Traits\HasDate;
@@ -22,10 +23,10 @@ class Bill extends GlobalPdf {
     public $content;
     public $sidebar;
 
-    public function __construct($members, $atts, LetterSidebarInterface $sidebar) {
+    public function __construct($members, $atts, LetterSidebarInterface $sidebar, LetterContentInterface $content) {
         parent::__construct();
-        $this->content = new BillContentRepository();
 
+        $this->content = $content;
         $this->sidebar = $sidebar;
         $this->members = $members;
         $this->deadline = $atts['deadline'];
@@ -72,7 +73,7 @@ class Bill extends GlobalPdf {
             }
 
             $this->pdf->Cell(0, 5, '', 0, 1);
-            $this->pdf->MultiCell(0, 5, utf8_decode('Bitte nehmen Sie zur Kenntnis, dass der für jedes Mitglied obligatorische Versicherungsschutz über die DPSG nur dann für Ihr Kind / Ihre Kinder gilt, wenn der Mitgliedsbeitrag bezahlt wurde. Wenn dies nicht geschieht, müssen wir Ihr Kind / Ihre Kinder von allen Pfadfinderaktionen ausschließen. Dazu gehören sowohl die Gruppenstunden sowie Tagesaktionen als auch mehrtägige Lager. Bei Fragen zur Rechnung können Sie mich auch persönlich erreichen unter:'));
+            $this->pdf->MultiCell(0, 5, utf8_decode($this->content->getOutroText()));
 
             $this->pdf->Cell(0, 5, '', 0, 1);
             if ($this->content->getPersonName()) {
