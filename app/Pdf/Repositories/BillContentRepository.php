@@ -190,10 +190,10 @@ class BillContentRepository implements LetterContentInterface
         ];
 
         if ($deadline) {
-            $text[] = 'bis zum <strong>'.$deadline.'</strong>';
+            $text[] = 'bis zum <strong>'.$deadline.'</strong> auf folgendes Konto zu überweisen:';
+        } else {
+            $text[] = 'auf folgendes Konto zu überweisen:';
         }
-
-        $text[] = 'Auf folgendes Konto zu überweisen:';
 
         return $text;
     }

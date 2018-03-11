@@ -61,8 +61,9 @@ class Bill extends GlobalPdf {
                 $line = $this->formatHtml($line);
                 foreach ($line as $linePart) {
                     $this->pdf->SetFont('OpenSans', ($linePart->type == 'strong') ? 'B' : '', 10);
-                    $this->pdf->Cell(0, 8, $linePart->text, 0, 1);
+                    $this->pdf->Write(8, $linePart->text);
                 }
+                $this->pdf->Ln();
             }
 
             foreach ($this->content->getBankDetails($member[0]) as $label => $content) {

@@ -67,13 +67,36 @@ class ParseHtmlContentTest extends TestCase
     }
 
     /** @test */
-    public function it_parses_a_date() {
+    public function it_parses_raw_content_before_a_tag() {
         $this->assertEquals(
             [
                 (object)['text' => 'Ciao', 'type' => 'p'],
                 (object)['text' => 'Hello doe', 'type' => 'strong'],
             ],
             $this->parser->parseHtmlContent('Ciao<strong>Hello doe</strong>')
+        );
+    }
+
+    /** @test */
+    public function it_parses_spaces_between_raw_content_and_a_tag() {
+        $this->assertEquals(
+            [
+                (object)['text' => 'Ciao ', 'type' => 'p'],
+                (object)['text' => 'Hello doe', 'type' => 'strong'],
+            ],
+            $this->parser->parseHtmlContent('Ciao <strong>Hello doe</strong>')
+        );
+    }
+
+    /** @test */
+    public function it_parses_a_colon() {
+        $this->assertEquals(
+            [
+                (object)['text' => 'Ciao: ', 'type' => 'p'],
+                (object)['text' => 'Hello doe', 'type' => 'strong'],
+                (object)['text' => ' str:', 'type' => 'p'],
+            ],
+            $this->parser->parseHtmlContent('Ciao: <strong>Hello doe</strong> str:')
         );
     }
 }
