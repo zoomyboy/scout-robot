@@ -2,16 +2,17 @@
 
 namespace App\Notifications;
 
-use Illuminate\Bus\Queueable;
-use Illuminate\Notifications\Notification;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Zoomyboy\BetterNotifications\MailMessage;
-use App\Member;
-use App\Traits\GeneratesBlade;
-use App\Services\Pdf\Bill as BillPdfService;
 use App\Collections\OwnCollection;
 use App\Conf;
+use App\Member;
+use App\Pdf\Generator\LetterGenerator;
+use App\Pdf\Repositories\BillContentRepository;
+use App\Traits\GeneratesBlade;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\Blade;
+use Zoomyboy\BetterNotifications\MailMessage;
 
 class EmailBillNotification extends Notification implements ShouldQueue
 {
@@ -76,7 +77,12 @@ class EmailBillNotification extends Notification implements ShouldQueue
 		$filename = ($this->family)
 			? 'Rechnung für Familie '.$this->member->lastname.'.pdf'
 			: 'Rechnung für '.$this->member->firstname.' '.$this->member->lastname.'.pdf';
-		$service = new BillPdfService($members, ['deadline' => $this->deadline, 'family' => $this->family]);
+
+        $service = app()->makeWith(LetterGenerator::class, [
+            'members' => $members,
+            'atts' => ['deadline' => $this->deadline],
+            'content' => new BillContentRepository()
+        ]);
 		$service->handle($filename);
 
 		$message->attach(public_path('storage/pdf/'.$filename));

@@ -7,7 +7,7 @@ use App\Payment;
 use App\Subscription;
 use App\Status;
 
-class CreatesBillPdf extends IntegrationTestCase {
+class CreatesBillPdfTest extends IntegrationTestCase {
     public function setUp() {
         parent::setUp();
 

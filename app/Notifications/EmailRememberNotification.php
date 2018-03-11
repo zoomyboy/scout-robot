@@ -2,16 +2,17 @@
 
 namespace App\Notifications;
 
-use Illuminate\Bus\Queueable;
-use Illuminate\Notifications\Notification;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Zoomyboy\BetterNotifications\MailMessage;
-use App\Member;
-use App\Traits\GeneratesBlade;
-use App\Services\Pdf\Remember as RememberPdfService;
 use App\Collections\OwnCollection;
 use App\Conf;
+use App\Member;
+use App\Pdf\Generator\LetterGenerator;
+use App\Pdf\Repositories\RememberContentRepository;
+use App\Traits\GeneratesBlade;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\Blade;
+use Zoomyboy\BetterNotifications\MailMessage;
 
 class EmailRememberNotification extends Notification
 {
@@ -76,7 +77,12 @@ class EmailRememberNotification extends Notification
 		$filename = ($this->family)
 			? 'Zahlungserinnerung für Familie '.$this->member->lastname.'.pdf'
 			: 'Zahlungserinnerung für '.$this->member->firstname.' '.$this->member->lastname.'.pdf';
-		$service = new RememberPdfService($members, ['deadline' => $this->deadline, 'family' => $this->family]);
+
+        $service = app()->makeWith(LetterGenerator::class, [
+            'members' => $members,
+            'atts' => ['deadline' => $this->deadline],
+            'content' => new RememberContentRepository()
+        ]);
 		$service->handle($filename);
 
 		$message->attach(public_path('storage/pdf/'.$filename));

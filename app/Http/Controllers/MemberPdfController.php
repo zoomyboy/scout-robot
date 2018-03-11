@@ -2,16 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use \FPDF;
-use App\Member;
-use Illuminate\Http\Request;
-use App\Queries\BillPdfQuery;
-use App\Queries\RememberPdfQuery;
 use App\Collections\OwnCollection;
-use App\Pdf\Generator\Bill as BillPdfService;
+use App\Member;
+use App\Pdf\Generator\LetterGenerator;
 use App\Pdf\Repositories\BillContentRepository;
 use App\Pdf\Repositories\RememberContentRepository;
-use App\Pdf\Generator\Remember as RememberPdfService;
+use App\Queries\BillPdfQuery;
+use App\Queries\RememberPdfQuery;
+use Illuminate\Http\Request;
+use \FPDF;
 
 class MemberPdfController extends Controller
 {
@@ -21,7 +20,7 @@ class MemberPdfController extends Controller
             : (new OwnCollection([$member]))
         ;
 
-		$service = app()->makeWith(BillPdfService::class, [
+		$service = app()->makeWith(LetterGenerator::class, [
             'members' => $members->groupBy('lastname'),
             'atts' => ['deadline' => request()->deadline],
             'content' => new BillContentRepository()
@@ -41,8 +40,12 @@ class MemberPdfController extends Controller
 			: function($m) {return $m->firstname.$m->lastname.$m->plz.$m->city.$m->address;}
 		;
 
-		$members = (new BillPdfQuery())->handle($ways)->get()->groupBy($groupBy);
-		$service = new BillPdfService($members, ['deadline' => request()->deadline]);
+		$members = BillPdfQuery::members()->filterWays($ways)->get()->groupBy($groupBy);
+        $service = app()->makeWith(LetterGenerator::class, [
+            'members' => $members,
+            'atts' => ['deadline' => request()->deadline],
+            'content' => new BillContentRepository()
+        ]);
 
 		return $service->handle('Alle-Rechnungen.pdf');
     }

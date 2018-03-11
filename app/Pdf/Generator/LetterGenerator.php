@@ -11,7 +11,8 @@ use App\Pdf\Traits\HasSidebar;
 use App\Pdf\Traits\HasSubject;
 use Carbon\Carbon;
 
-class Bill extends GlobalPdf {
+class LetterGenerator extends GlobalPdf
+{
 
     use HasHeader;
     use HasSidebar;
