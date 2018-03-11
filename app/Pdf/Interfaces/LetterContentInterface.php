@@ -112,4 +112,11 @@ interface LetterContentInterface {
      * @return string
      */
     public function getOutroText();
+
+    /**
+     * Gets the total amount for member
+     *
+     * @return string
+     */
+    public function getTotalAmount($member);
 }

@@ -73,4 +73,13 @@ class BillContentRepository extends LetterContentRepository
 
         return $text;
     }
+
+    /**
+     * Gets the total amount for member
+     *
+     * @return string
+     */
+    public function getTotalAmount($member) {
+        return $member->totalAmount([1]);
+    }
 }

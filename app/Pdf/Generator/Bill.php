@@ -56,7 +56,7 @@ class Bill extends GlobalPdf {
 
             $this->pdf->SetFont('OpenSans', 'B', 10);
             $this->pdf->cell(110, 7, 'Gesamt', 0, 0);
-            $this->pdf->cell(0, 7, utf8_decode($member->totalAmount([1])).' '.EURO, 0, 1, 'R');
+            $this->pdf->cell(0, 7, utf8_decode($this->content->getTotalAmount($member)).' '.EURO, 0, 1, 'R');
 
             foreach ($this->content->getMiddleText($member, $this->deadline) as $line) {
                 $line = $this->formatHtml($line);
