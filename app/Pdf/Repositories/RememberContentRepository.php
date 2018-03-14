@@ -79,7 +79,8 @@ class RememberContentRepository extends LetterContentRepository
      *
      * @return string
      */
-    public function getTotalAmount($member) {
+    public function getTotalAmount($member)
+    {
         return $member->totalAmount([2]);
     }
 }

@@ -2,4 +2,6 @@
 
 namespace App\Exceptions\NaMi;
 
-class LoginException extends \Exception {}
+class LoginException extends \Exception
+{
+}

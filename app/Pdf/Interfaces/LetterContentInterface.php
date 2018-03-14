@@ -2,7 +2,8 @@
 
 namespace App\Pdf\Interfaces;
 
-interface LetterContentInterface {
+interface LetterContentInterface
+{
     /**
      * Gets the Date for the document
      *
@@ -38,7 +39,7 @@ interface LetterContentInterface {
      * @param Model $member The member used as the name
      * @return array
      */
-    public function getBankDetails($meber);
+    public function getBankDetails();
 
     /**
      * Gets the Name of the responsible Person for Monay
@@ -67,56 +68,4 @@ interface LetterContentInterface {
      * @return string
      */
     public function getPersonFunction();
-
-    /**
-     * Gets the title (=Subject) of the letter
-     *
-     * @return string
-     */
-    public function getTitle();
-
-    /**
-     * Gets the Intro text
-     *
-     * @param Model $member
-     *
-     * @return string
-     */
-    public function getIntro($member);
-
-    /**
-     * Gets the greeting
-     *
-     * @param Model $member
-     */
-    public function getGreeting($member);
-
-    /**
-     * Gets the payments for the given Member
-     *
-     * @param Member[] $member
-     */
-    public function getPaymentsFor($member);
-
-    /**
-     * Gets text after table
-     *
-     * @param Member $member
-     * @param date $deadline
-     */
-    public function getMiddleText($member, $deadline);
-
-    /**
-     * Gets outro below the bank details
-     *
-     * @return string
-     */
-    public function getOutroText();
-
-    /**
-     * Gets the total amount for member
-     *
-     * @return string
-     */
-    public function getTotalAmount($member);
 }

@@ -11,34 +11,38 @@ use Zoomyboy\Tests\Traits\AuthenticatesUsers;
 use Zoomyboy\Tests\Traits\HandlesApiCalls;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
-class IntegrationTestCase extends \Tests\TestCase {
-	use CreatesModels;
-	use HandlesExceptions;
-	use AuthenticatesUsers;
-	use HandlesApiCalls;
-	use DatabaseMigrations;
-	use SetsUpNaMi;
+class IntegrationTestCase extends \Tests\TestCase
+{
+    use CreatesModels;
+    use HandlesExceptions;
+    use AuthenticatesUsers;
+    use HandlesApiCalls;
+    use DatabaseMigrations;
+    use SetsUpNaMi;
 
-	public function setUp() {
-		parent::setUp();
-		$this->disableExceptionHandling();
+    public function setUp()
+    {
+        parent::setUp();
+        $this->disableExceptionHandling();
 
-		if(!property_exists($this, 'dontFakeNotifications')) {
-			Notification::fake();
-		}
+        if (!property_exists($this, 'dontFakeNotifications')) {
+            Notification::fake();
+        }
 
-		if(!property_exists($this, 'dontFakeEvents')) {
-			Event::fake();
-		}
-	}
+        if (!property_exists($this, 'dontFakeEvents')) {
+            Event::fake();
+        }
+    }
 
-	public function afterAuthUserCreated($user) {
-		\App\Right::get()->each(function($right) use ($user) {
-			$user->usergroup->rights()->attach($right);
-		});
-	}
+    public function afterAuthUserCreated($user)
+    {
+        \App\Right::get()->each(function ($right) use ($user) {
+            $user->usergroup->rights()->attach($right);
+        });
+    }
 
-    public function createPayment(\App\Member $member, $values) {
+    public function createPayment(\App\Member $member, $values)
+    {
         $member->payments()->save(
             (new \App\Payment([
                 'nr' => $values['nr']

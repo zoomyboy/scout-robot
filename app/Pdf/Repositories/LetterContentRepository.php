@@ -63,13 +63,13 @@ abstract class LetterContentRepository implements LetterContentInterface
     /**
      * Gets the Bank details for the sidebar
      */
-    public function getBankDetails($member)
+    public function getBankDetails()
     {
         return [
             'Kontoinhaber:' => $this->getGroupname(),
             'IBAN:' => $this->configModel->letterIban,
             'BIC:' => $this->configModel->letterBic,
-            'Verwendungszweck:' => str_replace('[name]', $member->lastname, $this->configModel->letterZweck)
+            'Verwendungszweck:' => str_replace('[name]', $this->members[0]->lastname, $this->configModel->letterZweck)
         ];
     }
 
@@ -124,21 +124,12 @@ abstract class LetterContentRepository implements LetterContentInterface
     }
 
     /**
-     * Gets the greeting
-     *
-     * @param Model $member
-     */
-    public function getGreeting($member)
-    {
-        return 'Liebe Familie '.$member;
-    }
-
-    /**
      * Gets outro below the bank details
      *
      * @return string
      */
-    public function getOutroText() {
+    public function getOutroText()
+    {
         return 'Bitte nehmen Sie zur Kenntnis, dass der für jedes Mitglied obligatorische Versicherungsschutz über die DPSG nur dann für Ihr Kind / Ihre Kinder gilt, wenn der Mitgliedsbeitrag bezahlt wurde. Wenn dies nicht geschieht, müssen wir Ihr Kind / Ihre Kinder von allen Pfadfinderaktionen ausschließen. Dazu gehören sowohl die Gruppenstunden sowie Tagesaktionen als auch mehrtägige Lager. Bei Fragen zur Rechnung können Sie mich auch persönlich erreichen unter:';
     }
 }

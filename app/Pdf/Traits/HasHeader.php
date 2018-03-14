@@ -2,15 +2,19 @@
 
 namespace App\Pdf\Traits;
 
-trait HasHeader {
-    public function generateHeader($member) {
+use App\Pdf\Repositories\BillPageRepository;
+
+trait HasHeader
+{
+    public function generateHeader(BillPageRepository $page)
+    {
         $filename = $this->content->getLogoFilename();
 
         if ($filename !== false) {
             $this->pdf->Image($filename, $this->pdf->GetPageWidth() - 45, 5, 40);
         }
 
-        $this->pdf->SetTextColor(0,0,0);
+        $this->pdf->SetTextColor(0, 0, 0);
         $this->pdf->AddFont('OpenSans', '', 'OpenSans.php');
         $this->pdf->AddFont('OpenSans', 'B', 'OpenSans-Bold.php');
         $this->pdf->AddFont('Arvo', '', 'Arvo-Regular.php');
@@ -22,7 +26,7 @@ trait HasHeader {
         $this->pdf->Cell(0, 8, utf8_decode($this->content->getFrom()), 0, 1);
 
         $this->pdf->setFont('OpenSans', '', 10);
-        foreach($member->realAddress as $addressPart) {
+        foreach ($page->getHeaderAddress() as $addressPart) {
             $this->pdf->Cell(0, 5, utf8_decode($addressPart), 0, 1);
         }
 

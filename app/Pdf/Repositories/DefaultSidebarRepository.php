@@ -4,8 +4,9 @@ namespace App\Pdf\Repositories;
 
 use App\Pdf\Interfaces\LetterSidebarInterface;
 
-class DefaultSidebarRepository implements LetterSidebarInterface {
-    
+class DefaultSidebarRepository implements LetterSidebarInterface
+{
+
     /**
      * @var \App\Conf $configModel The Config Eloquent Model
      */
@@ -13,29 +14,32 @@ class DefaultSidebarRepository implements LetterSidebarInterface {
 
     /**
      * Constructor
-     * 
+     *
      * @return static
      */
-    public function __construct() {
+    public function __construct()
+    {
         $this->configModel = \App\Conf::first();
         return $this;
     }
 
     /**
      * Gets the Name of the Group
-     * 
+     *
      * @return string
      */
-    public function getGroupname() {
+    public function getGroupname()
+    {
         return $this->configModel->groupname;
     }
 
     /**
      * Gets the contact info line by line
-     * 
+     *
      * @return string[]
      */
-    public function getContactInfo() {
+    public function getContactInfo()
+    {
         return [
             $this->configModel->personName,
             $this->configModel->personFunction,
