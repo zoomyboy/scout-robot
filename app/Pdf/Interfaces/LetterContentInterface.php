@@ -12,7 +12,7 @@ interface LetterContentInterface
     public function getDateString();
 
     /**
-     * Gets the Filename of the logo. A FQDN in the file system
+     * Gets the Filename of the logo. A FQCN in the file system
      *
      * @return string
      */
