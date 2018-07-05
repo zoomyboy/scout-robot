@@ -81,7 +81,7 @@ class EmailBillNotification extends Notification implements ShouldQueue
         $service = app()->makeWith(LetterGenerator::class, [
             'members' => $members,
             'atts' => ['deadline' => $this->deadline],
-            'content' => new BillContentRepository()
+            'content' => new BillContentRepository($members)
         ]);
 		$service->handle($filename);
 
