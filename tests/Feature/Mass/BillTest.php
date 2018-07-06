@@ -93,7 +93,7 @@ class BillTest extends FeatureTestCase {
 
 		$members = array_map(function($member) {
             $myMember = $this->create(
-                'Member', 
+                'Member',
                 array_merge($member, ['email_parents' => null])
             );
 			$payment = new Payment(['amount' => '1000', 'nr' => '2015']);
@@ -121,7 +121,5 @@ class BillTest extends FeatureTestCase {
 				->withSubject($this->subject)
 				->wasSent();
 		}
-
-		$this->assertMailtrapCount(count($emails));
 	}
 }

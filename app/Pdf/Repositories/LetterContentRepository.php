@@ -16,6 +16,17 @@ abstract class LetterContentRepository implements LetterContentInterface
     private $configModel;
 
     /**
+     * Creates a new Reposittory for a single Bill PDF Page
+     *
+     * @param Member[] $members
+     * @return static
+     */
+    public static function fromMemberCollection($members)
+    {
+        return new static($members);
+    }
+
+    /**
      * Constructor
      *
      * @return static

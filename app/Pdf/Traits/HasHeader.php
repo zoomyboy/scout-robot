@@ -2,11 +2,11 @@
 
 namespace App\Pdf\Traits;
 
-use App\Pdf\Repositories\BillPageRepository;
+use App\Pdf\Repositories\LetterContentRepository;
 
 trait HasHeader
 {
-    public function generateHeader(BillPageRepository $page)
+    public function generateHeader(LetterContentRepository $page)
     {
         $filename = $this->content->getLogoFilename();
 

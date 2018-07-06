@@ -105,7 +105,7 @@ class RememberTest extends FeatureTestCase {
 		}, $members);
 
 		$this->postApi('mass/email/remember', [
-			'deadline' => '02-02-2018',
+			'deadline' => '2018-02-02',
 			'includeFamilies' => $family,
 			'wayEmail' => $email,
 			'wayPost' => $post,
@@ -120,7 +120,5 @@ class RememberTest extends FeatureTestCase {
 				->withSubject($this->subject)
 				->wasSent();
 		}
-
-		$this->assertMailtrapCount(count($emails));
 	}
 }

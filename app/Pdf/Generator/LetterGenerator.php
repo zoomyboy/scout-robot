@@ -4,8 +4,7 @@ namespace App\Pdf\Generator;
 
 use App\Pdf\Interfaces\LetterContentInterface;
 use App\Pdf\Interfaces\LetterSidebarInterface;
-use App\Pdf\Repositories\BillContentRepository;
-use App\Pdf\Repositories\BillPageRepository;
+use App\Pdf\Repositories\LetterContentRepository;
 use App\Pdf\Traits\HasDate;
 use App\Pdf\Traits\HasHeader;
 use App\Pdf\Traits\HasSidebar;
@@ -34,7 +33,7 @@ class LetterGenerator extends GlobalPdf
         $this->deadline = $atts['deadline'];
     }
 
-    public function addPage(BillPageRepository $page)
+    public function addPage(LetterContentRepository $page)
     {
         $this->pdf->AddPage();
         $this->generateHeader($page);
@@ -60,7 +59,7 @@ class LetterGenerator extends GlobalPdf
         $this->pdf->cell(110, 7, 'Gesamt', 0, 0);
         $this->pdf->cell(0, 7, utf8_decode($page->getTotalAmount()).' '.EURO, 0, 1, 'R');
 
-        foreach ($page->getMiddleText($page, $this->deadline) as $line) {
+        foreach ($page->getMiddleText($this->deadline) as $line) {
             $line = $this->formatHtml($line);
             foreach ($line as $linePart) {
                 $this->pdf->SetFont('OpenSans', ($linePart->type == 'strong') ? 'B' : '', 10);

@@ -2,11 +2,25 @@
 
 namespace App\Pdf\Repositories;
 
+use App\Pdf\Interfaces\LetterContentInterface;
+use App\Pdf\Repositories\DefaultSidebarRepository;
+use App\Traits\GeneratesBlade;
 use Carbon\Carbon;
 
-class BillPageRepository extends LetterContentRepository
+class RememberPageRepository extends LetterContentRepository
 {
     public $members;
+
+    /**
+     * Creates a new Reposittory for a single Bill PDF Page
+     *
+     * @param Member[] $members
+     * @return static
+     */
+    public static function fromMemberCollection($members)
+    {
+        return new static($members);
+    }
 
     /**
      * Private constructor
@@ -24,14 +38,23 @@ class BillPageRepository extends LetterContentRepository
     }
 
     /**
-     * Creates a new Reposittory for a single Bill PDF Page
+     * Gets the title (=Subject) of the letter
      *
-     * @param Member[] $members
-     * @return static
+     * @return string
      */
-    public static function fromMemberCollection($members)
+    public function getTitle()
     {
-        return new static($members);
+        return 'Zahlungserinnerung';
+    }
+
+    /**
+     * Gets the Intro text
+     *
+     * @return string
+     */
+    public function getIntro()
+    {
+        return 'Am Anfang des Jahres haben wir Ihnen Ihre bisherigen Ausstände in Höhe von '.$this->members->totalAmount([1]).' €'.' für '.$this->members->enumNames().' für den '.$this->getGroupname().' und die DPSG in Rechnung gestellt. Diese setzten sich wie folgt zusammen:';
     }
 
     public function getHeaderAddress()
@@ -48,26 +71,6 @@ class BillPageRepository extends LetterContentRepository
     }
 
     /**
-     * Gets the Intro text
-     *
-     * @return string
-     */
-    public function getIntro()
-    {
-        return 'Hiermit stellen wir Ihnen den aktuellen Mitgliedsbeitrag in Höhe von '.$this->members->totalAmount([1]).' €'.' für '.$this->members->enumNames().' für den '.$this->getGroupname().' und die DPSG in Rechnung. Dieser setzt sich wie folgt zusammen:';
-    }
-
-    /**
-     * Gets the title (=Subject) of the letter
-     *
-     * @return string
-     */
-    public function getTitle()
-    {
-        return 'Rechnung';
-    }
-
-    /**
      * Gets the payments for the given Member
      *
      * @param Member[] $member
@@ -76,7 +79,7 @@ class BillPageRepository extends LetterContentRepository
     {
         $payments = [];
         foreach ($this->members as $m) {
-            foreach ($m->payments()->where('status_id', 1)->get() as $p) {
+            foreach ($m->payments()->where('status_id', 2)->get() as $p) {
                 $payments['Beitrag '.$p->nr.' für '.$m->firstname.' '.$m->lastname]
                     = number_format($p->subscription->amount / 100, 2, ',', '.').' €';
             }
@@ -98,8 +101,8 @@ class BillPageRepository extends LetterContentRepository
             : false;
 
         $text = [
-            'Somit bitten wir Sie, den Betrag von',
-            '<strong>'.$this->members->totalAmount([1]).' €'.'</strong>',
+            'Da von Ihnen bislang keine Zahlung eingegangen ist, erinnern wir Sie nun freundlichst daran, den Betrag in Höhe von',
+            '<strong>'.$this->members->totalAmount([2]).' €'.'</strong>',
         ];
 
         if ($deadline) {

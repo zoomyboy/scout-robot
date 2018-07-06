@@ -81,7 +81,7 @@ class EmailRememberNotification extends Notification
         $service = app()->makeWith(LetterGenerator::class, [
             'members' => $members,
             'atts' => ['deadline' => $this->deadline],
-            'content' => new RememberContentRepository()
+            'content' => new RememberContentRepository($members)
         ]);
 		$service->handle($filename);
 
