@@ -3,6 +3,7 @@
 namespace App\Services\NaMi;
 
 use App\Conf;
+use GuzzleHttp\Client as GuzzleClient;
 use App\Exceptions\NaMi\LoginException;
 use App\Exceptions\NaMi\TooManyLoginAttemptsException;
 
@@ -10,6 +11,7 @@ class NaMiService {
 
     protected $cookie;
     protected $baseUrl;
+    private $client;
     protected $config;
     protected $user = null;
     protected $password = null;
@@ -17,17 +19,21 @@ class NaMiService {
     /** @var int Anzahl erlaubter Loginversuche */
     private $times = 3;
 
-    public function __construct() {
+    public function __construct(GuzzleClient $client, NaMiUserResolver $user) {
         $this->cookie = config('nami.cookie');
         $this->baseUrl = config('nami.baseurl');
         $this->config = Conf::first();
+        $this->client = $client;
     }
 
-    protected function setUser($user) {
+    /* @todo Diese Funktion kann weg. Besser über einen userResolver lösen,
+     * der in den Constructor kommt.
+     */
+    public function setUser($user) {
         $this->user = $user;
     }
 
-    protected function setPassword($password) {
+    public function setPassword($password) {
         $this->password = $password;
     }
 
@@ -51,7 +57,27 @@ class NaMiService {
      * Generates a new Session when expired
      */
     public function newSession() {
-        @unlink($this->getCookie());
+        if (!$this->username() || !$this->password()) {
+            throw new LoginException('Benutzer oder passwort für NaMi nicht gesetzt.');
+        }
+
+        $jar = new \GuzzleHttp\Cookie\CookieJar();
+
+        $r = $this->client->request('GET', $this->getBaseUrl().'/ica/pages/login.jsp', ['cookies' => $jar]);
+
+        $login = $this->client->request(
+            'POST', $this->getBaseUrl().'/ica/rest/nami/auth/manual/sessionStartup', [
+                'form_params' => [
+                    'Login' => 'API',
+                    'redirectTo' => './app.jsp',
+                    'username' => $this->username(),
+                    'password' => $this->password()
+                ],
+                'cookies' => $jar
+            ]
+        );
+
+        return;
 
         $handle = curl_init($this->getBaseUrl().'/ica/pages/login.jsp');
         if (!env('NAMI_SSL')) {
@@ -78,6 +104,8 @@ class NaMiService {
         curl_setopt ($handle, CURLOPT_COOKIEFILE, $this->getCookie());
         $body = curl_exec($handle);
         curl_close($handle);
+
+        dd($body);
 
         $response = json_decode($body);
 
