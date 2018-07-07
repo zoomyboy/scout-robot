@@ -185,7 +185,8 @@ return [
 		Intervention\Image\ImageServiceProvider::class,
 	    Barryvdh\DomPDF\ServiceProvider::class,
 		Zoomyboy\BetterNotifications\ServiceProvider::class,
-		\App\Providers\NaMiServiceProvider::class
+		\App\Providers\NaMiServiceProvider::class,
+        \App\Providers\SettingServiceProvider::class
     ],
 
     /*
@@ -234,6 +235,7 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
+        'Setting' => App\Facades\Setting::class
 
     ],
 

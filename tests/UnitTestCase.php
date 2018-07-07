@@ -9,21 +9,16 @@ use Zoomyboy\Tests\Traits\AuthenticatesUsers;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Tests\Traits\MocksSetting;
 
 class UnitTestCase extends \Tests\TestCase {
-	use CreatesModels;
-	use HandlesExceptions;
-	use AuthenticatesUsers;
-	use DatabaseMigrations;
-	use SetsUpNaMi;
+    use MocksSetting;
 
 	public function setUp() {
 		parent::setUp();
-		$this->disableExceptionHandling();
 
 		Notification::fake();
 		Event::fake();
-
 	}
 
 	public function afterAuthUserCreated($user) {
