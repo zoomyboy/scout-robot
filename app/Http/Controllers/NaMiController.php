@@ -14,9 +14,7 @@ class NaMiController extends Controller
     }
 
     public function login() {
-        $nami = new NaMiService();
-        $nami->setUser('90166');
-        $nami->setPassword('h8uHYOXinN89');
+        $nami = app(NaMiService::class);
         dd($nami->newSession());
     }
 }

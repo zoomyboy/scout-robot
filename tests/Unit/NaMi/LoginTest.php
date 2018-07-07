@@ -2,13 +2,15 @@
 
 namespace Unit\NaMi;
 
-use Tests\UnitTestCase;
+use App\NaMi\Exceptions\LoginException;
+use App\NaMi\Interfaces\UserResolver;
 use App\Services\NaMi\NaMiService;
-use GuzzleHttp\HandlerStack;
-use GuzzleHttp\Middleware;
-use GuzzleHttp\Handler\MockHandler;
-use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Client;
+use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Handler\MockHandler;
+use GuzzleHttp\Middleware;
+use GuzzleHttp\Psr7\Response;
+use Tests\UnitTestCase;
 use \Mockery as M;
 
 class NaMiLoginTest extends UnitTestCase {
@@ -17,10 +19,12 @@ class NaMiLoginTest extends UnitTestCase {
     }
 
     private function createNamiUser($user, $password) {
-        $resolver = M::mock(NaMiUserResolver::class);
-        $resolver->shouldReceive('user')->andReturn($user);
-        $resolver->shouldReceive('password')->andReturn($password);
-        $this->app->instance(NaMiUserResolver::class, $resolver);
+        $resolver = M::mock(UserResolver::class);
+        $resolver->shouldReceive('getUsername')->andReturn($user);
+        $resolver->shouldReceive('getPassword')->andReturn($password);
+        $this->app->instance(UserResolver::class, $resolver);
+
+        return $resolver;
     }
 
     /** @test */
@@ -39,12 +43,9 @@ class NaMiLoginTest extends UnitTestCase {
         $client = new Client(['handler' => $stack]);
         $this->app->instance(Client::class, $client);
 
-        $user = $this->createNamiUser('90166', 'PW');
+         $this->createNamiUser('90166', 'PW');
 
         $nami = app(NaMiService::class);
-        /** @todo Mock userResolver and add this to the Service */
-        $nami->setUser('90166');
-        $nami->setPassword('PW');
         $nami->newSession();
 
         $this->assertEquals('https://nami.dpsg.de/ica/pages/login.jsp', $container[0]['request']->getUri());
@@ -53,6 +54,31 @@ class NaMiLoginTest extends UnitTestCase {
             'Login=API&redirectTo=.%2Fapp.jsp&username=90166&password=PW',
             (string) $container[1]['request']->getBody()
         );
+    }
+
+    /**
+     * @test
+     * @expectedException LoginException
+     */
+    public function it_throws_an_error_when_credentials_are_wrong() {
+        $container = [];
+        $history = Middleware::history($container);
+
+        $mock = new MockHandler([
+            new Response(200, [], ''),
+            new Response(200, [], '{"servicePrefix":null,"methodCall":null,"response":null,"statusCode":3000,"statusMessage":"Benutzer nicht gefunden oder Passwort falsch.","apiSessionName":"JSESSIONID","apiSessionToken":"yxLjt9nY-eD7L8IZeXWSHLyt","minorNumber":0,"majorNumber":0}')
+        ]);
+
+        $stack = HandlerStack::create($mock);
+        $stack->push($history);
+
+        $client = new Client(['handler' => $stack]);
+        $this->app->instance(Client::class, $client);
+
+         $this->createNamiUser('90166', 'PW');
+
+        $nami = app(NaMiService::class);
+        $nami->newSession();
     }
 
     /** @test */
@@ -67,15 +93,14 @@ class NaMiLoginTest extends UnitTestCase {
         $client = new Client(['handler' => $stack]);
         $this->app->instance(Client::class, $client);
 
+        $this->createNamiUser('', '');
+
         $nami = app(NaMiService::class);
-        /** @todo Mock userResolver and add this to the Service */
-        $nami->setUser('');
-        $nami->setPassword('');
 
         try {
             $nami->newSession();
             $this->assertTrue(false, 'NaMi sollte eine Exception werfen, wenn Benutzer und Passwort nicht gesetzt.');
-        } catch(NaMiLoginException $e) {}
+        } catch(LoginException $e) {}
 
         $this->assertCount(0, $container);
     }

@@ -2,13 +2,19 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\Facades\Event;
+use App\NaMi\Interfaces\UserResolver;
+use App\NaMi\Resolvers\CurrentUser;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
+use Illuminate\Support\Facades\Event;
 
 class NaMiServiceProvider extends ServiceProvider
 {
     public function register()
 	{
+        $this->app->bind(UserResolver::class, function() {
+            return new CurrentUser();
+        });
+
 		$this->app->singleton('nami.member', function() {
 			return new \App\Services\NaMi\Member();
 		});

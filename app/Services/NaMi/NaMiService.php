@@ -3,9 +3,10 @@
 namespace App\Services\NaMi;
 
 use App\Conf;
-use GuzzleHttp\Client as GuzzleClient;
-use App\Exceptions\NaMi\LoginException;
 use App\Exceptions\NaMi\TooManyLoginAttemptsException;
+use App\NaMi\Exceptions\LoginException;
+use App\NaMi\Interfaces\UserResolver;
+use GuzzleHttp\Client as GuzzleClient;
 
 class NaMiService {
 
@@ -19,10 +20,9 @@ class NaMiService {
     /** @var int Anzahl erlaubter Loginversuche */
     private $times = 3;
 
-    public function __construct(GuzzleClient $client, NaMiUserResolver $user) {
-        $this->cookie = config('nami.cookie');
+    public function __construct(GuzzleClient $client, UserResolver $user) {
         $this->baseUrl = config('nami.baseurl');
-        $this->config = Conf::first();
+        $this->user = $user;
         $this->client = $client;
     }
 
@@ -76,6 +76,11 @@ class NaMiService {
                 'cookies' => $jar
             ]
         );
+        var_dump((string) $login->getBody());
+        $login = (string) $login->getBody();
+
+        $response = json_decode($login);
+        dd($response);
 
         return;
 
@@ -152,11 +157,11 @@ class NaMiService {
     }
 
     public function username() {
-        return $this->user ?: $this->getConfig()->namiUser;
+        return $this->user->getUsername();
     }
 
     public function password() {
-        return $this->password ?: $this->getConfig()->namiPassword;
+        return $this->user->getPassword();
     }
 
     public function isSuccess($response) {

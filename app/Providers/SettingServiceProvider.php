@@ -25,8 +25,11 @@ class SettingServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->bind('setting', function() {
-            return '';
-            return Conf::first();
+            return new class {
+                public function get($key) {
+                    return Conf::first()->{$key};
+                }
+            };
         });
     }
 }
