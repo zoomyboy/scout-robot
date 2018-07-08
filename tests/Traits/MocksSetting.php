@@ -10,5 +10,9 @@ trait MocksSetting {
     public function setting($key, $value) {
         Setting::shouldReceive('get')->with($key)->andReturn($value);
     }
+
+    public function settings($key, $value, $times = null) {
+        Setting::shouldReceive('get')->with($key)->times($times)->andReturn(...$value);
+    }
 }
 

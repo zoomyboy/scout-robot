@@ -3,7 +3,6 @@
 namespace Unit\NaMi;
 
 use App\NaMi\Exceptions\LoginException;
-use App\NaMi\Interfaces\UserResolver;
 use App\Services\NaMi\NaMiService;
 use GuzzleHttp\Client;
 use GuzzleHttp\Cookie\CookieJar;
@@ -12,50 +11,33 @@ use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Response;
 use Tests\UnitTestCase;
+use Tests\Unit\NaMiTestCase;
 use \Mockery as M;
 
-class NaMiLoginTest extends UnitTestCase {
+class LoginTest extends NaMiTestCase {
     public function setUp() {
         parent::setUp();
     }
 
-    private function createNamiUser($user, $password) {
-        $resolver = M::mock(UserResolver::class);
-        $resolver->shouldReceive('getUsername')->andReturn($user);
-        $resolver->shouldReceive('getPassword')->andReturn($password);
-        $this->app->instance(UserResolver::class, $resolver);
-
-        return $resolver;
-    }
-
     /** @test */
     public function it_loggs_in_to_nami_successful() {
-        $container = [];
-        $history = Middleware::history($container);
-
-        $mock = new MockHandler([
+        $this->fakeGuzzle([
             new Response(200, [], ''),
             new Response(200, [
                 'Set-Cookie' => 'JSESSIONID=d4-CjOOIMAxKVOVSsVSy23CD.srv-nami06; path=/ica'
             ], '{"servicePrefix":null,"methodCall":null,"response":null,"statusCode":0,"statusMessage":"","apiSessionName":"JSESSIONID","apiSessionToken":"PXU5-ewCjYv9i7f7mudhebje","minorNumber":2,"majorNumber":1}')
         ]);
 
-        $stack = HandlerStack::create($mock);
-        $stack->push($history);
-
-        $client = new Client(['handler' => $stack]);
-        $this->app->instance(Client::class, $client);
-
-         $this->createNamiUser('90166', 'PW');
+        $this->createNamiUser('90166', 'PW');
 
         $nami = app(NaMiService::class);
         $nami->newSession();
 
-        $this->assertEquals('https://nami.dpsg.de/ica/pages/login.jsp', $container[0]['request']->getUri());
-        $this->assertEquals('https://nami.dpsg.de/ica/rest/nami/auth/manual/sessionStartup', $container[1]['request']->getUri());
+        $this->assertEquals('https://nami.dpsg.de/ica/pages/login.jsp', $this->container[0]['request']->getUri());
+        $this->assertEquals('https://nami.dpsg.de/ica/rest/nami/auth/manual/sessionStartup', $this->container[1]['request']->getUri());
         $this->assertEquals(
             'Login=API&redirectTo=.%2Fapp.jsp&username=90166&password=PW',
-            (string) $container[1]['request']->getBody()
+            (string) $this->container[1]['request']->getBody()
         );
 
         $this->assertEquals(
@@ -69,21 +51,12 @@ class NaMiLoginTest extends UnitTestCase {
      * @expectedException App\NaMi\Exceptions\LoginException
      */
     public function it_throws_an_error_when_credentials_are_wrong() {
-        $container = [];
-        $history = Middleware::history($container);
-
-        $mock = new MockHandler([
+        $this->fakeGuzzle([
             new Response(200, [], ''),
             new Response(200, [], '{"servicePrefix":null,"methodCall":null,"response":null,"statusCode":3000,"statusMessage":"Benutzer nicht gefunden oder Passwort falsch.","apiSessionName":"JSESSIONID","apiSessionToken":"yxLjt9nY-eD7L8IZeXWSHLyt","minorNumber":0,"majorNumber":0}')
         ]);
 
-        $stack = HandlerStack::create($mock);
-        $stack->push($history);
-
-        $client = new Client(['handler' => $stack]);
-        $this->app->instance(Client::class, $client);
-
-         $this->createNamiUser('90166', 'PW');
+        $this->createNamiUser('90166', 'PW');
 
         $nami = app(NaMiService::class);
         $nami->newSession();
@@ -94,21 +67,12 @@ class NaMiLoginTest extends UnitTestCase {
      * @expectedException App\NaMi\Exceptions\LoginException
      */
     public function it_throws_an_error_when_account_is_locked() {
-        $container = [];
-        $history = Middleware::history($container);
-
-        $mock = new MockHandler([
+        $this->fakeGuzzle([
             new Response(200, [], ''),
             new Response(200, [], '{"servicePrefix":null,"methodCall":null,"response":null,"statusCode":3000,"statusMessage":"Die höchste Anzahl von Login-Versuchen wurde erreicht. Ihr Konto ist für 15 Minuten gesperrt worden. Nach Ablauf dieser Zeitspanne wird ihr Zugang wieder freigegeben.","apiSessionName":"JSESSIONID","apiSessionToken":"rd3dJUxmi098jbCy507jEg_X","minorNumber":0,"majorNumber":0}')
         ]);
 
-        $stack = HandlerStack::create($mock);
-        $stack->push($history);
-
-        $client = new Client(['handler' => $stack]);
-        $this->app->instance(Client::class, $client);
-
-         $this->createNamiUser('90166', 'PW');
+        $this->createNamiUser('90166', 'PW');
 
         $nami = app(NaMiService::class);
         $nami->newSession();
@@ -116,16 +80,6 @@ class NaMiLoginTest extends UnitTestCase {
 
     /** @test */
     public function it_throws_an_error_when_no_user_given() {
-        $container = [];
-        $history = Middleware::history($container);
-
-        $mock = new MockHandler();
-        $stack = HandlerStack::create($mock);
-        $stack->push($history);
-
-        $client = new Client(['handler' => $stack]);
-        $this->app->instance(Client::class, $client);
-
         $this->createNamiUser('', '');
 
         $nami = app(NaMiService::class);
@@ -135,6 +89,6 @@ class NaMiLoginTest extends UnitTestCase {
             $this->assertTrue(false, 'NaMi sollte eine Exception werfen, wenn Benutzer und Passwort nicht gesetzt.');
         } catch(LoginException $e) {}
 
-        $this->assertCount(0, $container);
+        $this->assertCount(0, $this->container);
     }
 }

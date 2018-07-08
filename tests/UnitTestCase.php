@@ -2,17 +2,14 @@
 
 namespace Tests;
 
-use Tests\Traits\SetsUpNaMi;
-use Zoomyboy\Tests\Traits\CreatesModels;
-use Zoomyboy\Tests\Traits\HandlesExceptions;
-use Zoomyboy\Tests\Traits\AuthenticatesUsers;
+use Zoomyboy\Tests\Traits\FakesGuzzle;
+use Tests\Traits\MocksSetting;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Event;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Tests\Traits\MocksSetting;
 
 class UnitTestCase extends \Tests\TestCase {
     use MocksSetting;
+    use FakesGuzzle;
 
 	public function setUp() {
 		parent::setUp();

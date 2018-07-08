@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Conf;
+use App\Services\SettingService;
 use Illuminate\Support\ServiceProvider;
 
 class SettingServiceProvider extends ServiceProvider
@@ -25,11 +26,7 @@ class SettingServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->bind('setting', function() {
-            return new class {
-                public function get($key) {
-                    return Conf::first()->{$key};
-                }
-            };
+            return new SettingService();
         });
     }
 }

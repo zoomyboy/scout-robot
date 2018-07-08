@@ -43,4 +43,24 @@ class CurrentUserResolverTest extends UnitTestCase {
         $this->assertFalse($resolver->getUsername());
         $this->assertFalse($resolver->getGroup());
     }
+
+
+     /** @test */
+    public function the_credentials_are_missing_when_nami_is_disabled() {
+        $this->setting('namiEnabled', false);
+
+        $resolver = app(CurrentUser::class);
+        $this->assertFalse($resolver->hasCredentials());
+    }
+
+     /** @test */
+    public function the_credentials_are_missing_when_password_or_user_arent_set() {
+        $this->settings('namiUser', ['pw', '']);
+        $this->settings('namiPassword', ['', 'a']);
+        $this->setting('namiEnabled', true);
+
+        $resolver = app(CurrentUser::class);
+        $this->assertFalse($resolver->hasCredentials());
+        $this->assertFalse($resolver->hasCredentials());
+    }
 }

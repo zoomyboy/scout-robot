@@ -24,4 +24,10 @@ class CurrentUser implements UserResolver {
         if (!Setting::get('namiEnabled')) {return false;}
         return Setting::get('namiGroup');
     }
+
+    public function hasCredentials() {
+        if (!Setting::get('namiEnabled')) {return false;}
+
+        return (bool)Setting::get('namiUser') && (bool)Setting::get('namiPassword');
+    }
 }
