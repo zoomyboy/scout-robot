@@ -10,7 +10,7 @@ use GuzzleHttp\Client as GuzzleClient;
 
 class NaMiService {
 
-    protected $cookie;
+    public $cookie;
     protected $baseUrl;
     private $client;
     protected $config;
@@ -24,6 +24,8 @@ class NaMiService {
         $this->baseUrl = config('nami.baseurl');
         $this->user = $user;
         $this->client = $client;
+
+        $this->cookie = new \GuzzleHttp\Cookie\CookieJar();
     }
 
     /* @todo Diese Funktion kann weg. Besser über einen userResolver lösen,
@@ -61,9 +63,7 @@ class NaMiService {
             throw new LoginException('Benutzer oder passwort für NaMi nicht gesetzt.');
         }
 
-        $jar = new \GuzzleHttp\Cookie\CookieJar();
-
-        $r = $this->client->request('GET', $this->getBaseUrl().'/ica/pages/login.jsp', ['cookies' => $jar]);
+        $r = $this->client->request('GET', $this->getBaseUrl().'/ica/pages/login.jsp', ['cookies' => $this->cookie]);
 
         $login = $this->client->request(
             'POST', $this->getBaseUrl().'/ica/rest/nami/auth/manual/sessionStartup', [
@@ -73,11 +73,11 @@ class NaMiService {
                     'username' => $this->username(),
                     'password' => $this->password()
                 ],
-                'cookies' => $jar
+                'cookies' => $this->cookie
             ]
         );
+        $login = json_decode(utf8_encode((string)$login->getBody()));
 
-        $login = json_decode((utf8_encode(str_replace('', '', (string)$login->getBody()))));
         if ($login->statusCode !== 0) {
             throw new LoginException($login->statusMessage);
         }
