@@ -76,11 +76,11 @@ class NaMiService {
                 'cookies' => $jar
             ]
         );
-        var_dump((string) $login->getBody());
-        $login = (string) $login->getBody();
 
-        $response = json_decode($login);
-        dd($response);
+        $login = json_decode((utf8_encode(str_replace('', '', (string)$login->getBody()))));
+        if ($login->statusCode !== 0) {
+            throw new LoginException($login->statusMessage);
+        }
 
         return;
 

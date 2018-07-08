@@ -58,7 +58,7 @@ class NaMiLoginTest extends UnitTestCase {
 
     /**
      * @test
-     * @expectedException LoginException
+     * @expectedException App\NaMi\Exceptions\LoginException
      */
     public function it_throws_an_error_when_credentials_are_wrong() {
         $container = [];
