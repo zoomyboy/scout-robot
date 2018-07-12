@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit;
+namespace Tests\Integration;
 
 use Tests\UnitTestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;

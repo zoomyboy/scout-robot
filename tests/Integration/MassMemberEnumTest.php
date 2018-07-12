@@ -1,12 +1,12 @@
 <?php
 
-namespace Tests\Unit;
+namespace Tests\Integration;
 
 use Tests\UnitTestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use App\Notifications\EmailBillNotification;
 
-class MassMemberEnumBillTest extends UnitTestCase {
+class MassMemberEnumTest extends UnitTestCase {
 	use DatabaseMigrations;
 
 	public function setUp() {

@@ -1,11 +1,15 @@
 <?php
 
-namespace Tests\Unit;
+namespace Tests\Integration;
 
 use Tests\UnitTestCase;
-use App\Queries\RememberPdfQuery;
+use App\Queries\BillPdfQuery;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
 
-class RememberPdfQueryTest extends UnitTestCase {
+class BillPdfQueryTest extends UnitTestCase {
+
+	use DatabaseMigrations;
+
 	public function setUp() {
 		parent::setUp();
 
@@ -15,8 +19,8 @@ class RememberPdfQueryTest extends UnitTestCase {
 		$this->runSeeder('RegionSeeder');
 		$this->runSeeder('CountrySeeder');
 		$this->runSeeder('GenderSeeder');
-		$this->runSeeder('NationalitySeeder');
 		$this->runSeeder('StatusSeeder');
+		$this->runSeeder('NationalitySeeder');
 
 		$this->createMany('Subscription', 3);
 	}
@@ -31,8 +35,8 @@ class RememberPdfQueryTest extends UnitTestCase {
 			['way_id' => 1]
 		]);
 
-		$query = RememberPdfQuery::members()->get();
-		$this->assertCount(0, $query);
+		$query = new BillPdfQuery();
+		$this->assertCount(0, BillPdfQuery::members()->get());
 	}
 
 	/** @test */
@@ -45,12 +49,12 @@ class RememberPdfQueryTest extends UnitTestCase {
 			['way_id' => 1]
 		]);
 
-		$this->make('Payment', ['status_id' => 1])->member()->associate($members[0])->save();
+		$this->make('Payment', ['status_id' => 2])->member()->associate($members[0])->save();
 		$this->make('Payment', ['status_id' => 3])->member()->associate($members[1])->save();
-		$this->make('Payment', ['status_id' => 1])->member()->associate($members[1])->save();
+		$this->make('Payment', ['status_id' => 2])->member()->associate($members[1])->save();
 
-		$query = RememberPdfQuery::members()->get();
-		$this->assertCount(0, $query);
+		$query = new BillPdfQuery();
+		$this->assertCount(0, BillPdfQuery::members()->get());
 	}
 
 	/** @test */
@@ -69,8 +73,8 @@ class RememberPdfQueryTest extends UnitTestCase {
 		$this->make('Payment', ['status_id' => 3, 'subscription_id' => $sub->id])->member()->associate($members[1])->save();
 		$this->make('Payment', ['status_id' => 1, 'subscription_id' => $sub->id])->member()->associate($members[1])->save();
 
-		$query = RememberPdfQuery::members()->get();
-		$this->assertCount(0, $query);
+		$query = new BillPdfQuery();
+		$this->assertCount(0, BillPdfQuery::members()->get());
 	}
 
     public function validPaymentDataProvider() {
@@ -94,14 +98,16 @@ class RememberPdfQueryTest extends UnitTestCase {
 			['way_id' => 1]
 		]);
 
-		$this->make('Payment', ['status_id' => 2])->member()->associate($members[0])->save();
-		$this->make('Payment', ['status_id' => 2])->member()->associate($members[1])->save();
-		$this->make('Payment', ['status_id' => 2])->member()->associate($members[2])->save();
-		$this->make('Payment', ['status_id' => 2])->member()->associate($members[3])->save();
-		$this->make('Payment', ['status_id' => 2])->member()->associate($members[4])->save();
+		$this->make('Payment', ['status_id' => 1])->member()->associate($members[0])->save();
+		$this->make('Payment', ['status_id' => 1])->member()->associate($members[1])->save();
+		$this->make('Payment', ['status_id' => 1])->member()->associate($members[2])->save();
+		$this->make('Payment', ['status_id' => 1])->member()->associate($members[3])->save();
+		$this->make('Payment', ['status_id' => 1])->member()->associate($members[4])->save();
 
-		$result = RememberPdfQuery::members()->filterWays($ways)->get()->pluck('id')->sort()->values()->toArray();
-        $this->assertEquals($expected, $result);
+        $this->assertEquals(
+            $expected,
+            BillPdfQuery::members()->filterWays($ways)->get()->pluck('id')->sort()->values()->toArray()
+        );
 	}
 
 	/** @test */
@@ -114,13 +120,13 @@ class RememberPdfQueryTest extends UnitTestCase {
 			['way_id' => 1, 'lastname' => 'U']
 		]);
 
-		$this->make('Payment', ['status_id' => 2])->member()->associate($members[0])->save();
-		$this->make('Payment', ['status_id' => 2])->member()->associate($members[1])->save();
-		$this->make('Payment', ['status_id' => 2])->member()->associate($members[2])->save();
-		$this->make('Payment', ['status_id' => 2])->member()->associate($members[3])->save();
-		$this->make('Payment', ['status_id' => 2])->member()->associate($members[4])->save();
+		$this->make('Payment', ['status_id' => 1])->member()->associate($members[0])->save();
+		$this->make('Payment', ['status_id' => 1])->member()->associate($members[1])->save();
+		$this->make('Payment', ['status_id' => 1])->member()->associate($members[2])->save();
+		$this->make('Payment', ['status_id' => 1])->member()->associate($members[3])->save();
+		$this->make('Payment', ['status_id' => 1])->member()->associate($members[4])->save();
 
-		$data = RememberPdfQuery::members()->get();
-		$this->assertEquals([2,1,4,3,5], $data->pluck('id')->toArray());
+		$query = BillPdfQuery::members();
+		$this->assertEquals([2,1,4,3,5], $query->get()->pluck('id')->toArray());
 	}
 }

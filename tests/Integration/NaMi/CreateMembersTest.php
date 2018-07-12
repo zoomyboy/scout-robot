@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\NaMi;
+namespace Tests\Integration\NaMi;
 
 use Tests\UnitTestCase;
 use App\Facades\NaMi\NaMi;
