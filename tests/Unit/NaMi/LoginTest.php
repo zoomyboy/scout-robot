@@ -80,6 +80,7 @@ class LoginTest extends NaMiTestCase {
 
     /** @test */
     public function it_throws_an_error_when_no_user_given() {
+        $this->fakeGuzzle([]);
         $this->createNamiUser('', '');
 
         $nami = app(NaMiService::class);

@@ -2,18 +2,19 @@
 
 namespace App\Services\NaMi;
 
-use GuzzleHttp\Client;
 use App\Exceptions\NaMi\GroupException;
 use App\Exceptions\NaMi\SystemException;
+use App\Facades\NaMi\NaMi;
 use App\Facades\NaMi\NaMiGroup;
 use App\Membership as MembershipModel;
-use App\Facades\NaMi\NaMi;
+use App\NaMi\Interfaces\UserResolver;
 use Carbon\Carbon;
+use GuzzleHttp\Client as GuzzleClient;
 
 class Membership extends NaMiService {
-	public function __construct() {
-		parent::__construct();
-	}
+    public function __construct(GuzzleClient $client, UserResolver $user) {
+        parent::__construct($client, $user);
+    }
 
 	/**
 	 * Gets a single membership from nami

@@ -11,10 +11,12 @@ use App\Facades\NaMi\NaMiMembership;
 use App\Activity;
 use App\Group;
 use App\Facades\NaMi\NaMi;
+use GuzzleHttp\Client as GuzzleClient;
+use App\NaMi\Interfaces\UserResolver;
 
 class Member extends NaMiService {
-    public function __construct() {
-        parent::__construct();
+    public function __construct(GuzzleClient $client, UserResolver $user) {
+        parent::__construct($client, $user);
     }
 
     public function single($memberId) {
@@ -68,12 +70,12 @@ class Member extends NaMiService {
         $group = NaMi::getConfig()->namiGroup;
 
         $gender = $member->gender
-            ? $member->gender->nami_id 
+            ? $member->gender->nami_id
             : \App\Gender::where('is_null', true)->first()->nami_id
         ;
 
         $region = $member->region
-            ? $member->region->nami_id 
+            ? $member->region->nami_id
             : \App\Region::where('is_null', true)->first()->nami_id
         ;
 
@@ -236,12 +238,12 @@ class Member extends NaMiService {
         $group = NaMi::getConfig()->namiGroup;
 
         $gender = $member->gender
-            ? $member->gender->nami_id 
+            ? $member->gender->nami_id
             : \App\Gender::where('is_null', true)->first()->nami_id
         ;
 
         $region = $member->region
-            ? $member->region->nami_id 
+            ? $member->region->nami_id
             : \App\Region::where('is_null', true)->first()->nami_id
         ;
 

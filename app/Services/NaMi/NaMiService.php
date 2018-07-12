@@ -41,7 +41,7 @@ class NaMiService {
                     'Login' => 'API',
                     'redirectTo' => './app.jsp',
                     'username' => $this->user->getUsername(),
-                    'password' => $this->password()
+                    'password' => $this->user->getPassword()
                 ],
                 'cookies' => $this->cookie
             ]
@@ -53,17 +53,14 @@ class NaMiService {
         }
     }
 
-    public function password() {
-        return $this->user->getPassword();
-    }
-
     /** @todo testen mit guzzle fake */
     public function isSuccess($response) {
         return isset ($response->success) && $response->success === true
             && isset ($response->responseType) && $response->responseType == 'OK';
     }
 
-    /** @todo evtl beim resolving ausführen */
+    /** @todo evtl beim resolving ausführen
+    @todo testen */
     public function checkCredentials($user, $password) {
         $this->setPassword($password);
         $this->setUser($user);
@@ -76,7 +73,7 @@ class NaMiService {
         return true;
     }
 
-    /** @todo mit guzzle lösen */
+    /** @todo mit guzzle lösen und testen */
     public function get($url) {
         return $this->login(function() use ($url) {
             $handle = curl_init($this->getBaseUrl().$url);
@@ -100,7 +97,7 @@ class NaMiService {
         });
     }
 
-    /** @todo mit guzzle lösen */
+    /** @todo mit guzzle lösen und testen */
     public function post($url, $fields) {
         return $this->login(function() use ($url, $fields) {
             $handle = curl_init($this->getBaseUrl().$url);
@@ -127,6 +124,7 @@ class NaMiService {
         });
     }
 
+    /* @todo mit guzzle lösen und testen */
     public function put($url, $fields) {
         return $this->login(function() use ($url, $fields) {
             $handle = curl_init($this->getBaseUrl().$url);

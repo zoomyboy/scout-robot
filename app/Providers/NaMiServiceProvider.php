@@ -16,31 +16,31 @@ class NaMiServiceProvider extends ServiceProvider
         });
 
 		$this->app->singleton('nami.member', function() {
-			return new \App\Services\NaMi\Member();
+			return app(\App\Services\NaMi\Member::class);
 		});
 
 		$this->app->singleton('nami.region', function() {
-			return new \App\Services\NaMi\Region();
+			return app(\App\Services\NaMi\Region::class);
 		});
 
 		$this->app->singleton('nami.country', function() {
-			return new \App\Services\NaMi\Country();
+			return app(\App\Services\NaMi\Country::class);
 		});
 
 		$this->app->singleton('nami.group', function() {
-			return new \App\Services\NaMi\Group();
+			return app(\App\Services\NaMi\Group::class);
 		});
 
 		$this->app->singleton('nami.membership', function() {
-			return new \App\Services\NaMi\Membership();
+			return app(\App\Services\NaMi\Membership::class);
 		});
 
 		$this->app->singleton('nami.nationality', function() {
-			return new \App\Services\NaMi\Nationality();
+			return app(\App\Services\NaMi\Nationality::class);
 		});
 
 		$this->app->singleton('nami', function() {
-			return new \App\Services\NaMi\NaMiService();
+			return app(\App\Services\NaMi\NaMiService::class);
 		});
     }
 
