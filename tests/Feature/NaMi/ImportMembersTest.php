@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Integration\NaMi;
+namespace Tests\Feature\NaMi;
 
 use App\Member;
 use App\Facades\NaMi\NaMiMember;
@@ -44,7 +44,7 @@ class ImportMembersTest extends FeatureTestCase {
 			->assertSuccess();
 
         Queue::assertPushed(SyncAllNaMiMembers::class, function($q) {
-            return $q->filter == ['status' => 'Aktiv'];       
+            return $q->filter == ['status' => 'Aktiv'];
         });
 	}
 
@@ -59,7 +59,7 @@ class ImportMembersTest extends FeatureTestCase {
 			->assertSuccess();
 
         Queue::assertPushed(SyncAllNaMiMembers::class, function($q) {
-            return $q->filter == ['status' => 'Aktiv|Inaktiv'];       
+            return $q->filter == ['status' => 'Aktiv|Inaktiv'];
         });
 	}
 
