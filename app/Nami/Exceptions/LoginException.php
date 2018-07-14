@@ -1,6 +1,6 @@
 <?php
 
-namespace App\NaMi\Exceptions;
+namespace App\Nami\Exceptions;
 
 class LoginException extends \Exception
 {

@@ -1,9 +1,9 @@
 <?php
 
-namespace App\NaMi\Resolvers;
+namespace App\Nami\Resolvers;
 
 use Setting;
-use App\NaMi\Interfaces\UserResolver;
+use App\Nami\Interfaces\UserResolver;
 
 /**
  * Gets the current user and group from global ScoutRobot config

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\NaMi\Interfaces;
+namespace App\Nami\Interfaces;
 
 interface UserResolver {
     public function getUsername();

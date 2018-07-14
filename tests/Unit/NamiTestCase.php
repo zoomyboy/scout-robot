@@ -1,7 +1,7 @@
 <?php
 
 namespace Tests\Unit;
-use App\NaMi\Interfaces\UserResolver;
+use App\Nami\Interfaces\UserResolver;
 use Tests\UnitTestCase;
 use \Mockery as M;
 
