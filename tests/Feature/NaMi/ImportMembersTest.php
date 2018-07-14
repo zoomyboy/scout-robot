@@ -2,11 +2,11 @@
 
 namespace Tests\Feature\NaMi;
 
-use App\Member;
 use App\Facades\NaMi\NaMiMember;
-use Tests\FeatureTestCase;
+use App\Jobs\SyncAllNamiMembers;
+use App\Member;
 use Illuminate\Support\Facades\Queue;
-use App\Jobs\SyncAllNaMiMembers;
+use Tests\FeatureTestCase;
 
 class ImportMembersTest extends FeatureTestCase {
 	public $config;
@@ -31,7 +31,7 @@ class ImportMembersTest extends FeatureTestCase {
 		$this->postApi('nami/getmembers', ['active' => true, 'inactive' => true])
 			->assertSuccess();
 
-		Queue::assertPushed(SyncAllNaMiMembers::class);
+		Queue::assertPushed(SyncAllNamiMembers::class);
 	}
 
 	/** @test */

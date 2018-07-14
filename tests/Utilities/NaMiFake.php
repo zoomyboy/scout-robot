@@ -175,7 +175,7 @@ class NaMiFake {
 				'aktivVon' => Carbon::now()->format('Y-m-d').'T00:00:00',
 				'id' => $this->createRandomId()
 			]);
-			
+
 			return (object) [
     			"success" => true,
     			"data" => $memberId,
@@ -210,8 +210,8 @@ class NaMiFake {
 		];
 	}
 
-	public function fakeMemberValues() {
-		return [
+	public function member($overrides = []) {
+		return (object) array_merge([
 			'jungpfadfinder' => null,
 			'mglType' => 'Mitglied',
 			'geschlecht' => 'männlich',
@@ -278,7 +278,7 @@ class NaMiFake {
 			'telefax' => '+49 212 4455555',
 			'beitragsartId' => 1,
 			'plz' => '42777'
-		];
+		], $overrides);
 	}
 
 	public function createRandomId() {

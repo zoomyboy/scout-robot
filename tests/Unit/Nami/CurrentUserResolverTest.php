@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\NaMi;
+namespace Tests\Unit\Nami;
 
 use App\NaMi\Interfaces\UserResolver;
 use App\NaMi\Resolvers\CurrentUser;

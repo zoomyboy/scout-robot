@@ -1,9 +1,9 @@
 <?php
 
-namespace Unit\NaMi;
+namespace Unit\Nami;
 
 use App\NaMi\Exceptions\LoginException;
-use App\Services\NaMi\NaMiService;
+use App\Nami\Service;
 use GuzzleHttp\Client;
 use GuzzleHttp\Cookie\CookieJar;
 use GuzzleHttp\HandlerStack;
@@ -11,10 +11,10 @@ use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Response;
 use Tests\UnitTestCase;
-use Tests\Unit\NaMiTestCase;
+use Tests\Unit\NamiTestCase;
 use \Mockery as M;
 
-class LoginTest extends NaMiTestCase {
+class LoginTest extends NamiTestCase {
     public function setUp() {
         parent::setUp();
     }
@@ -28,10 +28,10 @@ class LoginTest extends NaMiTestCase {
             ], '{"servicePrefix":null,"methodCall":null,"response":null,"statusCode":0,"statusMessage":"","apiSessionName":"JSESSIONID","apiSessionToken":"PXU5-ewCjYv9i7f7mudhebje","minorNumber":2,"majorNumber":1}')
         ]);
 
-        $this->createNamiUser('90166', 'PW');
+        $this->createNamiUser('90166', 'PW', 3);
 
-        $nami = app(NaMiService::class);
-        $nami->newSession();
+        $nami = app(Service::class);
+        $nami->login();
 
         $this->assertEquals('https://nami.dpsg.de/ica/pages/login.jsp', $this->container[0]['request']->getUri());
         $this->assertEquals('https://nami.dpsg.de/ica/rest/nami/auth/manual/sessionStartup', $this->container[1]['request']->getUri());
@@ -56,10 +56,10 @@ class LoginTest extends NaMiTestCase {
             new Response(200, [], '{"servicePrefix":null,"methodCall":null,"response":null,"statusCode":3000,"statusMessage":"Benutzer nicht gefunden oder Passwort falsch.","apiSessionName":"JSESSIONID","apiSessionToken":"yxLjt9nY-eD7L8IZeXWSHLyt","minorNumber":0,"majorNumber":0}')
         ]);
 
-        $this->createNamiUser('90166', 'PW');
+        $this->createNamiUser('90166', 'PW', 3);
 
-        $nami = app(NaMiService::class);
-        $nami->newSession();
+        $nami = app(Service::class);
+        $nami->login();
     }
 
     /**
@@ -72,21 +72,21 @@ class LoginTest extends NaMiTestCase {
             new Response(200, [], '{"servicePrefix":null,"methodCall":null,"response":null,"statusCode":3000,"statusMessage":"Die höchste Anzahl von Login-Versuchen wurde erreicht. Ihr Konto ist für 15 Minuten gesperrt worden. Nach Ablauf dieser Zeitspanne wird ihr Zugang wieder freigegeben.","apiSessionName":"JSESSIONID","apiSessionToken":"rd3dJUxmi098jbCy507jEg_X","minorNumber":0,"majorNumber":0}')
         ]);
 
-        $this->createNamiUser('90166', 'PW');
+        $this->createNamiUser('90166', 'PW', 33);
 
-        $nami = app(NaMiService::class);
-        $nami->newSession();
+        $nami = app(Service::class);
+        $nami->login();
     }
 
     /** @test */
     public function it_throws_an_error_when_no_user_given() {
         $this->fakeGuzzle([]);
-        $this->createNamiUser('', '');
+        $this->createNamiUser('', '', '');
 
-        $nami = app(NaMiService::class);
+        $nami = app(Service::class);
 
         try {
-            $nami->newSession();
+            $nami->login();
             $this->assertTrue(false, 'NaMi sollte eine Exception werfen, wenn Benutzer und Passwort nicht gesetzt.');
         } catch(LoginException $e) {}
 

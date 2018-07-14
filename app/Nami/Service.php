@@ -1,21 +1,18 @@
 <?php
 
-namespace App\Services\NaMi;
+namespace App\Nami;
 
 use App\Conf;
-use App\Exceptions\NaMi\TooManyLoginAttemptsException;
-use App\NaMi\Exceptions\LoginException;
-use App\NaMi\Interfaces\UserResolver;
+use App\Nami\Exceptions\TooManyLoginAttemptsException;
+use App\Nami\Exceptions\LoginException;
+use App\Nami\Interfaces\UserResolver;
 use GuzzleHttp\Client as GuzzleClient;
 
-class NaMiService {
+class Service {
 
     public $cookie;
     protected $baseUrl;
     private $client;
-
-    /** @var int Anzahl erlaubter Loginversuche */
-    private $times = 3;
 
     public function __construct(GuzzleClient $client, UserResolver $user) {
         $this->baseUrl = config('nami.baseurl');
@@ -24,11 +21,7 @@ class NaMiService {
         $this->cookie = new \GuzzleHttp\Cookie\CookieJar();
     }
 
-    /**
-     * Generates a new Session when expired
-     * @todo in login umbenennen
-     */
-    public function newSession() {
+    public function login() {
         if (!$this->user->hasCredentials()) {
             throw new LoginException('Benutzer oder passwort für NaMi nicht gesetzt.');
         }
@@ -75,26 +68,16 @@ class NaMiService {
 
     /** @todo mit guzzle lösen und testen */
     public function get($url) {
-        return $this->login(function() use ($url) {
-            $handle = curl_init($this->getBaseUrl().$url);
+        $this->login();
 
-            curl_setopt($handle, CURLOPT_FOLLOWLOCATION, true);
-            if (!env('NAMI_SSL')) {
-                curl_setopt($handle, CURLOPT_SSL_VERIFYHOST, 0);
-                curl_setopt($handle, CURLOPT_SSL_VERIFYPEER, 0);
-            }
-            curl_setopt($handle, CURLOPT_POSTFIELDS, '');
-            curl_setopt ($handle, CURLOPT_POST, 0);
-            curl_setopt($handle, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt ($handle, CURLOPT_COOKIEJAR, $this->getCookie());
-            curl_setopt ($handle, CURLOPT_COOKIEFILE, $this->getCookie());
-            $body = curl_exec($handle);
-            curl_close($handle);
+        $response = $this->client->request('GET', $this->baseUrl.$url, [
+            'http_errors' => false,
+            'cookies' => $this->cookie
+        ]);
 
-            if(config('nami.log')) {\Log::debug('NaMi-Response: '.$body);}
+        $json = json_decode((string) $response->getBody());
 
-            return json_decode($body);
-        });
+        return collect($json);
     }
 
     /** @todo mit guzzle lösen und testen */

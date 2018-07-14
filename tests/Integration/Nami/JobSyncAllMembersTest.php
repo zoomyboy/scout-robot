@@ -1,43 +1,57 @@
 <?php
 
-namespace App\Integration\NaMi;
+namespace Tests\Integration\Nami;
 
+use App\Events\Import\MemberCreated;
+use App\Events\Import\MemberUpdated;
+use App\Jobs\SyncAllNamiMembers;
 use App\Member;
-use App\Fee;
-use App\Subscription;
-use App\Facades\NaMi\NaMi;
+use App\Nami\Manager\Member as MemberManager;
+use App\Nami\Manager\Membership as MembershipManager;
+use App\Nami\Receiver\Member as MemberReceiver;
+use App\Nami\Receiver\Membership as MembershipReceiver;
+use Illuminate\Support\Facades\Event;
 use Tests\IntegrationTestCase;
-use App\Jobs\SyncAllNaMiMembers;
+use \Mockery as M;
 
-class GetMembersTest extends IntegrationTestCase {
+class JobSyncAllMembersTest extends IntegrationTestCase {
     public $config;
 
     public function setUp() {
         parent::setUp();
 
-        $this->runSeeder('UsergroupSeeder');
-        $this->runSeeder('CountrySeeder');
-        $this->runSeeder('WaySeeder');
-        $this->runSeeder('NationalitySeeder');
-        $this->runSeeder('ConfSeeder');
-        $this->runSeeder('GenderSeeder');
-        $this->runSeeder('ActivitySeeder');
-
-        $this->setUpNaMi();
+        $this->runSeeder(\DatabaseSeeder::class);
     }
 
     /** @test */
-    public function it_saves_a_members_firstname() {
-        $this->authAsApi();
+    public function it_saves_or_upates_a_member_when_the_job_executes() {
+        $this->setting('defaultWay', 1);
 
-        NaMi::createMember(['vorname' => 'Julia', 'id' => 2334]);
+        $this->create('Member', ['nami_id' => 2335]);
 
-        SyncAllNaMiMembers::dispatch(); 
+        $memberReceiver = M::mock(MemberReceiver::class);
+        $memberReceiver->shouldReceive('all')->once()->andReturn([
+            (object) ['id' => 2334],
+            (object) ['id' => 2335]
+        ]);
+        $this->app->instance(MemberReceiver::class, $memberReceiver);
 
-        $member = Member::where('nami_id', 2334)->first();
-        $this->assertNotNull($member);
-        $this->assertEquals('Julia', $member->firstname);
-        $this->assertCount(0, $member->memberships);
+        $firstMemberModel = new Member(['nami_id' => 2334]);
+        $secondMemberModel = new Member(['nami_id' => 2335]);
+
+        $memberManager = M::mock(MemberManager::class);
+        $memberManager->shouldReceive('store')->once()->with(2334)->andReturn($firstMemberModel);
+        $memberManager->shouldReceive('update')->once()->with(2335)->andReturn($secondMemberModel);
+        $this->app->instance(MemberManager::class, $memberManager);
+
+        SyncAllNamiMembers::dispatch();
+
+        Event::assertDispatched(MemberCreated::class, function($e) {
+            return $e->progress == 50 && $e->member->nami_id == 2334;
+        });
+        Event::assertDispatched(MemberUpdated::class, function($e) {
+            return $e->progress == 100 && $e->member->nami_id == 2335;
+        });
     }
 
     /** @test */
@@ -46,7 +60,7 @@ class GetMembersTest extends IntegrationTestCase {
 
         NaMi::createMember(['nachname' => 'Heut', 'id' => 2334]);
 
-        SyncAllNaMiMembers::dispatch(); 
+        SyncAllNaMiMembers::dispatch();
 
         $member = Member::where('nami_id', 2334)->first();
         $this->assertNotNull($member);
@@ -59,7 +73,7 @@ class GetMembersTest extends IntegrationTestCase {
 
         NaMi::createMember(['geburtsDatum' => '2016-04-05 00:00:00', 'id' => 2334]);
 
-        SyncAllNaMiMembers::dispatch(); 
+        SyncAllNaMiMembers::dispatch();
 
         $member = Member::where('nami_id', 2334)->first();
         $this->assertNotNull($member);
@@ -72,7 +86,7 @@ class GetMembersTest extends IntegrationTestCase {
 
         NaMi::createMember(['geschlechtId' => 19, 'id' => 2334]);
 
-        SyncAllNaMiMembers::dispatch(); 
+        SyncAllNaMiMembers::dispatch();
 
         $member = Member::where('nami_id', 2334)->first();
         $this->assertNotNull($member);
@@ -85,7 +99,7 @@ class GetMembersTest extends IntegrationTestCase {
 
         NaMi::createMember(['geschlechtId' => 23, 'id' => 2334]);
 
-        SyncAllNaMiMembers::dispatch(); 
+        SyncAllNaMiMembers::dispatch();
 
         $member = Member::where('nami_id', 2334)->first();
         $this->assertNotNull($member);
@@ -102,7 +116,7 @@ class GetMembersTest extends IntegrationTestCase {
         NaMi::createMembership(2334, ['taetigkeitId' => null, 'untergliederungId' => 999]);
         NaMi::createMembership(2334, ['taetigkeitId' => null, 'untergliederungId' => null]);
 
-        SyncAllNaMiMembers::dispatch(); 
+        SyncAllNaMiMembers::dispatch();
 
         $member = Member::where('nami_id', 2334)->first();
         $this->assertNotNull($member);
@@ -117,7 +131,7 @@ class GetMembersTest extends IntegrationTestCase {
         //Vorsitzende/r und Rover
         NaMi::createMembership(2334, ['taetigkeitId' => 13, 'untergliederungId' => 4]);
 
-        SyncAllNaMiMembers::dispatch(); 
+        SyncAllNaMiMembers::dispatch();
 
         $member = Member::where('nami_id', 2334)->first();
         $this->assertNotNull($member);
@@ -131,7 +145,7 @@ class GetMembersTest extends IntegrationTestCase {
         NaMi::createMember(['id' => 2334]);
         NaMi::createMembership(2334, ['aktivBis' => \Carbon\Carbon::now()->subDays(1)->format('Y-m-d').'T00:00:00']);
 
-        SyncAllNaMiMembers::dispatch(); 
+        SyncAllNaMiMembers::dispatch();
 
         $member = Member::where('nami_id', 2334)->first();
         $this->assertNotNull($member);
@@ -145,7 +159,7 @@ class GetMembersTest extends IntegrationTestCase {
         NaMi::createMember(['id' => 2334]);
         NaMi::createMembership(2334, ['taetigkeitId' => 6, 'untergliederungId' => 4]);
 
-        SyncAllNaMiMembers::dispatch(); 
+        SyncAllNaMiMembers::dispatch();
 
         $member = Member::where('nami_id', 2334)->first();
         $this->assertNotNull($member);
@@ -164,7 +178,7 @@ class GetMembersTest extends IntegrationTestCase {
         NaMi::createMembership(2334, ['taetigkeitId' => 6, 'untergliederungId' => 4]);
         NaMi::createMembership(2334, ['taetigkeitId' => 6, 'untergliederungId' => 3]);
 
-        SyncAllNaMiMembers::dispatch(); 
+        SyncAllNaMiMembers::dispatch();
 
         $member = Member::where('nami_id', 2334)->first();
         $this->assertNotNull($member);
@@ -185,14 +199,14 @@ class GetMembersTest extends IntegrationTestCase {
     public function it_overwrites_a_members_firstname_that_is_found_locally_by_nami_id() {
         NaMi::createMember(['vorname' => 'Hans', 'id' => 2334]);
 
-        SyncAllNaMiMembers::dispatch(); 
+        SyncAllNaMiMembers::dispatch();
 
         $this->assertNotNull(Member::where('firstname', 'Hans')->first());
         $this->assertCount(1, Member::get());
 
         NaMi::updateMember(2334, ['vorname' => 'Peter']);
 
-        SyncAllNaMiMembers::dispatch(); 
+        SyncAllNaMiMembers::dispatch();
 
         $this->assertCount(1, Member::get());
         $this->assertNotNull(Member::where('firstname', 'Peter')->first());
@@ -207,7 +221,7 @@ class GetMembersTest extends IntegrationTestCase {
 
         SyncAllNaMiMembers::dispatch([
             'status' => 'Aktiv'
-        ]); 
+        ]);
 
         $activeMember = Member::where('nami_id', 2334)->first();
         $inactiveMember = Member::where('nami_id', 2335)->first();
@@ -224,7 +238,7 @@ class GetMembersTest extends IntegrationTestCase {
 
         SyncAllNaMiMembers::dispatch([
             'status' => 'Aktiv|Inaktiv'
-        ]); 
+        ]);
 
         $activeMember = Member::where('nami_id', 2334)->first();
         $inactiveMember = Member::where('nami_id', 2335)->first();
@@ -261,7 +275,7 @@ class GetMembersTest extends IntegrationTestCase {
 
         SyncAllNaMiMembers::dispatch([
             'status' => 'Aktiv|Inaktiv'
-        ]); 
+        ]);
 
         $member = Member::where('nami_id', 2334)->first();
         $this->assertEquals('sub1', $member->subscription->title);

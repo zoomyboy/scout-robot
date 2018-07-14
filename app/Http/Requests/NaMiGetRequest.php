@@ -2,10 +2,9 @@
 
 namespace App\Http\Requests;
 
-use Zoomyboy\BaseRequest\Request;
+use App\Jobs\SyncAllNamiMembers;
 use Illuminate\Validation\Rule;
-use App\Facades\NaMi\NaMiMember;
-use App\Jobs\SyncAllNaMiMembers;
+use Zoomyboy\BaseRequest\Request;
 use \App\Member;
 
 class NaMiGetRequest extends Request
@@ -48,6 +47,6 @@ class NaMiGetRequest extends Request
             $filter = ['status' => 'Aktiv|Inaktiv'];
         }
 
-		SyncAllNaMiMembers::dispatch($filter);
+		SyncAllNamiMembers::dispatch($filter);
 	}
 }

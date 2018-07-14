@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Exceptions\NaMi;
+namespace App\Nami\Exceptions;
 
 class TooManyLoginAttemptsException extends \Exception {
 

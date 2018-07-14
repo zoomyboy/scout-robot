@@ -1,0 +1,45 @@
+<?php
+
+namespace Tests\Unit\Nami;
+
+use App\NaMi\Interfaces\UserResolver;
+use App\Nami\Receiver\Member;
+use App\Nami\Service;
+use GuzzleHttp\Psr7\Response;
+use Tests\UnitTestCase;
+use \Mockery as M;
+
+class MemberReceiverTest extends UnitTestCase {
+    public function setUp() {
+        parent::setUp();
+
+        $resolver = M::mock(UserResolver::class);
+        $resolver->shouldReceive('getGroup')->andReturn(3);
+        $this->app->instance(UserResolver::class, $resolver);
+    }
+
+    /** @test */
+    public function it_gets_all_member_ids() {
+        $service = M::mock(Service::class);
+        $service->shouldReceive('get')->with('/ica/rest/nami/mitglied/filtered-for-navigation/gruppierung/gruppierung/3/flist')
+            ->andReturn(collect(json_decode('{"success":true,"data":[{"id":2334}]}')));
+        $this->app->instance(Service::class, $service);
+
+        $all = app(Member::class)->all();
+        $this->assertEquals(2334, $all->first()->id);
+    }
+
+    /** @test */
+    public function it_gets_a_single_member() {
+        $service = M::mock(Service::class);
+        $service->shouldReceive('get')->with('/ica/rest/nami/mitglied/filtered-for-navigation/gruppierung/gruppierung/3/2334')
+            ->andReturn(
+                collect(json_decode('{"success":true,"data":{"id":2334,"geschlechtId": 55}}'))
+            );
+        $this->app->instance(Service::class, $service);
+
+        $all = app(Member::class)->single(2334);
+        $this->assertEquals(2334, $all->id);
+        $this->assertEquals(55, $all->geschlechtId);
+    }
+}
