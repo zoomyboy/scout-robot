@@ -5,15 +5,15 @@ namespace App\Services\NaMi;
 use App\Exceptions\NaMi\GroupException;
 use App\Facades\NaMi\NaMi;
 use App\NaMi\Interfaces\UserResolver;
+use App\Nami\Service;
 use GuzzleHttp\Client as GuzzleClient;
 
-class Group extends NaMiService {
-    public function __construct(GuzzleClient $client, UserResolver $user) {
-        parent::__construct($client, $user);
+class Group {
+    public function __construct() {
     }
 
 	public function all() {
-		$response = NaMi::get('/ica/rest/nami/gruppierungen/filtered-for-navigation/gruppierung/node/root');
+        $r = $nami->get('/ica/rest/nami/gruppierungen/filtered-for-navigation/gruppierung/node/root');
 
 		if ($this->isSuccess($response)) {
 			return $response->data;

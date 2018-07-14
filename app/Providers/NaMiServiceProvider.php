@@ -2,8 +2,8 @@
 
 namespace App\Providers;
 
-use App\NaMi\Interfaces\UserResolver;
-use App\NaMi\Resolvers\CurrentUser;
+use App\Nami\Interfaces\UserResolver;
+use App\Nami\Resolvers\CurrentUser;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Event;
 
@@ -16,31 +16,31 @@ class NaMiServiceProvider extends ServiceProvider
         });
 
 		$this->app->singleton('nami.member', function() {
-			return app(\App\Services\NaMi\Member::class);
+			return app(\App\Services\Nami\Member::class);
 		});
 
 		$this->app->singleton('nami.region', function() {
-			return app(\App\Services\NaMi\Region::class);
+			return app(\App\Services\Nami\Region::class);
 		});
 
 		$this->app->singleton('nami.country', function() {
-			return app(\App\Services\NaMi\Country::class);
+			return app(\App\Services\Nami\Country::class);
 		});
 
 		$this->app->singleton('nami.group', function() {
-			return app(\App\Services\NaMi\Group::class);
+			return app(\App\Services\Nami\Group::class);
 		});
 
 		$this->app->singleton('nami.membership', function() {
-			return app(\App\Services\NaMi\Membership::class);
+			return app(\App\Services\Nami\Membership::class);
 		});
 
 		$this->app->singleton('nami.nationality', function() {
-			return app(\App\Services\NaMi\Nationality::class);
+			return app(\App\Services\Nami\Nationality::class);
 		});
 
 		$this->app->singleton('nami', function() {
-			return app(\App\Services\NaMi\NaMiService::class);
+			return app(\App\Services\Nami\NaMiService::class);
 		});
     }
 

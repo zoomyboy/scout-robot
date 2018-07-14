@@ -43,6 +43,7 @@ class ConfUpdateRequest extends Request
 			}
 		}
 
+
 		if (!is_numeric($this->namiGroup)) {
 			return ['namiGroup' => 'Das hier sollte eine 6-stellige Zahl sein.'];
 		}
