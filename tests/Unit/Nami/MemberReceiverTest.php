@@ -2,7 +2,7 @@
 
 namespace Tests\Unit\Nami;
 
-use App\NaMi\Interfaces\UserResolver;
+use App\Nami\Interfaces\UserResolver;
 use App\Nami\Receiver\Member;
 use App\Nami\Service;
 use GuzzleHttp\Psr7\Response;
@@ -38,8 +38,8 @@ class MemberReceiverTest extends UnitTestCase {
             );
         $this->app->instance(Service::class, $service);
 
-        $all = app(Member::class)->single(2334);
-        $this->assertEquals(2334, $all->id);
-        $this->assertEquals(55, $all->geschlechtId);
+        $member = app(Member::class)->single(2334);
+        $this->assertEquals(2334, $member->id);
+        $this->assertEquals(55, $member->geschlechtId);
     }
 }

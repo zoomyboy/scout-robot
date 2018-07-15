@@ -2,16 +2,18 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
 use App\Collections\OwnCollection;
-use Illuminate\Notifications\Notifiable;
 use App\Events\MemberCreated;
+use App\Nami\Traits\HasNamiId;
 use App\Relations\HasSameRelation;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
 
 class Member extends Model
 {
     use Notifiable;
     use HasSameRelation;
+    use HasNamiId;
 
     public $fillable = ['firstname', 'lastname', 'nickname', 'other_country', 'birthday', 'joined_at', 'keepdata', 'sendnewspaper', 'address', 'further_address', 'zip', 'city', 'phone', 'mobile', 'business_phone', 'fax', 'email', 'email_parents', 'nami_id', 'active', 'letter_address'];
 
@@ -123,13 +125,5 @@ class Member extends Model
     public function scopeActive($q)
     {
         return $q->where('active', true);
-    }
-
-    /**
-     * Filter by members that are synched with nami id
-     */
-    public function scopeNami($q, $id)
-    {
-        return $q->where('nami_id', $id);
     }
 }

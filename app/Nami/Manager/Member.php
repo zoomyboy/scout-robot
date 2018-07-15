@@ -3,16 +3,16 @@
 namespace App\Nami\Manager;
 
 use App\Nami\Receiver\Member as MemberReceiver;
-use App\Nami\Receiver\Membership as MembershipReceiver;
+use App\Nami\Manager\Membership as MembershipManager;
 use App\Nami\Service;
 
 class Member {
     private $memberReceiver;
-    private $membershipReceiver;
+    private $membershipManager;
 
-    public function __construct(MemberReceiver $memberReceiver, MembershipReceiver $membershipReceiver) {
+    public function __construct(MemberReceiver $memberReceiver, MembershipManager $membershipManager) {
         $this->memberReceiver = $memberReceiver;
-        $this->membershipReceiver = $membershipReceiver;
+        $this->membershipManger = $membershipManager;
     }
 
     public function store($memberId) {
@@ -69,13 +69,8 @@ class Member {
 
         $m->save();
 
-        $this->importMemberships($memberId);
+        $this->membershipManager->import($memberId);
 
         return $m;
-    }
-
-    public function importMemberships($memberId) {
-        $this->membershipReceiver->all($memberId);
-        /** @todo testen */
     }
 }

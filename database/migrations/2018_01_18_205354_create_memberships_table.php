@@ -16,7 +16,7 @@ class CreateMembershipsTable extends Migration
         Schema::create('memberships', function (Blueprint $table) {
             $table->increments('id');
 			$table->integer('activity_id');
-			$table->integer('group_id');
+			$table->integer('group_id')->nullable();
 			$table->integer('member_id');
 			$table->integer('nami_id')->nullable();
             $table->timestamps();
