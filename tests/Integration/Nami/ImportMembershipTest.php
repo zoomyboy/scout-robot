@@ -10,7 +10,7 @@ use Tests\IntegrationTestCase;
 use Tests\Traits\CreatesNamiMember;
 use \Mockery as M;
 
-class MemberManagerImportMembershipTest extends IntegrationTestCase {
+class ImportMembershipTest extends IntegrationTestCase {
     use CreatesNamiMember;
 
     public function setUp() {

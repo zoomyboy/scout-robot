@@ -2,14 +2,11 @@
 
 namespace Tests\Integration;
 
-use Tests\UnitTestCase;
 use App\Queries\BillPdfQuery;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Tests\IntegrationTestCase;
 
-class BillPdfQueryTest extends UnitTestCase {
-
-	use DatabaseMigrations;
-
+class BillPdfQueryTest extends IntegrationTestCase {
 	public function setUp() {
 		parent::setUp();
 

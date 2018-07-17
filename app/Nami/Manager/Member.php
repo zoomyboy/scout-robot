@@ -12,7 +12,7 @@ class Member {
 
     public function __construct(MemberReceiver $memberReceiver, MembershipManager $membershipManager) {
         $this->memberReceiver = $memberReceiver;
-        $this->membershipManger = $membershipManager;
+        $this->membershipManager = $membershipManager;
     }
 
     public function store($memberId) {

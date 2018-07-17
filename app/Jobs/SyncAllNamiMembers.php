@@ -24,7 +24,7 @@ class SyncAllNamiMembers implements ShouldQueue
      *
      * @return void
      */
-    public function __construct($filter = [])
+    public function __construct($filter = ['status' => ['Aktiv', 'Inaktiv']])
     {
         $this->filter = $filter;
     }
@@ -36,7 +36,9 @@ class SyncAllNamiMembers implements ShouldQueue
      */
     public function handle(MemberReceiver $receiver, MemberManager $manager)
     {
-        $members = $receiver->all($this->filter);
+        $members = $receiver->all()->filter(function($member) {
+            return in_array($member->entries_status, $this->filter['status']);
+        });
 
         foreach($members as $i => $member) {
             if (Member::nami($member->id)->exists()) {

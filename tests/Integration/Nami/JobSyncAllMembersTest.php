@@ -21,19 +21,18 @@ class JobSyncAllMembersTest extends IntegrationTestCase {
         parent::setUp();
 
         $this->runSeeder(\DatabaseSeeder::class);
+        $this->setting('defaultWay', 1);
     }
 
     /** @test */
     public function it_saves_or_upates_a_member_when_the_job_executes() {
-        $this->setting('defaultWay', 1);
-
         $this->create('Member', ['nami_id' => 2335]);
 
         $memberReceiver = M::mock(MemberReceiver::class);
-        $memberReceiver->shouldReceive('all')->once()->andReturn([
-            (object) ['id' => 2334],
-            (object) ['id' => 2335]
-        ]);
+        $memberReceiver->shouldReceive('all')->once()->andReturn(collect([
+            (object) ['id' => 2334, 'entries_status' => 'Aktiv'],
+            (object) ['id' => 2335, 'entries_status' => 'Inaktiv']
+        ]));
         $this->app->instance(MemberReceiver::class, $memberReceiver);
 
         $firstMemberModel = new Member(['nami_id' => 2334]);
@@ -55,197 +54,52 @@ class JobSyncAllMembersTest extends IntegrationTestCase {
     }
 
     /** @test */
-    public function it_saves_a_members_lastname() {
-        $this->authAsApi();
+    public function it_only_stores_active_members() {
+        $memberReceiver = M::mock(MemberReceiver::class);
+        $memberReceiver->shouldReceive('all')->once()->andReturn(collect([
+            (object) ['id' => 2334, 'entries_status' => 'Aktiv'],
+            (object) ['id' => 2335, 'entries_status' => 'Inaktiv']
+        ]));
+        $this->app->instance(MemberReceiver::class, $memberReceiver);
 
-        NaMi::createMember(['nachname' => 'Heut', 'id' => 2334]);
+        $firstMemberModel = new Member(['nami_id' => 2334]);
 
-        SyncAllNaMiMembers::dispatch();
+        $memberManager = M::mock(MemberManager::class);
+        $memberManager->shouldReceive('store')->once()->with(2334)->andReturn($firstMemberModel);
+        $memberManager->shouldReceive('store')->with(2335)->never();
+        $this->app->instance(MemberManager::class, $memberManager);
 
-        $member = Member::where('nami_id', 2334)->first();
-        $this->assertNotNull($member);
-        $this->assertEquals('Heut', $member->lastname);
-    }
+        dispatch(new SyncAllNamiMembers(['status' => ['Aktiv']]));
 
-    /** @test */
-    public function it_saves_a_members_birthday() {
-        $this->authAsApi();
-
-        NaMi::createMember(['geburtsDatum' => '2016-04-05 00:00:00', 'id' => 2334]);
-
-        SyncAllNaMiMembers::dispatch();
-
-        $member = Member::where('nami_id', 2334)->first();
-        $this->assertNotNull($member);
-        $this->assertEquals('2016-04-05', $member->birthday->format('Y-m-d'));
-    }
-
-    /** @test */
-    public function it_saves_a_members_gender() {
-        $this->authAsApi();
-
-        NaMi::createMember(['geschlechtId' => 19, 'id' => 2334]);
-
-        SyncAllNaMiMembers::dispatch();
-
-        $member = Member::where('nami_id', 2334)->first();
-        $this->assertNotNull($member);
-        $this->assertEquals('Männlich', $member->gender->title);
-    }
-
-    /** @test */
-    public function it_sets_a_members_gender_to_null_when_gender_is_keine_angabe() {
-        $this->authAsApi();
-
-        NaMi::createMember(['geschlechtId' => 23, 'id' => 2334]);
-
-        SyncAllNaMiMembers::dispatch();
-
-        $member = Member::where('nami_id', 2334)->first();
-        $this->assertNotNull($member);
-        $this->assertNull($member->gender);
-    }
-
-    /** @test */
-    public function it_doesnt_import_a_members_membership_that_doesnt_exist_locally() {
-        $this->authAsApi();
-
-        NaMi::createMember(['id' => 2334]);
-        NaMi::createMembership(2334, ['taetigkeitId' => 999, 'untergliederungId' => 999]);
-        NaMi::createMembership(2334, ['taetigkeitId' => 999, 'untergliederungId' => null]);
-        NaMi::createMembership(2334, ['taetigkeitId' => null, 'untergliederungId' => 999]);
-        NaMi::createMembership(2334, ['taetigkeitId' => null, 'untergliederungId' => null]);
-
-        SyncAllNaMiMembers::dispatch();
-
-        $member = Member::where('nami_id', 2334)->first();
-        $this->assertNotNull($member);
-        $this->assertCount(0, $member->memberships);
-    }
-
-    /** @test */
-    public function it_doesnt_import_a_members_membership_that_has_a_valid_taetigkeit_but_no_local_matching_group() {
-        $this->authAsApi();
-
-        NaMi::createMember([ 'id' => 2334]);
-        //Vorsitzende/r und Rover
-        NaMi::createMembership(2334, ['taetigkeitId' => 13, 'untergliederungId' => 4]);
-
-        SyncAllNaMiMembers::dispatch();
-
-        $member = Member::where('nami_id', 2334)->first();
-        $this->assertNotNull($member);
-        $this->assertCount(0, $member->memberships);
-    }
-
-    /** @test */
-    public function it_doesnt_import_a_members_membership_that_has_a_valid_taetigkeit_but_is_not_active() {
-        $this->authAsApi();
-
-        NaMi::createMember(['id' => 2334]);
-        NaMi::createMembership(2334, ['aktivBis' => \Carbon\Carbon::now()->subDays(1)->format('Y-m-d').'T00:00:00']);
-
-        SyncAllNaMiMembers::dispatch();
-
-        $member = Member::where('nami_id', 2334)->first();
-        $this->assertNotNull($member);
-        $this->assertCount(0, $member->memberships);
-    }
-
-    /** @test */
-    public function it_imports_a_membership_that_is_valid() {
-        $this->authAsApi();
-
-        NaMi::createMember(['id' => 2334]);
-        NaMi::createMembership(2334, ['taetigkeitId' => 6, 'untergliederungId' => 4]);
-
-        SyncAllNaMiMembers::dispatch();
-
-        $member = Member::where('nami_id', 2334)->first();
-        $this->assertNotNull($member);
-        $this->assertCount(1, $member->memberships);
-
-        $membership = $member->memberships->first();
-        $this->assertEquals(4, $membership->group->nami_id);
-        $this->assertEquals(6, $membership->activity->nami_id);
-    }
-
-    /** @test */
-    public function it_imports_each_membership_only_once_when_there_are_multiple_ones() {
-        $this->authAsApi();
-
-        NaMi::createMember(['id' => 2334]);
-        NaMi::createMembership(2334, ['taetigkeitId' => 6, 'untergliederungId' => 4]);
-        NaMi::createMembership(2334, ['taetigkeitId' => 6, 'untergliederungId' => 3]);
-
-        SyncAllNaMiMembers::dispatch();
-
-        $member = Member::where('nami_id', 2334)->first();
-        $this->assertNotNull($member);
-        $this->assertCount(2, $member->memberships);
-
-        $membership = $member->memberships->first();
-        $this->assertEquals(4, $membership->group->nami_id);
-        $this->assertEquals(6, $membership->activity->nami_id);
-
-        $membership = $member->memberships[1];
-        $this->assertEquals(3, $membership->group->nami_id);
-        $this->assertEquals(6, $membership->activity->nami_id);
+        Event::assertDispatched(MemberCreated::class, function($e) {
+            return $e->progress == 100 && $e->member->nami_id == 2334;
+        });
+        Event::assertNotDispatched(MemberCreated::class, function($e) {
+            return $e->member->nami_id == 2335;
+        });
     }
 
     //------------------------------ Overwrite Members ------------------------------
     //*******************************************************************************
     /** @test */
-    public function it_overwrites_a_members_firstname_that_is_found_locally_by_nami_id() {
-        NaMi::createMember(['vorname' => 'Hans', 'id' => 2334]);
+    public function it_overwrites_a_local_model_that_is_found_by_nami_id() {
+        $memberReceiver = M::mock(MemberReceiver::class);
+        $memberReceiver->shouldReceive('all')->once()->andReturn(collect([
+            (object) ['id' => 2334, 'entries_status' => 'Aktiv']
+        ]));
+        $this->app->instance(MemberReceiver::class, $memberReceiver);
 
-        SyncAllNaMiMembers::dispatch();
+        $localMember = $this->create('Member', ['nami_id' => 2334]);
 
-        $this->assertNotNull(Member::where('firstname', 'Hans')->first());
-        $this->assertCount(1, Member::get());
+        $memberManager = M::mock(MemberManager::class);
+        $memberManager->shouldReceive('update')->once()->with(2334)->andReturn($localMember);
+        $this->app->instance(MemberManager::class, $memberManager);
 
-        NaMi::updateMember(2334, ['vorname' => 'Peter']);
+        dispatch(new SyncAllNamiMembers(['status' => ['Aktiv']]));
 
-        SyncAllNaMiMembers::dispatch();
-
-        $this->assertCount(1, Member::get());
-        $this->assertNotNull(Member::where('firstname', 'Peter')->first());
-    }
-
-    /** @test */
-    public function it_only_stores_active_members() {
-        $this->authAsApi();
-
-        NaMi::createMember(['nachname' => 'Heut', 'id' => 2334, 'status' => 'Aktiv']);
-        NaMi::createMember(['nachname' => 'Heut2', 'id' => 2335, 'status' => 'Inaktiv']);
-
-        SyncAllNaMiMembers::dispatch([
-            'status' => 'Aktiv'
-        ]);
-
-        $activeMember = Member::where('nami_id', 2334)->first();
-        $inactiveMember = Member::where('nami_id', 2335)->first();
-        $this->assertNotNull($activeMember);
-        $this->assertNull($inactiveMember);
-    }
-
-    /** @test */
-    public function it_stores_active_state_of_members() {
-        $this->authAsApi();
-
-        NaMi::createMember(['nachname' => 'Heut', 'id' => 2334, 'status' => 'Aktiv']);
-        NaMi::createMember(['nachname' => 'Heut2', 'id' => 2335, 'status' => 'Inaktiv']);
-
-        SyncAllNaMiMembers::dispatch([
-            'status' => 'Aktiv|Inaktiv'
-        ]);
-
-        $activeMember = Member::where('nami_id', 2334)->first();
-        $inactiveMember = Member::where('nami_id', 2335)->first();
-        $this->assertNotNull($activeMember);
-        $this->assertNotNull($inactiveMember);
-        $this->assertFalse($inactiveMember->active);
-        $this->assertTrue($activeMember->active);
+        Event::assertDispatched(MemberUpdated::class, function($e) {
+            return $e->progress == 100 && $e->member->nami_id == 2334;
+        });
     }
 
     /** @test */
