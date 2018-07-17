@@ -27,15 +27,14 @@ class ConfUpdateRequest extends Request
     {
         $rules = [];
 
-        if ($this->has(['namiUser', 'namiPassword'])) {
-            $rules['namiUser'] = [
-                'required', new ValidNamiCredentials($this->namiUser, $this->namiPassword)
-            ];
+        if ($this->namiEnabled && $this->namiGroup) {
+            $rules['namiGroup'] = ['numeric', 'max:8'];
         }
 
-        if ($this->namiEnabled && $this->namiGroup) {
-            // @todo add Validation for Nami Group Access
-            $rules['namiGroup'] = ['numeric', 'max:8'];
+        if ($this->namiEnabled && $this->has(['namiUser', 'namiPassword', 'namiGroup'])) {
+            $rules['namiUser'] = [
+                'required', new ValidNamiCredentials($this->namiUser, $this->namiPassword, $this->namiGroup)
+            ];
         }
 
         return $rules;
