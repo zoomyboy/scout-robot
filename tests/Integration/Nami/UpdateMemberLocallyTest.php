@@ -98,6 +98,8 @@ class UpdateMemberLocallyTest extends NamiTestCase {
         $noGender = $this->create('Gender', ['is_null' => true, 'nami_id' => 89]);
         $noRegion = $this->create('Region', ['is_null' => true, 'nami_id' => 90]);
 
+        $localMember = $this->create('Member', ['nami_id' => 23]);
+
         $receiver = M::mock(MemberReceiver::class);
         $receiver->shouldReceive('single')->with(23)->once()->andReturn($this->localNamiMember([
             'id' => 23,
@@ -109,32 +111,13 @@ class UpdateMemberLocallyTest extends NamiTestCase {
 
         $manager = app(MemberManager::class);
 
-        $manager->store(23);
+        $manager->pull(23);
 
         $this->assertDatabaseHas('members', [
+            'id' => $localMember->id,
             'nami_id' => 23,
             'gender_id' => null,
-            'region_id' => null
-        ]);
-    }
-
-    /** @test */
-    public function it_stores_inactive_nami_members_as_inactive() {
-        $receiver = M::mock(MemberReceiver::class);
-        $receiver->shouldReceive('single')->with(23)->once()->andReturn($this->localNamiMember([
-            'id' => 23,
-            'status' => 'Inaktiv'
-        ]));
-        $this->app->instance(MemberReceiver::class, $receiver);
-        $this->membershipManager->shouldReceive('import')->with(23)->andReturnNull();
-
-        $manager = app(MemberManager::class);
-
-        $manager->store(23);
-
-        $this->assertDatabaseHas('members', [
-            'nami_id' => 23,
-            'active' => false
+            'region_id' => null,
         ]);
     }
 }
