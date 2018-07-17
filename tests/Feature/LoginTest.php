@@ -56,11 +56,13 @@ class LoginTest extends FeatureTestCase {
 
     /** @test */
     public function it_validates_login() {
+        $this->withExceptionHandling();
+
         $user = User::first();
 
         $this->postJson('/login', ['email' => config('seed.default_usermail').'A', 'password' => config('seed.default_userpw').'A'])
             ->assertStatus(422)
-            ->assertJson(['email' => __('auth.failed')]);
+            ->assertValidationFailedWith('email');
 
         $this->assertNull(auth()->user());
     }

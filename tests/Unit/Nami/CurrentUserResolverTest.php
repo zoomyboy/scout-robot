@@ -2,8 +2,8 @@
 
 namespace Tests\Unit\Nami;
 
-use App\NaMi\Interfaces\UserResolver;
-use App\NaMi\Resolvers\CurrentUser;
+use App\Nami\Interfaces\UserResolver;
+use App\Nami\Resolvers\CurrentUser;
 use Tests\UnitTestCase;
 
 class CurrentUserResolverTest extends UnitTestCase {

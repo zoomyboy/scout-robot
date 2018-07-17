@@ -22,12 +22,12 @@ class BillTest extends IntegrationTestCase {
 		$this->runSeeder('SubscriptionSeeder');
 		$this->runSeeder('UsergroupSeeder');
 		$this->runSeeder('GenderSeeder');
-		$this->runSeeder('CountrySeeder');
-		$this->runSeeder('RegionSeeder');
-		$this->runSeeder('ConfessionSeeder');
+        $this->create('Country');
+        $this->create('Region', ['is_null' => false]);
+        $this->create('Confession');
 		$this->runSeeder('WaySeeder');
 		$this->runSeeder('StatusSeeder');
-		$this->runSeeder('NationalitySeeder');
+        $this->create('Nationality');
 	}
 
 	/** @test */

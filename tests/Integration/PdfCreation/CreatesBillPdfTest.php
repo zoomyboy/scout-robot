@@ -34,7 +34,7 @@ class CreatesBillPdfTest extends IntegrationTestCase
         $this->postApi("member/$member->id/billpdf", ['includeFamilies' => false, 'deadline' => null])
             ->assertSuccess();
 
-        \Storage::disk('public')->assertExists("pdf/rechnung-fuer-must.pdf");
+        \Storage::disk('public')->assertExists("pdf/rechnung-fur-must.pdf");
     }
 
     /** @test */
@@ -55,6 +55,6 @@ class CreatesBillPdfTest extends IntegrationTestCase
         $this->postApi("member/$member->id/billpdf", ['includeFamilies' => true, 'deadline' => null])
             ->assertSuccess();
 
-        \Storage::disk('public')->assertExists("pdf/rechnung-fuer-must.pdf");
+        \Storage::disk('public')->assertExists("pdf/rechnung-fur-must.pdf");
     }
 }
