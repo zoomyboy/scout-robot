@@ -2,10 +2,10 @@
 
 namespace Tests\Integration;
 
-use Tests\UnitTestCase;
 use App\Queries\RememberPdfQuery;
+use Tests\IntegrationTestCase;
 
-class RememberPdfQueryTest extends UnitTestCase {
+class RememberPdfQueryTest extends IntegrationTestCase {
 	public function setUp() {
 		parent::setUp();
 
