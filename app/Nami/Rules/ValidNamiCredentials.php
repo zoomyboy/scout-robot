@@ -36,6 +36,7 @@ class ValidNamiCredentials implements Rule
         $service = app(Service::class);
         $group = app(Group::class);
 
+        // @todo Add test for checkCredentials on service class
         return $service->checkCredentials($this->user, $this->password)
             && !$group->all()->where('id', $this->group)->isEmpty();
 
