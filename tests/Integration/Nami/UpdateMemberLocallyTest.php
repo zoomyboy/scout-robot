@@ -11,7 +11,7 @@ use Tests\Integration\NamiTestCase;
 use Tests\Traits\CreatesNamiMember;
 use \Mockery as M;
 
-class ImportMemberTest extends NamiTestCase {
+class UpdateMemberLocallyTest extends NamiTestCase {
     use CreatesNamiMember;
 
     public function setUp() {
@@ -23,7 +23,9 @@ class ImportMemberTest extends NamiTestCase {
     }
 
     /** @test */
-    public function the_manager_can_store_a_nami_response_as_a_member() {
+    public function the_manager_can_update_a_local_member_when_a_nami_member_is_pulled() {
+        $localMember = $this->create('Member', ['nami_id' => 23]);
+
         $receiver = M::mock(MemberReceiver::class);
         $receiver->shouldReceive('single')->with(23)->once()->andReturn($this->localNamiMember([
             'id' => 23,
@@ -58,9 +60,10 @@ class ImportMemberTest extends NamiTestCase {
 
         $manager = app(MemberManager::class);
 
-        $manager->store(23);
+        $manager->pull(23);
 
         $this->assertDatabaseHas('members', [
+            'id' => $localMember->id,
             'nami_id' => 23,
             'firstname' => 'Philipp',
             'lastname' => 'Lang',

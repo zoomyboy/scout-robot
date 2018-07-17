@@ -31,4 +31,11 @@ abstract class NamiTestCase extends IntegrationTestCase {
 
         $this->runSeeder(\ConfSeeder::class);
     }
+
+    public function localNamiMember($overrides = []) {
+        return $this->createNamiMember(array_merge([
+            'landId' => 1054,
+            'staatsangehoerigkeitId' => 584
+        ], $overrides));
+    }
 }

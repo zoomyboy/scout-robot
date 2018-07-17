@@ -5,6 +5,7 @@ namespace App\Nami\Manager;
 use App\Nami\Receiver\Member as MemberReceiver;
 use App\Nami\Manager\Membership as MembershipManager;
 use App\Nami\Service;
+use App\Member as MemberModel;
 
 class Member {
     private $memberReceiver;
@@ -15,7 +16,7 @@ class Member {
         $this->membershipManager = $membershipManager;
     }
 
-    public function store($memberId) {
+    public function pull($memberId) {
         $data = $this->memberReceiver->single($memberId);
 
         $gender = \App\Gender::where('nami_id', $data->geschlechtId)->where('is_null', false)->first();
@@ -35,7 +36,7 @@ class Member {
             $sub = $fee->subscriptions->first();
         }
 
-        $m = new \App\Member([
+        $attributes = [
             'firstname' => $data->vorname,
             'lastname' => $data->nachname,
             'nickname' => $data->spitzname,
@@ -57,7 +58,9 @@ class Member {
             'email_parents' => $data->emailVertretungsberechtigter,
             'nami_id' => $data->id,
             'active' => $data->status == 'Aktiv'
-        ]);
+        ];
+
+        $m = MemberModel::updateOrCreate(['nami_id' => $data->id], $attributes);
 
         $m->gender()->associate($gender);
         $m->country()->associate($country);

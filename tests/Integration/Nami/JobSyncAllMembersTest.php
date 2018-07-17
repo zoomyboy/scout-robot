@@ -11,17 +11,16 @@ use App\Nami\Manager\Membership as MembershipManager;
 use App\Nami\Receiver\Member as MemberReceiver;
 use App\Nami\Receiver\Membership as MembershipReceiver;
 use Illuminate\Support\Facades\Event;
-use Tests\IntegrationTestCase;
+use Tests\Integration\NamiTestCase;
 use \Mockery as M;
 
-class JobSyncAllMembersTest extends IntegrationTestCase {
+class JobSyncAllMembersTest extends NamiTestCase {
     public $config;
 
     public function setUp() {
         parent::setUp();
 
-        $this->runSeeder(\DatabaseSeeder::class);
-        $this->setting('defaultWay', 1);
+        $this->setupNamiDatabaseModels();
     }
 
     /** @test */
