@@ -60,7 +60,12 @@ class Member {
             'active' => $data->status == 'Aktiv'
         ];
 
-        $m = MemberModel::updateOrCreate(['nami_id' => $data->id], $attributes);
+        if (MemberModel::nami($data->id)->exists()) {
+            $m = MemberModel::nami($data->id)->first();
+            $m->update($attributes);
+        } else {
+            $m = new MemberModel($attributes);
+        }
 
         $m->gender()->associate($gender);
         $m->country()->associate($country);

@@ -100,46 +100,4 @@ class JobSyncAllMembersTest extends NamiTestCase {
             return $e->progress == 100 && $e->member->nami_id == 2334;
         });
     }
-
-    /** @test */
-    public function it_stores_subscription_of_members() {
-        $this->authAsApi();
-
-        Subscription::truncate();
-        Fee::truncate();
-
-        NaMi::createMember(['nachname' => 'Heut1', 'id' => 2334, 'status' => 'Aktiv', 'beitragsartId' => 50]);
-        NaMi::createMember(['nachname' => 'Heut2', 'id' => 2335, 'status' => 'Aktiv', 'beitragsartId' => 60]);
-        NaMi::createMember(['nachname' => 'Heut3', 'id' => 2336, 'status' => 'Aktiv', 'beitragsartId' => 70]);
-        NaMi::createMember(['nachname' => 'Heut4', 'id' => 2337, 'status' => 'Aktiv', 'beitragsartId' => 100]);
-
-        $f1 = Fee::create(['title' => 'test1', 'nami_id' => 50]);
-        $f2 = Fee::create(['title' => 'test2', 'nami_id' => 60]);
-        $f3 = Fee::create(['title' => 'test3', 'nami_id' => 70]);
-
-        $s1 = \App\Subscription::create(['title' => 'sub1', 'amount' => 10]);
-        $s1->fee()->associate($f1);
-        $s1->save();
-
-        $s2 = \App\Subscription::create(['title' => 'sub2', 'amount' => 10]);
-        $s2->fee()->associate($f2);
-        $s2->save();
-
-
-        SyncAllNaMiMembers::dispatch([
-            'status' => 'Aktiv|Inaktiv'
-        ]);
-
-        $member = Member::where('nami_id', 2334)->first();
-        $this->assertEquals('sub1', $member->subscription->title);
-
-        $member = Member::where('nami_id', 2335)->first();
-        $this->assertEquals('sub2', $member->subscription->title);
-
-        $member = Member::where('nami_id', 2336)->first();
-        $this->assertNull($member->subscription);
-
-        $member = Member::where('nami_id', 2337)->first();
-        $this->assertNull($member->subscription);
-    }
 }

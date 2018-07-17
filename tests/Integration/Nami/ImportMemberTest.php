@@ -58,7 +58,7 @@ class ImportMemberTest extends NamiTestCase {
 
         $manager = app(MemberManager::class);
 
-        $manager->store(23);
+        $manager->pull(23);
 
         $this->assertDatabaseHas('members', [
             'nami_id' => 23,
@@ -106,7 +106,7 @@ class ImportMemberTest extends NamiTestCase {
 
         $manager = app(MemberManager::class);
 
-        $manager->store(23);
+        $manager->pull(23);
 
         $this->assertDatabaseHas('members', [
             'nami_id' => 23,
@@ -127,7 +127,7 @@ class ImportMemberTest extends NamiTestCase {
 
         $manager = app(MemberManager::class);
 
-        $manager->store(23);
+        $manager->pull(23);
 
         $this->assertDatabaseHas('members', [
             'nami_id' => 23,

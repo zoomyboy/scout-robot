@@ -74,13 +74,6 @@ class ImportMembershipTest extends NamiTestCase {
         ]);
     }
 
-    private function localNamiMember($overrides = []) {
-        return $this->createNamiMember(array_merge([
-            'landId' => 1054,
-            'staatsangehoerigkeitId' => 584
-        ], $overrides));
-    }
-
     /** @test */
     public function it_doesnt_import_a_members_membership_that_doesnt_exist_locally() {
         $endingDate = Carbon::now()->addDays(10)->format('Y-m-d').' 00:00:00';
@@ -194,102 +187,5 @@ class ImportMembershipTest extends NamiTestCase {
         $this->assertDatabaseMissing('memberships', [
             'member_id' => $this->member->id
         ]);
-    }
-
-    //------------------------------ Overwrite Members ------------------------------
-    //*******************************************************************************
-    /** @test */
-    public function it_overwrites_a_members_firstname_that_is_found_locally_by_nami_id() {
-        NaMi::createMember(['vorname' => 'Hans', 'id' => 2334]);
-
-        SyncAllNaMiMembers::dispatch();
-
-        $this->assertNotNull(Member::where('firstname', 'Hans')->first());
-        $this->assertCount(1, Member::get());
-
-        NaMi::updateMember(2334, ['vorname' => 'Peter']);
-
-        SyncAllNaMiMembers::dispatch();
-
-        $this->assertCount(1, Member::get());
-        $this->assertNotNull(Member::where('firstname', 'Peter')->first());
-    }
-
-    /** @test */
-    public function it_only_stores_active_members() {
-        $this->authAsApi();
-
-        NaMi::createMember(['nachname' => 'Heut', 'id' => 2334, 'status' => 'Aktiv']);
-        NaMi::createMember(['nachname' => 'Heut2', 'id' => 2335, 'status' => 'Inaktiv']);
-
-        SyncAllNaMiMembers::dispatch([
-            'status' => 'Aktiv'
-        ]);
-
-        $activeMember = Member::where('nami_id', 2334)->first();
-        $inactiveMember = Member::where('nami_id', 2335)->first();
-        $this->assertNotNull($activeMember);
-        $this->assertNull($inactiveMember);
-    }
-
-    /** @test */
-    public function it_stores_active_state_of_members() {
-        $this->authAsApi();
-
-        NaMi::createMember(['nachname' => 'Heut', 'id' => 2334, 'status' => 'Aktiv']);
-        NaMi::createMember(['nachname' => 'Heut2', 'id' => 2335, 'status' => 'Inaktiv']);
-
-        SyncAllNaMiMembers::dispatch([
-            'status' => 'Aktiv|Inaktiv'
-        ]);
-
-        $activeMember = Member::where('nami_id', 2334)->first();
-        $inactiveMember = Member::where('nami_id', 2335)->first();
-        $this->assertNotNull($activeMember);
-        $this->assertNotNull($inactiveMember);
-        $this->assertFalse($inactiveMember->active);
-        $this->assertTrue($activeMember->active);
-    }
-
-    /** @test */
-    public function it_stores_subscription_of_members() {
-        $this->authAsApi();
-
-        Subscription::truncate();
-        Fee::truncate();
-
-        NaMi::createMember(['nachname' => 'Heut1', 'id' => 2334, 'status' => 'Aktiv', 'beitragsartId' => 50]);
-        NaMi::createMember(['nachname' => 'Heut2', 'id' => 2335, 'status' => 'Aktiv', 'beitragsartId' => 60]);
-        NaMi::createMember(['nachname' => 'Heut3', 'id' => 2336, 'status' => 'Aktiv', 'beitragsartId' => 70]);
-        NaMi::createMember(['nachname' => 'Heut4', 'id' => 2337, 'status' => 'Aktiv', 'beitragsartId' => 100]);
-
-        $f1 = Fee::create(['title' => 'test1', 'nami_id' => 50]);
-        $f2 = Fee::create(['title' => 'test2', 'nami_id' => 60]);
-        $f3 = Fee::create(['title' => 'test3', 'nami_id' => 70]);
-
-        $s1 = \App\Subscription::create(['title' => 'sub1', 'amount' => 10]);
-        $s1->fee()->associate($f1);
-        $s1->save();
-
-        $s2 = \App\Subscription::create(['title' => 'sub2', 'amount' => 10]);
-        $s2->fee()->associate($f2);
-        $s2->save();
-
-
-        SyncAllNaMiMembers::dispatch([
-            'status' => 'Aktiv|Inaktiv'
-        ]);
-
-        $member = Member::where('nami_id', 2334)->first();
-        $this->assertEquals('sub1', $member->subscription->title);
-
-        $member = Member::where('nami_id', 2335)->first();
-        $this->assertEquals('sub2', $member->subscription->title);
-
-        $member = Member::where('nami_id', 2336)->first();
-        $this->assertNull($member->subscription);
-
-        $member = Member::where('nami_id', 2337)->first();
-        $this->assertNull($member->subscription);
     }
 }
