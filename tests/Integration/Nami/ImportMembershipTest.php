@@ -6,17 +6,17 @@ use App\Nami\Manager\Membership as MembershipManager;
 use App\Nami\Receiver\Membership as MembershipReceiver;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Config;
-use Tests\IntegrationTestCase;
+use Tests\Integration\NamiTestCase;
 use Tests\Traits\CreatesNamiMember;
 use \Mockery as M;
 
-class ImportMembershipTest extends IntegrationTestCase {
+class ImportMembershipTest extends NamiTestCase {
     use CreatesNamiMember;
 
     public function setUp() {
         parent::setUp();
 
-        $this->runSeeder(\DatabaseSeeder::class);
+        $this->setupNamiDatabaseModels();
 
         $this->member = $this->create('Member', ['nami_id' => 23]);
 

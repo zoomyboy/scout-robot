@@ -7,40 +7,17 @@ use App\Nami\Manager\Membership as MembershipManager;
 use App\Nami\Receiver\Member as MemberReceiver;
 use App\Nami\Receiver\Membership as MembershipReceiver;
 use Illuminate\Support\Facades\Config;
-use Tests\IntegrationTestCase;
+use Tests\Integration\NamiTestCase;
 use Tests\Traits\CreatesNamiMember;
 use \Mockery as M;
 
-class ImportMemberTest extends IntegrationTestCase {
+class ImportMemberTest extends NamiTestCase {
     use CreatesNamiMember;
 
     public function setUp() {
         parent::setUp();
 
-        \App\Country::create(['nami_title' => 'NDeutsch', 'nami_id' => 1054, 'title' => 'Deutsch']);
-        $default = \App\Country::create(['nami_title' => 'NEng', 'nami_id' => 455, 'title' => 'Englisch']);
-        Config::set('seed.default_country', 'Englisch');
-
-        \App\Nationality::create(['nami_title' => 'NDeutsch', 'nami_id' => 334, 'title' => 'Deutsch']);
-        \App\Nationality::create(['nami_title' => 'NEng', 'nami_id' => 584, 'title' => 'Englisch']);
-
-        \App\Way::create(['title' => 'Way1']);
-        \App\Way::create(['title' => 'Way2']);
-
-        \App\Gender::create(['nami_title' => 'M', 'nami_id' => 100, 'title' => 'M', 'is_null' => false]);
-        \App\Gender::create(['nami_title' => 'W', 'nami_id' => 101, 'title' => 'W', 'is_null' => false]);
-
-        \App\Region::create(['nami_title' => 'NRW', 'nami_id' => 200, 'title' => 'NRW', 'is_null' => false]);
-        \App\Region::create(['nami_title' => 'BW', 'nami_id' => 201, 'title' => 'BW', 'is_null' => false]);
-
-        \App\Confession::create(['nami_title' => 'RK', 'nami_id' => 300, 'title' => 'RK']);
-        \App\Confession::create(['nami_title' => 'E', 'nami_id' => 301, 'title' => 'E']);
-
-        $this->runSeeder(\FeeSeeder::class);
-        $this->runSeeder(\SubscriptionSeeder::class);
-
-        $this->runSeeder(\ConfSeeder::class);
-
+        $this->setupNamiDatabaseModels();
         $this->membershipManager = M::mock(MembershipManager::class);
         $this->app->instance(MembershipManager::class, $this->membershipManager);
     }
@@ -163,47 +140,5 @@ class ImportMemberTest extends IntegrationTestCase {
             'nami_id' => 23,
             'active' => false
         ]);
-    }
-
-    /** @test */
-    public function it_stores_subscription_of_members() {
-        $this->authAsApi();
-
-        Subscription::truncate();
-        Fee::truncate();
-
-        NaMi::createMember(['nachname' => 'Heut1', 'id' => 2334, 'status' => 'Aktiv', 'beitragsartId' => 50]);
-        NaMi::createMember(['nachname' => 'Heut2', 'id' => 2335, 'status' => 'Aktiv', 'beitragsartId' => 60]);
-        NaMi::createMember(['nachname' => 'Heut3', 'id' => 2336, 'status' => 'Aktiv', 'beitragsartId' => 70]);
-        NaMi::createMember(['nachname' => 'Heut4', 'id' => 2337, 'status' => 'Aktiv', 'beitragsartId' => 100]);
-
-        $f1 = Fee::create(['title' => 'test1', 'nami_id' => 50]);
-        $f2 = Fee::create(['title' => 'test2', 'nami_id' => 60]);
-        $f3 = Fee::create(['title' => 'test3', 'nami_id' => 70]);
-
-        $s1 = \App\Subscription::create(['title' => 'sub1', 'amount' => 10]);
-        $s1->fee()->associate($f1);
-        $s1->save();
-
-        $s2 = \App\Subscription::create(['title' => 'sub2', 'amount' => 10]);
-        $s2->fee()->associate($f2);
-        $s2->save();
-
-
-        SyncAllNaMiMembers::dispatch([
-            'status' => 'Aktiv|Inaktiv'
-        ]);
-
-        $member = Member::where('nami_id', 2334)->first();
-        $this->assertEquals('sub1', $member->subscription->title);
-
-        $member = Member::where('nami_id', 2335)->first();
-        $this->assertEquals('sub2', $member->subscription->title);
-
-        $member = Member::where('nami_id', 2336)->first();
-        $this->assertNull($member->subscription);
-
-        $member = Member::where('nami_id', 2337)->first();
-        $this->assertNull($member->subscription);
     }
 }
