@@ -2,12 +2,13 @@
 
 namespace App\Http\Requests;
 
-use Zoomyboy\BaseRequest\Request;
-use Zoomyboy\Fileupload\Image;
+use App\Exceptions\NaMi\GroupAccessDeniedException;
 use App\Exceptions\NaMi\LoginException;
 use App\Exceptions\NaMi\TooManyLoginAttemptsException;
-use App\Exceptions\NaMi\GroupAccessDeniedException;
 use App\Facades\NaMi\NaMiGroup;
+use App\Nami\Rules\ValidNamiCredentials;
+use Zoomyboy\BaseRequest\Request;
+use Zoomyboy\Fileupload\Image;
 
 class ConfUpdateRequest extends Request
 {
@@ -24,30 +25,27 @@ class ConfUpdateRequest extends Request
      */
     public function rules()
     {
-		return [];
+        $rules = [];
+
+        if ($this->has(['namiUser', 'namiPassword'])) {
+            $rules['namiUser'] = [
+                'required', new ValidNamiCredentials($this->namiUser, $this->namiPassword)
+            ];
+        }
+
+        if ($this->namiEnabled && $this->namiGroup) {
+            // @todo add Validation for Nami Group Access
+            $rules['namiGroup'] = ['numeric', 'max:8'];
+        }
+
+        return $rules;
     }
 
 	/**
 	 * Check nami access
 	 */
 	public function customRules() {
-		if (!$this->namiEnabled) {
-			return [];
-		} else {
-			if (!$this->namiUser) {
-				return ['namiUser' => 'Dieses Feld ist erforderlich'];
-			}
-
-			if (!$this->namiGroup) {
-				return ['namiGroup' => 'Dieses Feld ist erforderlich'];
-			}
-		}
-
-
-		if (!is_numeric($this->namiGroup)) {
-			return ['namiGroup' => 'Das hier sollte eine 6-stellige Zahl sein.'];
-		}
-
+        return [];
 		try {
 			$response = app('nami')->checkCredentials($this->namiUser, $this->namiPassword);
 		} catch(LoginException $e) {
