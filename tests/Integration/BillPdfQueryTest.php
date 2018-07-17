@@ -10,14 +10,14 @@ class BillPdfQueryTest extends IntegrationTestCase {
 	public function setUp() {
 		parent::setUp();
 
-		$this->runSeeder('FeeSeeder');
-		$this->runSeeder('WaySeeder');
-		$this->runSeeder('ConfessionSeeder');
-		$this->runSeeder('RegionSeeder');
-		$this->runSeeder('CountrySeeder');
-		$this->runSeeder('GenderSeeder');
+        $this->create('Fee');
+        $this->create('Way');
+        $this->create('Confession');
+        $this->create('Region', ['is_null' => false]);
+        $this->create('Country');
+        $this->create('Gender', ['is_null' => false]);
 		$this->runSeeder('StatusSeeder');
-		$this->runSeeder('NationalitySeeder');
+        $this->create('Nationality');
 
 		$this->createMany('Subscription', 3);
 	}
