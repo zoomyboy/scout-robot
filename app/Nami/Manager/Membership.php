@@ -23,18 +23,20 @@ class Membership {
             return $this->receiver->single($memberId, $ms->id);
         })->filter(function($ms) {
             return Activity::nami($ms->taetigkeitId)->exists()
-            && (!isset($ms->untergliederungId) || Activity::nami($ms->taetigkeitId)->first()->groups()->nami($ms->untergliederungId)->exists())
-            && (!$ms->aktivBis || Carbon::parse($ms->aktivBis)->isFuture());
+            && (!isset($ms->untergliederungId) || Activity::nami($ms->taetigkeitId)->first()->groups()->nami($ms->untergliederungId)->exists());
         })->each(function($ms) use ($member) {
-
-            $member->memberships()->updateOrCreate(['nami_id' => $ms->id], [
-                'activity_id' => Activity::nami($ms->taetigkeitId)->first()->id,
-                'nami_id' => $ms->id,
-                'group_id' => isset($ms->untergliederungId)
-                    ? Group::nami($ms->untergliederungId)->first()->id
-                    : null,
-                'created_at' => Carbon::parse($ms->aktivVon)
-            ]);
+            if(!$ms->aktivBis || Carbon::parse($ms->aktivBis)->isFuture()) {
+                $member->memberships()->updateOrCreate(['nami_id' => $ms->id], [
+                    'activity_id' => Activity::nami($ms->taetigkeitId)->first()->id,
+                    'nami_id' => $ms->id,
+                    'group_id' => isset($ms->untergliederungId)
+                        ? Group::nami($ms->untergliederungId)->first()->id
+                        : null,
+                    'created_at' => Carbon::parse($ms->aktivVon)
+                ]);
+            } elseif(Carbon::parse($ms->aktivBis)->isPast()) {
+                $member->memberships()->nami($ms->id)->delete();
+            }
         });
     }
 }

@@ -117,6 +117,38 @@ class ImportMembershipTest extends NamiTestCase {
     }
 
     /** @test */
+    public function it_deletes_a_local_membership_that_has_ended() {
+        $membership = new Membership([
+            'nami_id' => 588,
+            'activity_id' => $this->activities[0]->id,
+            'group_id' => $this->groups[0]->id
+        ]);
+        Member::nami(23)->first()->memberships()->save($membership);
+
+        $endingDate = Carbon::now()->subDays(10)->format('Y-m-d').' 00:00:00';
+
+        $receiver = M::mock(MembershipReceiver::class);
+        $receiver->shouldReceive('all')->with(23)->once()
+            ->andReturn(collect(json_decode('[{"id": 588}]')));
+
+        $receiver->shouldReceive('single')->with(23, 588)->once()->andReturn((object)[
+            'aktivVon' => '2016-01-01 00:00:00',
+            'aktivBis' => $endingDate,
+            'id' => 588,
+            'taetigkeitId' => 251,
+            'untergliederungId' => 301
+        ]);
+
+        $this->app->instance(MembershipReceiver::class, $receiver);
+
+        app(MembershipManager::class)->pull(23);
+
+        $this->assertDatabaseMissing('memberships', [
+            'member_id' => $this->member->id
+        ]);
+    }
+
+    /** @test */
     public function it_doesnt_import_a_members_membership_that_doesnt_exist_locally() {
         $endingDate = Carbon::now()->addDays(10)->format('Y-m-d').' 00:00:00';
 
