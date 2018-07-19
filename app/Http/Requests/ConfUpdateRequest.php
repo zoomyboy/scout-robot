@@ -18,6 +18,10 @@ class ConfUpdateRequest extends Request
 		return auth()->guard('api')->user()->can('update', $this->route('conf'));
 	}
 
+    public function isNamiEnabled() {
+        return \Setting::get('namiEnabled');
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -27,17 +31,36 @@ class ConfUpdateRequest extends Request
     {
         $rules = [];
 
-        if ($this->namiEnabled && $this->namiGroup) {
-            $rules['namiGroup'] = ['numeric', 'max:8'];
+        if ($this->namiEnabled) {
+            $rules['namiUser'] = ['required'];
+            $rules['namiGroup'] = ['numeric'];
         }
 
-        if ($this->namiEnabled && $this->has(['namiUser', 'namiPassword', 'namiGroup'])) {
+        if($this->namiEnabled && !$this->isNamiEnabled()) {
+            $rules['namiPassword'] = ['required'];
+        }
+
+        if ($this->namiEnabled && $this->filled(['namiUser', 'namiPassword', 'namiGroup'])) {
             $rules['namiUser'] = [
-                'required', new ValidNamiCredentials($this->namiUser, $this->namiPassword, $this->namiGroup)
+                'required', app(ValidNamiCredentials::class)
             ];
         }
 
         return $rules;
+    }
+
+    public function modifyFillables($fill) {
+        if (!array_key_exists('namiEnabled', $fill) || $fill['namiEnabled'] === false) {
+            $fill['namiGroup'] = null;
+            $fill['namiUser'] = null;
+            $fill['namiPassword'] = null;
+        }
+
+        if ($this->isNamiEnabled() && !$this->namiPassword) {
+            $fill = array_except($fill, ['namiPassword', 'namiGroup', 'namiUser']);
+        }
+
+        return $fill;
     }
 
 	/**

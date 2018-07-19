@@ -27,7 +27,7 @@
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
-        "mockery/mockery": "0.9.*",
+        "mockery/mockery": "1.1.*",
         "phpunit/phpunit": "~6.0",
         "filp/whoops": "~2.0",
         "zoomyboy/tests": "dev-master"

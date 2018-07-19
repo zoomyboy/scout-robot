@@ -21,6 +21,10 @@ class Service {
         $this->cookie = new \GuzzleHttp\Cookie\CookieJar();
     }
 
+    public function setUser(UserResolver $user) {
+        $this->user = $user;
+    }
+
     public function login() {
         if (!$this->user->hasCredentials()) {
             throw new LoginException('Benutzer oder passwort für NaMi nicht gesetzt.');

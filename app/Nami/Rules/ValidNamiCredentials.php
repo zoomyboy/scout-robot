@@ -6,6 +6,7 @@ use App\Nami\Receiver\Group;
 use App\Nami\Resolvers\InlineUser;
 use App\Nami\Service;
 use Illuminate\Contracts\Validation\Rule;
+use Illuminate\Http\Request;
 
 class ValidNamiCredentials implements Rule
 {
@@ -18,11 +19,11 @@ class ValidNamiCredentials implements Rule
      *
      * @return void
      */
-    public function __construct($user, $password, $group)
+    public function __construct(Request $request)
     {
-        $this->user = $user;
-        $this->password = $password;
-        $this->group = $group;
+        $this->user = $request->namiUser;
+        $this->password = $request->namiPassword;
+        $this->group = $request->namiGroup;
     }
 
     /**
@@ -34,11 +35,13 @@ class ValidNamiCredentials implements Rule
      */
     public function passes($attribute, $value)
     {
-        $service = app(Service::class);
-        $service->setUser(new InlineUser($this->user, $this->password, 0));
-        $group = app(Group::class);
+        $service = app()->makeWith(Service::class, [
+            'user' => new InlineUser($this->user, $this->password, $this->group)
+        ]);
+        $group = app()->makeWith(Group::class, [
+            'service' => $service
+        ]);
 
-        // @todo Add test for checkCredentials on service class
         return $service->checkCredentials()
             && !$group->all()->where('id', $this->group)->isEmpty();
 

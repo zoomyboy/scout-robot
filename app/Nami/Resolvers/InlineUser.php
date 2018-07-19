@@ -33,6 +33,6 @@ class InlineUser implements UserResolver {
     }
 
     public function hasCredentials() {
-        return (bool)$this->user && $this->password;
+        return (bool)$this->user && (bool)$this->password;
     }
 }
