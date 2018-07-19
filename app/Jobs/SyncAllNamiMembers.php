@@ -42,12 +42,12 @@ class SyncAllNamiMembers implements ShouldQueue
 
         foreach($members as $i => $member) {
             if (Member::nami($member->id)->exists()) {
-                $member = $manager->update($member->id);
+                $member = $manager->pull($member->id);
                 event(new MemberUpdated($member, $i+1, count($members)));
                 continue;
             }
 
-            $member = $manager->store($member->id);
+            $member = $manager->pull($member->id);
 
             if ($member == null) {
                 return false;

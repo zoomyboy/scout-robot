@@ -16,7 +16,7 @@ class Membership {
         $this->receiver = $receiver;
     }
 
-    public function store($memberId) {
+    public function pull($memberId) {
         $member = Member::nami($memberId)->first();
 
         $memberships = $this->receiver->all($memberId)->map(function($ms) {

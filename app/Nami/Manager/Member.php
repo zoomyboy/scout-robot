@@ -77,7 +77,7 @@ class Member {
 
         $m->save();
 
-        $this->membershipManager->import($memberId);
+        $this->membershipManager->pull($memberId);
 
         return $m;
     }

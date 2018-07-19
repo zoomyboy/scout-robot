@@ -39,8 +39,8 @@ class JobSyncAllMembersTest extends NamiTestCase {
         $secondMemberModel = new Member(['nami_id' => 2335]);
 
         $memberManager = M::mock(MemberManager::class);
-        $memberManager->shouldReceive('store')->once()->with(2334)->andReturn($firstMemberModel);
-        $memberManager->shouldReceive('update')->once()->with(2335)->andReturn($secondMemberModel);
+        $memberManager->shouldReceive('pull')->once()->with(2334)->andReturn($firstMemberModel);
+        $memberManager->shouldReceive('pull')->once()->with(2335)->andReturn($secondMemberModel);
         $this->app->instance(MemberManager::class, $memberManager);
 
         SyncAllNamiMembers::dispatch();
@@ -65,8 +65,8 @@ class JobSyncAllMembersTest extends NamiTestCase {
         $firstMemberModel = new Member(['nami_id' => 2334]);
 
         $memberManager = M::mock(MemberManager::class);
-        $memberManager->shouldReceive('store')->once()->with(2334)->andReturn($firstMemberModel);
-        $memberManager->shouldReceive('store')->with(2335)->never();
+        $memberManager->shouldReceive('pull')->once()->with(2334)->andReturn($firstMemberModel);
+        $memberManager->shouldReceive('pull')->with(2335)->never();
         $this->app->instance(MemberManager::class, $memberManager);
 
         dispatch(new SyncAllNamiMembers(['status' => ['Aktiv']]));
@@ -92,7 +92,7 @@ class JobSyncAllMembersTest extends NamiTestCase {
         $localMember = $this->create('Member', ['nami_id' => 2334]);
 
         $memberManager = M::mock(MemberManager::class);
-        $memberManager->shouldReceive('update')->once()->with(2334)->andReturn($localMember);
+        $memberManager->shouldReceive('pull')->once()->with(2334)->andReturn($localMember);
         $this->app->instance(MemberManager::class, $memberManager);
 
         dispatch(new SyncAllNamiMembers(['status' => ['Aktiv']]));

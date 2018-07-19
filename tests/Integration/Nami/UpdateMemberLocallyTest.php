@@ -56,7 +56,7 @@ class UpdateMemberLocallyTest extends NamiTestCase {
             'landId' => 1054    // Deutsch
         ]));
         $this->app->instance(MemberReceiver::class, $receiver);
-        $this->membershipManager->shouldReceive('import')->with(23)->andReturnNull();
+        $this->membershipManager->shouldReceive('pull')->with(23)->andReturnNull();
 
         $manager = app(MemberManager::class);
 
@@ -107,7 +107,7 @@ class UpdateMemberLocallyTest extends NamiTestCase {
             'regionId' => 90
         ]));
         $this->app->instance(MemberReceiver::class, $receiver);
-        $this->membershipManager->shouldReceive('import')->with(23)->andReturnNull();
+        $this->membershipManager->shouldReceive('pull')->with(23)->andReturnNull();
 
         $manager = app(MemberManager::class);
 

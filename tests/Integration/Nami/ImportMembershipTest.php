@@ -57,7 +57,7 @@ class ImportMembershipTest extends NamiTestCase {
         ]);
         $this->app->instance(MembershipReceiver::class, $receiver);
 
-        app(MembershipManager::class)->store(23);
+        app(MembershipManager::class)->pull(23);
 
         $this->assertDatabaseHas('memberships', [
             'activity_id' => $this->activities[0]->id,
@@ -100,7 +100,7 @@ class ImportMembershipTest extends NamiTestCase {
 
         $this->app->instance(MembershipReceiver::class, $receiver);
 
-        app(MembershipManager::class)->store(23);
+        app(MembershipManager::class)->pull(23);
 
         $this->assertDatabaseMissing('memberships', [
             'member_id' => $this->member->id
@@ -124,7 +124,7 @@ class ImportMembershipTest extends NamiTestCase {
 
         $this->app->instance(MembershipReceiver::class, $receiver);
 
-        app(MembershipManager::class)->store(23);
+        app(MembershipManager::class)->pull(23);
 
         $this->assertDatabaseHas('memberships', [
             'member_id' => $this->member->id,
@@ -157,7 +157,7 @@ class ImportMembershipTest extends NamiTestCase {
 
         $this->app->instance(MembershipReceiver::class, $receiver);
 
-        app(MembershipManager::class)->store(23);
+        app(MembershipManager::class)->pull(23);
 
         $this->assertDatabaseMissing('memberships', [
             'member_id' => $this->member->id
@@ -182,7 +182,7 @@ class ImportMembershipTest extends NamiTestCase {
 
         $this->app->instance(MembershipReceiver::class, $receiver);
 
-        app(MembershipManager::class)->store(23);
+        app(MembershipManager::class)->pull(23);
 
         $this->assertDatabaseMissing('memberships', [
             'member_id' => $this->member->id

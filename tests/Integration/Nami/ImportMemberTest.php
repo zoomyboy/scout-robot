@@ -54,7 +54,7 @@ class ImportMemberTest extends NamiTestCase {
             'landId' => 1054    // Deutsch
         ]));
         $this->app->instance(MemberReceiver::class, $receiver);
-        $this->membershipManager->shouldReceive('import')->with(23)->andReturnNull();
+        $this->membershipManager->shouldReceive('pull')->with(23)->andReturnNull();
 
         $manager = app(MemberManager::class);
 
@@ -102,7 +102,7 @@ class ImportMemberTest extends NamiTestCase {
             'regionId' => 90
         ]));
         $this->app->instance(MemberReceiver::class, $receiver);
-        $this->membershipManager->shouldReceive('import')->with(23)->andReturnNull();
+        $this->membershipManager->shouldReceive('pull')->with(23)->andReturnNull();
 
         $manager = app(MemberManager::class);
 
@@ -123,7 +123,7 @@ class ImportMemberTest extends NamiTestCase {
             'status' => 'Inaktiv'
         ]));
         $this->app->instance(MemberReceiver::class, $receiver);
-        $this->membershipManager->shouldReceive('import')->with(23)->andReturnNull();
+        $this->membershipManager->shouldReceive('pull')->with(23)->andReturnNull();
 
         $manager = app(MemberManager::class);
 
