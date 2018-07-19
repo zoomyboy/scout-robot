@@ -2,6 +2,8 @@
 
 namespace Tests\Integration\Nami;
 
+use App\Member;
+use App\Membership;
 use App\Nami\Manager\Membership as MembershipManager;
 use App\Nami\Receiver\Membership as MembershipReceiver;
 use Carbon\Carbon;
@@ -24,11 +26,12 @@ class ImportMembershipTest extends NamiTestCase {
             ['nami_id' => 251], ['nami_id' => 252]
         ]);
 
-        $this->groups = $this->createMany('Group', 2, [
-            ['nami_id' => 301], ['nami_id' => 401]
+        $this->groups = $this->createMany('Group', 3, [
+            ['nami_id' => 301], ['nami_id' => 401], ['nami_id' => 501]
         ]);
 
         $this->activities[0]->groups()->attach($this->groups[0]);
+        $this->activities[1]->groups()->attach($this->groups[1]);
         $this->activities[1]->groups()->attach($this->groups[1]);
     }
 
@@ -71,6 +74,45 @@ class ImportMembershipTest extends NamiTestCase {
             'group_id' => $this->groups[1]->id,
             'nami_id' => 589,
             'member_id' => $this->member->id
+        ]);
+    }
+
+    /** @test */
+    public function it_updates_a_local_membership() {
+        $membership = new Membership([
+            'nami_id' => 588,
+            'activity_id' => $this->activities[0]->id,
+            'group_id' => $this->groups[0]->id
+        ]);
+        Member::nami(23)->first()->memberships()->save($membership);
+
+        $endingDate = Carbon::now()->addDays(10)->format('Y-m-d').' 00:00:00';
+
+        $receiver = M::mock(MembershipReceiver::class);
+        $receiver->shouldReceive('all')->with(23)->once()
+            ->andReturn(collect(json_decode('[{"id": 588}]')));
+
+        $receiver->shouldReceive('single')->with(23, 588)->once()->andReturn((object)[
+            'aktivVon' => '2016-01-01 00:00:00',
+            'aktivBis' => "",
+            'id' => 588,
+            'taetigkeitId' => 252,
+            'untergliederungId' => 401
+        ]);
+
+        $this->app->instance(MembershipReceiver::class, $receiver);
+
+        app(MembershipManager::class)->pull(23);
+
+        $this->assertDatabaseHas('memberships', [
+            'activity_id' => $this->activities[1]->id,
+            'group_id' => $this->groups[1]->id,
+            'nami_id' => 588,
+            'member_id' => $this->member->id
+        ]);
+        $this->assertDatabaseMissing('memberships', [
+            'group_id' => $this->groups[0]->id,
+            'nami_id' => 588,
         ]);
     }
 

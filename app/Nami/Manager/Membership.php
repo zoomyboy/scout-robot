@@ -26,7 +26,8 @@ class Membership {
             && (!isset($ms->untergliederungId) || Activity::nami($ms->taetigkeitId)->first()->groups()->nami($ms->untergliederungId)->exists())
             && (!$ms->aktivBis || Carbon::parse($ms->aktivBis)->isFuture());
         })->each(function($ms) use ($member) {
-            $member->memberships()->create([
+
+            $member->memberships()->updateOrCreate(['nami_id' => $ms->id], [
                 'activity_id' => Activity::nami($ms->taetigkeitId)->first()->id,
                 'nami_id' => $ms->id,
                 'group_id' => isset($ms->untergliederungId)
