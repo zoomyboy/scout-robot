@@ -21,7 +21,7 @@ class MemberReceiverTest extends UnitTestCase {
     /** @test */
     public function it_gets_all_member_ids() {
         $service = M::mock(Service::class);
-        $service->shouldReceive('get')->with('/ica/rest/nami/mitglied/filtered-for-navigation/gruppierung/gruppierung/3/flist')
+        $service->shouldReceive('get')->with('/ica/rest/nami/mitglied/filtered-for-navigation/gruppierung/gruppierung/3/flist')->once()
             ->andReturn(collect(json_decode('{"success":true,"data":[{"id":2334}]}')));
         $this->app->instance(Service::class, $service);
 
@@ -32,7 +32,7 @@ class MemberReceiverTest extends UnitTestCase {
     /** @test */
     public function it_gets_a_single_member() {
         $service = M::mock(Service::class);
-        $service->shouldReceive('get')->with('/ica/rest/nami/mitglied/filtered-for-navigation/gruppierung/gruppierung/3/2334')
+        $service->shouldReceive('get')->with('/ica/rest/nami/mitglied/filtered-for-navigation/gruppierung/gruppierung/3/2334')->once()
             ->andReturn(
                 collect(json_decode('{"success":true,"data":{"id":2334,"geschlechtId": 55}}'))
             );

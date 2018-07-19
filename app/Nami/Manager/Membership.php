@@ -19,8 +19,8 @@ class Membership {
     public function pull($memberId) {
         $member = Member::nami($memberId)->first();
 
-        $memberships = $this->receiver->all($memberId)->map(function($ms) {
-            return $this->receiver->single($ms->id);
+        $memberships = $this->receiver->all($memberId)->map(function($ms) use ($memberId) {
+            return $this->receiver->single($memberId, $ms->id);
         })->filter(function($ms) {
             return Activity::nami($ms->taetigkeitId)->exists()
             && (!isset($ms->untergliederungId) || Activity::nami($ms->taetigkeitId)->first()->groups()->nami($ms->untergliederungId)->exists())

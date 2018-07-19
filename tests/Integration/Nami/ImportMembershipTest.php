@@ -40,7 +40,7 @@ class ImportMembershipTest extends NamiTestCase {
         $receiver->shouldReceive('all')->with(23)->once()
             ->andReturn(collect(json_decode('[{"id": 588}, {"id": 589}]')));
 
-        $receiver->shouldReceive('single')->with(588)->once()->andReturn((object)[
+        $receiver->shouldReceive('single')->with(23, 588)->once()->andReturn((object)[
             'aktivVon' => '2016-01-01 00:00:00',
             'aktivBis' => "",
             'id' => 588,
@@ -48,7 +48,7 @@ class ImportMembershipTest extends NamiTestCase {
             'untergliederungId' => 301
         ]);
 
-        $receiver->shouldReceive('single')->with(589)->once()->andReturn((object)[
+        $receiver->shouldReceive('single')->with(23, 589)->once()->andReturn((object)[
             'aktivVon' => '2017-01-01 00:00:00',
             'aktivBis' => $endingDate,
             'id' => 589,
@@ -82,7 +82,7 @@ class ImportMembershipTest extends NamiTestCase {
         $receiver->shouldReceive('all')->with(23)->once()
             ->andReturn(collect(json_decode('[{"id": 588}, {"id": 589}]')));
 
-        $receiver->shouldReceive('single')->with(588)->once()->andReturn((object)[
+        $receiver->shouldReceive('single')->with(23, 588)->once()->andReturn((object)[
             'aktivVon' => '2016-01-01 00:00:00',
             'aktivBis' => "",
             'id' => 588,
@@ -90,7 +90,7 @@ class ImportMembershipTest extends NamiTestCase {
             'untergliederungId' => 301
         ]);
 
-        $receiver->shouldReceive('single')->with(589)->once()->andReturn((object)[
+        $receiver->shouldReceive('single')->with(23, 589)->once()->andReturn((object)[
             'aktivVon' => '2016-01-01 00:00:00',
             'aktivBis' => "",
             'id' => 588,
@@ -115,7 +115,7 @@ class ImportMembershipTest extends NamiTestCase {
         $receiver->shouldReceive('all')->with(23)->once()
             ->andReturn(collect(json_decode('[{"id": 588}]')));
 
-        $receiver->shouldReceive('single')->with(588)->once()->andReturn((object)[
+        $receiver->shouldReceive('single')->with(23, 588)->once()->andReturn((object)[
             'aktivVon' => '2016-01-01 00:00:00',
             'aktivBis' => "",
             'id' => 588,
@@ -139,7 +139,7 @@ class ImportMembershipTest extends NamiTestCase {
         $receiver->shouldReceive('all')->with(23)->once()
             ->andReturn(collect(json_decode('[{"id": 588}, {"id": 589}]')));
 
-        $receiver->shouldReceive('single')->with(588)->once()->andReturn((object)[
+        $receiver->shouldReceive('single')->with(23, 588)->once()->andReturn((object)[
             'aktivVon' => '2016-01-01 00:00:00',
             'aktivBis' => "",
             'id' => 588,
@@ -147,7 +147,7 @@ class ImportMembershipTest extends NamiTestCase {
             'untergliederungId' => 401
         ]);
 
-        $receiver->shouldReceive('single')->with(589)->once()->andReturn((object)[
+        $receiver->shouldReceive('single')->with(23, 589)->once()->andReturn((object)[
             'aktivVon' => '2016-01-01 00:00:00',
             'aktivBis' => "",
             'id' => 589,
@@ -172,7 +172,7 @@ class ImportMembershipTest extends NamiTestCase {
         $receiver->shouldReceive('all')->with(23)->once()
             ->andReturn(collect(json_decode('[{"id": 588}]')));
 
-        $receiver->shouldReceive('single')->with(588)->once()->andReturn((object)[
+        $receiver->shouldReceive('single')->with(23, 588)->once()->andReturn((object)[
             'aktivVon' => '2016-01-01 00:00:00',
             'aktivBis' => $endingDate,
             'id' => 588,
