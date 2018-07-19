@@ -44,7 +44,6 @@ class ValidNamiCredentials implements Rule
 
         return $service->checkCredentials()
             && !$group->all()->where('id', $this->group)->isEmpty();
-
     }
 
     /**

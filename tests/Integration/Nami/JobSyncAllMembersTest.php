@@ -11,6 +11,7 @@ use App\Nami\Manager\Membership as MembershipManager;
 use App\Nami\Receiver\Member as MemberReceiver;
 use App\Nami\Receiver\Membership as MembershipReceiver;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Queue;
 use Tests\Integration\NamiTestCase;
 use \Mockery as M;
 

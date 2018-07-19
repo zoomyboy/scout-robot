@@ -7,7 +7,7 @@ use Illuminate\Validation\Rule;
 use Zoomyboy\BaseRequest\Request;
 use \App\Member;
 
-class NaMiGetRequest extends Request
+class NamiGetRequest extends Request
 {
 	public $model = Member::class;
 
@@ -25,7 +25,7 @@ class NaMiGetRequest extends Request
     }
 
 	public function customRules() {
-		if (!\App\Conf::first()->namiEnabled) {
+		if (!\Setting::get('namiEnabled')) {
 			return ['error' => 'NaMi ist nicht eingeschaltet. Es kann keine Synchronisation stattfinden.'];
 		}
 
@@ -36,15 +36,19 @@ class NaMiGetRequest extends Request
         if (!$this->active && !$this->inactive) {$filter = [];}
 
         if (!$this->active && $this->inactive) {
-            $filter = ['status' => 'Inaktiv'];
+            $filter = ['status' => ['Inaktiv']];
         }
 
         if ($this->active && !$this->inactive) {
-            $filter = ['status' => 'Aktiv'];
+            $filter = ['status' => ['Aktiv']];
         }
 
         if ($this->active && $this->inactive) {
-            $filter = ['status' => 'Aktiv|Inaktiv'];
+            $filter = ['status' => ['Aktiv', 'Inaktiv']];
+        }
+
+        if (!$this->active && !$this->inactive) {
+            $filter = ['status' => []];
         }
 
 		SyncAllNamiMembers::dispatch($filter);
