@@ -18,7 +18,12 @@ class CheckCredentialRuleTest extends NamiTestCase {
         $this->app->instance(Group::class, $group);
 
         $service = M::mock(Service::class);
-        $service->shouldReceive('checkCredentials')->twice()->with('Tom', 'PW')->andReturn(true);
+        $service->shouldReceive('checkCredentials')->twice()->withNoArgs()->andReturn(true);
+        $service->shouldReceive('setUser')->withArgs(function($user) {
+            return $user->getUsername() == 'Tom'
+            && $user->getPassword() == 'PW'
+            && $user->getGroup() == 1;
+        })->once()->andReturnNull();
         $this->app->instance(Service::class, $service);
 
         $rule = new ValidNamiCredentials('Tom', 'PW', 1);

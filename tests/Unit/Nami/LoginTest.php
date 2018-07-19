@@ -46,6 +46,34 @@ class LoginTest extends NamiTestCase {
         );
     }
 
+    /** @test */
+    public function it_checks_that_nami_credentials_are_successful() {
+        $this->fakeGuzzle([
+            new Response(200, [], ''),
+            new Response(200, [
+                'Set-Cookie' => 'JSESSIONID=d4-CjOOIMAxKVOVSsVSy23CD.srv-nami06; path=/ica'
+            ], '{"servicePrefix":null,"methodCall":null,"response":null,"statusCode":0,"statusMessage":"","apiSessionName":"JSESSIONID","apiSessionToken":"PXU5-ewCjYv9i7f7mudhebje","minorNumber":2,"majorNumber":1}')
+        ]);
+
+        $this->createNamiUser('90166', 'PW', 3);
+
+        $nami = app(Service::class);
+        $this->assertTrue($nami->checkCredentials());
+    }
+
+    /** @test */
+    public function it_can_return_false_when_checking_credentials() {
+        $this->fakeGuzzle([
+            new Response(200, [], ''),
+            new Response(200, [], '{"servicePrefix":null,"methodCall":null,"response":null,"statusCode":3000,"statusMessage":"Benutzer nicht gefunden oder Passwort falsch.","apiSessionName":"JSESSIONID","apiSessionToken":"yxLjt9nY-eD7L8IZeXWSHLyt","minorNumber":0,"majorNumber":0}')
+        ]);
+
+        $this->createNamiUser('90166', 'PW', 3);
+
+        $nami = app(Service::class);
+        $this->assertFalse($nami->checkCredentials());
+    }
+
     /**
      * @test
      * @expectedException App\NaMi\Exceptions\LoginException

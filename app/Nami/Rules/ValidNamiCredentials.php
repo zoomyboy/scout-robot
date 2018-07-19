@@ -3,6 +3,7 @@
 namespace App\Nami\Rules;
 
 use App\Nami\Receiver\Group;
+use App\Nami\Resolvers\InlineUser;
 use App\Nami\Service;
 use Illuminate\Contracts\Validation\Rule;
 
@@ -34,10 +35,11 @@ class ValidNamiCredentials implements Rule
     public function passes($attribute, $value)
     {
         $service = app(Service::class);
+        $service->setUser(new InlineUser($this->user, $this->password, 0));
         $group = app(Group::class);
 
         // @todo Add test for checkCredentials on service class
-        return $service->checkCredentials($this->user, $this->password)
+        return $service->checkCredentials()
             && !$group->all()->where('id', $this->group)->isEmpty();
 
     }

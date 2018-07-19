@@ -52,13 +52,9 @@ class Service {
             && isset ($response->responseType) && $response->responseType == 'OK';
     }
 
-    /** @todo evtl beim resolving ausführen
-    @todo testen */
-    public function checkCredentials($user, $password) {
-        $this->setPassword($password);
-        $this->setUser($user);
+    public function checkCredentials() {
         try {
-            $this->newSession();
+            $this->login();
         } catch (LoginException $e) {
             return false;
         }
