@@ -42,4 +42,21 @@ class MemberReceiverTest extends UnitTestCase {
         $this->assertEquals(2334, $member->id);
         $this->assertEquals(55, $member->geschlechtId);
     }
+
+    /** @test */
+    public function it_updates_a_single_member() {
+        $service = M::mock(Service::class);
+        $service->shouldReceive('put')->with(
+            '/ica/rest/nami/mitglied/filtered-for-navigation/gruppierung/gruppierung/3/2442',
+            ['vorname' => 'Pille']
+        )->once()
+            ->andReturn(
+                collect(json_decode('{"success":true,"data":{"vorname":"Pille", "id": 2442}}'))
+            );
+        $this->app->instance(Service::class, $service);
+
+        $member = app(Member::class)->update(2442, ['vorname' => 'Pille']);
+        $this->assertEquals(2442, $member->id);
+        $this->assertEquals("Pille", $member->vorname);
+    }
 }

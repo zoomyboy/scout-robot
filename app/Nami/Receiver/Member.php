@@ -26,4 +26,10 @@ class Member {
 
         return $member->get('data');
     }
+
+    public function update($memberId, $data) {
+        $response = $this->service->put("/ica/rest/nami/mitglied/filtered-for-navigation/gruppierung/gruppierung/{$this->userResolver->getGroup()}/{$memberId}", $data);
+
+        return $response->get('data');
+    }
 }
