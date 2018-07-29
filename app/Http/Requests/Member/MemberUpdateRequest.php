@@ -7,7 +7,7 @@ use Zoomyboy\BaseRequest\Request;
 use App\Member;
 use App\Group;
 use Illuminate\Validation\Rule;
-use App\Jobs\UpdateNaMiMember;
+use App\Nami\Jobs\UpdateMember;
 
 class MemberUpdateRequest extends Request
 {
@@ -58,10 +58,10 @@ class MemberUpdateRequest extends Request
 			return;
 		}
 
-		if (!\App\Conf::first()->namiEnabled) {
+		if (!\Setting::get('namiEnabled')) {
 			return;
 		}
 
-		UpdateNaMiMember::dispatch($model, $this->oldmodel);
+		UpdateMember::dispatch($model);
     }
 }

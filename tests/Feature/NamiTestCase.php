@@ -1,11 +1,11 @@
 <?php
 
-namespace Tests\Integration;
+namespace Tests\Feature;
 
-use Tests\IntegrationTestCase;
+use Tests\FeatureTestCase;
 use Tests\Traits\SetsUpNamiDatabaseModels;
 
-abstract class NamiTestCase extends IntegrationTestCase {
+abstract class NamiTestCase extends FeatureTestCase {
     use SetsUpNamiDatabaseModels;
 
     public function localNamiMember($overrides = []) {

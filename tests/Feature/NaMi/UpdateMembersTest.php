@@ -2,32 +2,25 @@
 
 namespace App\Integration\NaMi;
 
-use App\Member;
 use App\Facades\NaMi\NaMiMember;
-use Tests\FeatureTestCase;
+use App\Member;
+use App\Nami\Jobs\UpdateMember;
 use Illuminate\Support\Facades\Queue;
-use App\Jobs\UpdateNaMiMember;
+use Tests\Feature\NamiTestCase;
 
-class UpdateMembersTest extends FeatureTestCase {
+class UpdateMembersTest extends NamiTestCase {
 	public $config;
 
 	public function setUp() {
 		parent::setUp();
 
-        $this->runSeeder('CountrySeeder');
-        $this->runSeeder('ActivitySeeder');
-        $this->runSeeder('GenderSeeder');
-        $this->runSeeder('WaySeeder');
-        $this->runSeeder('NationalitySeeder');
-        $this->runSeeder('ConfSeeder');
-        $this->runSeeder('UsergroupSeeder');
-        $this->runSeeder('ConfessionSeeder');
-        $this->runSeeder('RegionSeeder');
+        $this->setupNamiDatabaseModels();
+        $this->seed(\UsergroupSeeder::class);
 
 		Queue::fake();
 
 		$this->authAsApi();
-		
+
 		\App\User::first()->usergroup->rights()->attach(\App\Right::where('key', 'member.manage')->first());
 	}
 
@@ -35,58 +28,56 @@ class UpdateMembersTest extends FeatureTestCase {
 	public function it_synchs_a_nami_member_when_it_is_updated() {
         $this->withExceptionHandling();
 
-		\App\Conf::first()->update(['namiEnabled' => true]);
-		$member = $this->create('Member', ['firstname' => 'John', 'nami_id' => 3362]);
+        \Setting::set('namiEnabled', true);
+		$member = $this->create('Member', ['nami_id' => 3362]);
 
-		$data = $this->patchApi("member/$member->id", array_merge($member->getAttributes(), [
-			'way' => \App\Way::first()->id,
-			'country' => \App\Way::first()->id,
-			'activity' => \App\Activity::where('nami_id', 35)->first()->id,
-			'group' => \App\Group::where('id', 2)->first()->id,
-			'nationality' => \App\Nationality::first()->id,
-            'subscription' => null,
-            'firstname' => 'Max'
-        ]))
+		$data = $this->patchApi("member/$member->id", $this->values($member))
 		    ->assertSuccess();
 
-		Queue::assertPushed(UpdateNaMiMember::class, function($j) {
-			return $j->member->firstname == 'Max' && $j->oldmember['firstname'] == 'John';
+		Queue::assertPushed(UpdateMember::class, function($j) {
+			return $j->member->nami_id == 3362;
 		});
 	}
 
 	/** @test */
 	public function it_doesnt_update_a_nami_member_when_nami_is_disabled() {
-		\App\Conf::first()->update(['namiEnabled' => false]);
-		$member = $this->create('Member', ['firstname' => 'John', 'nami_id' => 3362]);
+        $this->withExceptionHandling();
 
-		$this->patchApi("member/$member->id", array_merge($member->getAttributes(), [
-			'way' => \App\Way::first()->id,
-			'country' => \App\Way::first()->id,
-			'activity' => \App\Activity::where('nami_id', 35)->first()->id,
-			'group' => \App\Group::where('id', 2)->first()->id,
-			'nationality' => \App\Nationality::first()->id,
-			'subscription' => null
-		]))
-			->assertSuccess();
+        \Setting::set('namiEnabled', false);
+        $member = $this->create('Member', ['nami_id' => 3362]);
 
-		Queue::assertNotPushed(UpdateNaMiMember::class);
+        $data = $this->patchApi("member/$member->id", $this->values($member))
+            ->assertSuccess();
+
+        Queue::assertNotPushed(UpdateMember::class);
 	}
 
 	/** @test */
 	public function it_doesnt_update_a_nami_member_when_nami_id_is_not_set() {
-		\App\Conf::first()->update(['namiEnabled' => true]);
-		$member = $this->create('Member', ['firstname' => 'John', 'nami_id' => null]);
+        $this->withExceptionHandling();
 
-		$this->patchApi("member/$member->id", array_merge($member->getAttributes(), [
-			'way' => \App\Way::first()->id,
-			'country' => \App\Way::first()->id,
-			'activity' => \App\Activity::where('nami_id', 35)->first()->id,
-			'group' => \App\Group::where('id', 2)->first()->id,
-			'nationality' => \App\Nationality::first()->id,
-			'subscription' => null
-		]))
-			->assertSuccess();
+        \Setting::set('namiEnabled', false);
+        $member = $this->create('Member', ['nami_id' => null]);
 
-		Queue::assertNotPushed(UpdateNaMiMember::class);
+        $data = $this->patchApi("member/$member->id", $this->values($member))
+            ->assertSuccess();
+
+        Queue::assertNotPushed(UpdateMember::class);
 	}
+
+    public function values($member, $overrides = []) {
+        return array_merge([
+            'firstname' => $member->firstname,
+            'lastname' => $member->lastname,
+            'birthday' => $member->birthday->format('Y-m-d'),
+            'joined_at' => $member->joined_at->format('Y-m-d'),
+            'address' => $member->address,
+            'zip' => $member->zip,
+            'city' => $member->city,
+            'country' => $member->country_id,
+            'way' => $member->way_id,
+            'email' => $member->email,
+            'nationality' => $member->nationality_id
+        ], $overrides);
+    }
 }
