@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Jobs;
+namespace App\Nami\Jobs;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
@@ -8,24 +8,22 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use App\Member;
-use App\Facades\NaMi\NaMiMember;
+use App\Nami\Manager\Member as MemberManager;
 
-class UpdateNaMiMember implements ShouldQueue
+class UpdateMember implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public $member;
-    public $oldmember;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct(Member $member, $oldmember)
+    public function __construct(Member $member)
     {
         $this->member = $member;
-        $this->oldmember = $oldmember;
     }
 
     /**
@@ -35,6 +33,6 @@ class UpdateNaMiMember implements ShouldQueue
      */
     public function handle()
     {
-		NaMiMember::patch($this->member);
+        app(MemberManager::class)->push($this->member);
     }
 }

@@ -81,4 +81,8 @@ class Member {
 
         return $m;
     }
+
+    public function push(MemberModel $member) {
+        // @todo Update member with push to nami member receiver
+    }
 }
