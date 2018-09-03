@@ -2,6 +2,7 @@
 
 namespace Tests\Integration\Auth;
 
+use App\Usergroup;
 use Tests\IntegrationTestCase;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\PasswordResetNotification;
@@ -10,11 +11,11 @@ class ResetPasswordTest extends IntegrationTestCase {
 	public function setUp() {
 		parent::setUp();
 
-		$this->runSeeder('UsergroupSeeder');
+        factory(Usergroup::class)->create();
 	}
 
 	/** @test */
-	public function it_resets_a_password_of_a_user() {
+	public function it_sends_a_password_reset_notification_when_reset_password_requested() {
 		$user = $this->create('User');
 
 		$this->post('/password/email', ['email' => $user->email])
