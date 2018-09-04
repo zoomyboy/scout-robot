@@ -36,7 +36,7 @@
             submit: function() {
                 var vm = this;
 
-                axios.post('/api/payments/batch', this.values).then((ret) => {
+                axios.post('/api/paymentbatch', this.values).then((ret) => {
                     vm.$store.commit('successmsg', 'Zahlungen wurden erstellt!');
                 });
             }
