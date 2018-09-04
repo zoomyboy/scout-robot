@@ -83,6 +83,36 @@ class Member {
     }
 
     public function push(MemberModel $member) {
-        // @todo Update member with push to nami member receiver
+        if (!$member->nami_id) {
+            return;
+        }
+
+        $existingMember = $this->memberReceiver->single($member->nami_id);
+
+        $attributes = [
+            'id' => $member->nami_id,
+            'vorname' => $member->firstname,
+            'beitragsartId' => $member->subscription->fee->nami_id,
+            'eintrittsdatum' => $member->joined_at->format('Y-m-d').' 00:00:00',
+            'email' => $member->email,
+            'emailVertretungsberechtigter' => $member->email_parents,
+            'ersteTaetigkeitId' => $existingMember->ersteTaetigkeitId,
+            'ersteUntergliederungId' => $existingMember->ersteUntergliederungId,
+            'fixBeitrag' => $existingMember->fixBeitrag,
+            'geburtsDatum' => $member->birthday->format('Y-m-d').' 00:00:00',
+            'geschlechtId' => $member->gender->nami_id,
+            'regionId' => $member->region->nami_id,
+            'konfessionId' => $member->confession->nami_id,
+            'landId' => $member->country->nami_id,
+            'nachname' => $member->lastname,
+            'ort' => $member->city,
+            'plz' => $member->zip,
+            'staatsangehoerigkeitId' => $member->nationality->id,
+            'strasse' => $member->address,
+            'wiederverwendenFlag' => $member->keepdata,
+            'zeitschriftenversand' => $member->sendnewspaper
+        ];
+
+        $this->memberReceiver->update($member->nami_id, $attributes);
     }
 }

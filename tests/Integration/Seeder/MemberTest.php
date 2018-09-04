@@ -26,6 +26,8 @@ class MemberTest extends IntegrationTestCase
 		$this->runSeeder(\ConfessionSeeder::class);
 		$this->runSeeder(\CountrySeeder::class);
 		$this->runSeeder(\WaySeeder::class);
+        $this->runSeeder('FeeSeeder');
+        $this->runSeeder('SubscriptionSeeder');
 		$this->runSeeder(\MemberSeeder::class);
 	}
 

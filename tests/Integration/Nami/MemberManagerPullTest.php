@@ -8,12 +8,9 @@ use App\Nami\Receiver\Member as MemberReceiver;
 use App\Nami\Receiver\Membership as MembershipReceiver;
 use Illuminate\Support\Facades\Config;
 use Tests\Integration\NamiTestCase;
-use Tests\Traits\CreatesNamiMember;
 use \Mockery as M;
 
 class UpdateMemberLocallyTest extends NamiTestCase {
-    use CreatesNamiMember;
-
     public function setUp() {
         parent::setUp();
 
