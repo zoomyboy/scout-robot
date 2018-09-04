@@ -54,4 +54,14 @@ class IntegrationTestCase extends \Tests\TestCase
             ->status()->associate(\App\Status::find($values['status']))
         );
     }
+
+    public function seedForMember() {
+        $this->runSeeder('GenderSeeder');
+        factory(\App\Country::class)->create();
+        factory(\App\Region::class)->create(['is_null' => false]);
+        factory(\App\Confession::class)->create();
+        factory(\App\Way::class)->create();
+        factory(\App\Nationality::class)->create();
+        $this->runSeeder('UsergroupSeeder');
+    }
 }

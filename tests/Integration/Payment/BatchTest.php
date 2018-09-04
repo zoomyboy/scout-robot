@@ -14,14 +14,8 @@ class BatchTest extends IntegrationTestCase {
     public function setUp() {
         parent::setUp();
 
+        $this->seedForMember();
         $this->runSeeder('StatusSeeder');
-        $this->runSeeder('GenderSeeder');
-        factory(\App\Country::class)->create();
-        factory(\App\Region::class)->create(['is_null' => false]);
-        factory(\App\Confession::class)->create();
-        factory(\App\Way::class)->create();
-        factory(\App\Nationality::class)->create();
-        $this->runSeeder('UsergroupSeeder');
         $fee = factory(Fee::class)->create();
         $this->subscription = factory(Subscription::class)->create([
             'fee_id' => $fee->id,
