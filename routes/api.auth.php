@@ -49,7 +49,7 @@ Route::post('member/{member}/billpdf', 'MemberPdfController@bill');
 Route::post('member/{member}/rememberpdf', 'MemberPdfController@remember');
 Route::apiResource('member', 'MemberController');
 Route::apiResource('member.payments', 'MemberPaymentsController');
-Route::post('payments/batch', 'MemberPaymentsController@batch');
+Route::apiResource('paymentbatch', 'PaymentbatchController', ['only' => 'store']);
 
 
 Route::resource('gender', 'GenderController');

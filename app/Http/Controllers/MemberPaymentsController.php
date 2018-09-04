@@ -8,7 +8,6 @@ use App\Payment;
 use App\Http\Requests\Payment\StoreRequest;
 use App\Http\Requests\Payment\UpdateRequest;
 use App\Status;
-use App\Http\Requests\Payment\BatchRequest;
 
 class MemberPaymentsController extends Controller
 {
@@ -30,9 +29,5 @@ class MemberPaymentsController extends Controller
 
     public function destroy(Member $member, Payment $payment) {
         $payment->delete();
-    }
-
-    public function batch(BatchRequest $request) {
-        $request->persist();
     }
 }

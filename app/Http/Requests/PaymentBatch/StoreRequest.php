@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Requests\Payment;
+namespace App\Http\Requests\PaymentBatch;
 
 use Zoomyboy\BaseRequest\Request;
 use App\Member;
 use App\Payment;
 use App\Status;
 
-class BatchRequest extends Request {
+class StoreRequest extends Request {
     public function rules() {
         return [
             'nr' => 'required'

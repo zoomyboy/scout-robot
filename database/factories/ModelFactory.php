@@ -84,13 +84,6 @@ $factory->define(\App\Payment::class, function(Faker\Generator $faker) {
 	];
 });
 
-$factory->define(\App\Fee::class, function(Faker\Generator $faker) {
-	return [
-		'title' => $faker->words(3, true),
-		'nami_id' => $faker->numberBetween(100, 200)
-	];
-});
-
 $factory->define(\App\Subscription::class, function(Faker\Generator $faker) {
 	return [
 		'amount' => $faker->numberBetween(1000, 5000),
