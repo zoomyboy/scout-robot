@@ -95,9 +95,9 @@ class Member {
             'beitragsartId' => $member->subscription->fee->nami_id,
             'email' => $member->email,
             'emailVertretungsberechtigter' =>  $member->email_parents,
-            'geburtsDatum' => $member->birthday,
+            'geburtsDatum' => $member->birthday->format('Y-m-d').' 00:00:00',
             'eintrittsdatum' => $member->joined_at->format('Y-m-d').'T00:00:00',
-            'geschlechtId' => $member->genderFallback
+            'geschlechtId' => $member->genderFallback,
         ])->toArray();
 
         $this->memberReceiver->update($member->nami_id, $attributes);
