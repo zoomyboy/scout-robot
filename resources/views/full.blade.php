@@ -5,5 +5,5 @@
 @endsection
 
 @section('scripts')
-	<script src="/dist/js/full.js"></script>
+	<script src="/js/full.js"></script>
 @endsection

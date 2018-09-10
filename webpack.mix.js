@@ -11,24 +11,14 @@ let mix = require('laravel-mix');
  |
  */
 
-mix.config.resourceRoot = 'dist/';
+mix.setPublicPath('public');
+mix.setResourceRoot('/');
 
-    mix.webpackConfig({
-        module: {
-            rules: [{
-                test: /\.js?$/,
-                exclude: /(bower_components)/,
-                use: [{
-                    loader: 'babel-loader',
-                    options: mix.config.babel()
-                }]
-            }]
-        },
-		output: {
-			path: path.resolve(__dirname, 'public/dist'),
-			publicPath: '/dist/'
-		}
-    });
+mix.options({
+    fileLoaderDirs: {
+        fonts: 'fonts'
+    }
+})
 
 mix.js('resources/assets/js/app.js', 'public/js')
 	.js('resources/assets/js/full.js', 'public/js');

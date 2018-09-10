@@ -91,7 +91,13 @@ class Member {
 
         $attributes = collect($existingMember)->merge([
             'vorname' => $member->firstname,
-            'nachname' => $member->lastname
+            'nachname' => $member->lastname,
+            'beitragsartId' => $member->subscription->fee->nami_id,
+            'email' => $member->email,
+            'emailVertretungsberechtigter' =>  $member->email_parents,
+            'geburtsDatum' => $member->birthday,
+            'eintrittsdatum' => $member->joined_at->format('Y-m-d').'T00:00:00',
+            'geschlechtId' => $member->genderFallback
         ])->toArray();
 
         $this->memberReceiver->update($member->nami_id, $attributes);

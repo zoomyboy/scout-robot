@@ -1,8 +1,6 @@
 /node_modules
 /storage/*.key
-/public/dist
-/public/pdf
-/public/mix-manifest.json
+/public
 /vendor
 /.idea
 /.vagrant
@@ -20,4 +18,3 @@ yarn.lock
 packages/
 /resources/views/temp
 /resources/temp
-/public/storage
