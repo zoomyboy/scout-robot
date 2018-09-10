@@ -14,4 +14,6 @@ class EncryptCookies extends BaseEncrypter
     protected $except = [
         //
     ];
+
+    protected static $serialize = true;
 }
