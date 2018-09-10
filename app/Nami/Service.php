@@ -107,30 +107,41 @@ class Service {
         });
     }
 
-    /* @todo mit guzzle lösen und testen */
     public function put($url, $fields) {
-        return $this->login(function() use ($url, $fields) {
-            $handle = curl_init($this->getBaseUrl().$url);
+        $this->login();
 
-            curl_setopt($handle, CURLOPT_CUSTOMREQUEST, 'PUT');
-            if (!env('NAMI_SSL')) {
-                curl_setopt($handle, CURLOPT_SSL_VERIFYHOST, 0);
-                curl_setopt($handle, CURLOPT_SSL_VERIFYPEER, 0);
-            }
-            curl_setopt($handle, CURLOPT_POSTFIELDS, json_encode($fields));
-            curl_setopt($handle, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt ($handle, CURLOPT_COOKIEJAR, $this->getCookie());
-            curl_setopt ($handle, CURLOPT_COOKIEFILE, $this->getCookie());
-            curl_setopt ($handle, CURLOPT_HTTPHEADER, [
-                'Content-Type: application/json',
-                'Accept: application/json'
+        $response = $this->client->request('PUT', $this->baseUrl.$url, [
+            'http_errors' => false,
+            'cookies' => $this->cookie,
+            'headers' => [
+                'Accept' => 'application/json',
+                'Content-Type' => 'application/json'
+            ],
+            'json' => $fields
+        ]);
+
+        $json = json_decode((string) $response->getBody());
+
+        if (is_null($json)) {
+            \Log::critical('Api gibt kein JSON zurück', [
+                'response' => (string) $response->getBody(),
+                'fields' => $fields,
+                'url' => $url
             ]);
-            $body = curl_exec($handle);
-            curl_close($handle);
 
-            if(config('nami.log')) {\Log::debug('NaMi-Response: '.$body);}
+            return null;
+        }
 
-            return json_decode($body);
-        });
+        if (!$json->success || $json->success == false) {
+            \Log::critical('Fehler beim Update', [
+                'response' => (string) $response->getBody(),
+                'fields' => $fields,
+                'url' => $url
+            ]);
+
+            return null;
+        }
+
+        return collect($json);
     }
 }
