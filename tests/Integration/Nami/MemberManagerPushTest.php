@@ -280,7 +280,7 @@ class MemberManagerPushTest extends NamiTestCase {
             'geburtsDatum' => '2018-06-03 00:00:00'
         ]));
         $receiver->shouldReceive('update')->with(23, M::on(function($m) {
-            return array_get($m, 'geburtsDatum')  == '2018-07-06 00:00:00';
+            return array_get($m, 'geburtsDatum')  === '2018-07-06 00:00:00';
         }));
         $this->app->instance(MemberReceiver::class, $receiver);
 
