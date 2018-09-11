@@ -16,4 +16,11 @@ trait HasNamiFallbacks {
             : \App\Region::where('is_null', true)->first()->nami_id
         ;
     }
+
+    public function getConfessionFallbackAttribute() {
+        return $this->confession
+            ? $this->confession->nami_id
+            : null
+        ;
+    }
 }

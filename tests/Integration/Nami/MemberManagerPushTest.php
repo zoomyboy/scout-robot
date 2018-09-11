@@ -250,6 +250,50 @@ class MemberManagerPushTest extends NamiTestCase {
     }
 
     /** @test */
+    public function it_sets_the_members_confession() {
+        $confession = \App\Confession::where('title', 'RK')->first();
+        $localMember = $this->create('Member', [
+            'nami_id' => 23,
+            'confession_id' => $confession->id
+        ]);
+
+        $receiver = M::mock(MemberReceiver::class);
+        $receiver->shouldReceive('single')->with(23)->andReturn($this->localNamiMember([
+            'konfessionId' => 999
+        ]));
+        $receiver->shouldReceive('update')->with(23, M::on(function($m) {
+            return array_get($m, 'konfessionId') == 300;
+        }));
+        $this->app->instance(MemberReceiver::class, $receiver);
+
+        $manager = app(MemberManager::class);
+
+        $manager->push($localMember);
+    }
+
+    /** @test */
+    public function it_sets_the_members_confession_id_to_null_when_confession_is_dissociated() {
+        $confession = \App\Confession::where('title', 'RK')->first();
+        $localMember = $this->create('Member', [
+            'nami_id' => 23,
+            'confession_id' => null
+        ]);
+
+        $receiver = M::mock(MemberReceiver::class);
+        $receiver->shouldReceive('single')->with(23)->andReturn($this->localNamiMember([
+            'konfessionId' => 999
+        ]));
+        $receiver->shouldReceive('update')->with(23, M::on(function($m) {
+            return array_get($m, 'konfessionId') === null;
+        }));
+        $this->app->instance(MemberReceiver::class, $receiver);
+
+        $manager = app(MemberManager::class);
+
+        $manager->push($localMember);
+    }
+
+    /** @test */
     public function it_sets_the_members_eintrittsdatum() {
         $localMember = $this->create('Member', [
             'nami_id' => 23,
