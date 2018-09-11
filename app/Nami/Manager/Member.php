@@ -98,6 +98,7 @@ class Member {
             'geburtsDatum' => $member->birthday->format('Y-m-d').' 00:00:00',
             'eintrittsdatum' => $member->joined_at->format('Y-m-d').'T00:00:00',
             'geschlechtId' => $member->genderFallback,
+            'regionId' => $member->regionFallback
         ])->toArray();
 
         $this->memberReceiver->update($member->nami_id, $attributes);

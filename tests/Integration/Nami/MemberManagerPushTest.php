@@ -206,6 +206,50 @@ class MemberManagerPushTest extends NamiTestCase {
     }
 
     /** @test */
+    public function it_sets_the_members_region() {
+        $region = \App\Region::where('title', 'BW')->first();
+        $localMember = $this->create('Member', [
+            'nami_id' => 23,
+            'region_id' => $region->id
+        ]);
+
+        $receiver = M::mock(MemberReceiver::class);
+        $receiver->shouldReceive('single')->with(23)->andReturn($this->localNamiMember([
+            'regionId' => 999
+        ]));
+        $receiver->shouldReceive('update')->with(23, M::on(function($m) use ($region) {
+            return array_get($m, 'regionId')  == $region->nami_id;
+        }));
+        $this->app->instance(MemberReceiver::class, $receiver);
+
+        $manager = app(MemberManager::class);
+
+        $manager->push($localMember);
+    }
+
+    /** @test */
+    public function it_sets_the_members_region_id_to_null() {
+        $region = $this->create('Region', ['is_null' => true, 'nami_id' => 56]);
+        $localMember = $this->create('Member', [
+            'nami_id' => 23,
+            'region_id' => null
+        ]);
+
+        $receiver = M::mock(MemberReceiver::class);
+        $receiver->shouldReceive('single')->with(23)->andReturn($this->localNamiMember([
+            'regionId' => 999
+        ]));
+        $receiver->shouldReceive('update')->with(23, M::on(function($m) {
+            return array_get($m, 'regionId') == 56;
+        }));
+        $this->app->instance(MemberReceiver::class, $receiver);
+
+        $manager = app(MemberManager::class);
+
+        $manager->push($localMember);
+    }
+
+    /** @test */
     public function it_sets_the_members_eintrittsdatum() {
         $localMember = $this->create('Member', [
             'nami_id' => 23,

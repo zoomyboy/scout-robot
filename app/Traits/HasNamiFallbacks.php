@@ -9,4 +9,11 @@ trait HasNamiFallbacks {
             : \App\Gender::where('is_null', true)->first()->nami_id
         ;
     }
+
+    public function getRegionFallbackAttribute() {
+        return $this->region
+            ? $this->region->nami_id
+            : \App\Region::where('is_null', true)->first()->nami_id
+        ;
+    }
 }
