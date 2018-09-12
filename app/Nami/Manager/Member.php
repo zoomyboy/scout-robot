@@ -92,6 +92,7 @@ class Member {
         $attributes = collect($existingMember)->merge([
             'vorname' => $member->firstname,
             'nachname' => $member->lastname,
+            'spitzname' => $member->nickname,
             'beitragsartId' => $member->subscription->fee->nami_id,
             'email' => $member->email,
             'emailVertretungsberechtigter' =>  $member->email_parents,
@@ -99,7 +100,21 @@ class Member {
             'eintrittsdatum' => $member->joined_at->format('Y-m-d').'T00:00:00',
             'geschlechtId' => $member->genderFallback,
             'regionId' => $member->regionFallback,
-            'konfessionId' => $member->confessionFallback
+            'konfessionId' => $member->confessionFallback,
+            'staatsangehoerigkeitText' => $member->other_country,
+            'wiederverwendenFlag' => $member->keepdata,
+            'zeitschriftenversand' => $member->sendnewspaper,
+            'staatsangehoerigkeitId' => $member->nationality->nami_id,
+            'staatsangehoerigkeitText' => $member->other_country,
+            'strasse' => $member->address,
+            'landId' => $member->country->nami_id,
+            'plz' => (string) $member->zip,
+            'nameZusatz' => $member->further_address,
+            'ort' => $member->city,
+            'telefon1' => $member->phone,
+            'telefon2' => $member->mobile,
+            'telefon3' => $member->business_phone,
+            'telefax' => $member->fax,
         ])->toArray();
 
         $this->memberReceiver->update($member->nami_id, $attributes);

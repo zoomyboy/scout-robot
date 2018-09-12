@@ -112,7 +112,7 @@ class MemberManagerPushTest extends NamiTestCase {
         ]));
         $receiver->shouldReceive('update')->with(23, M::on(function($m) {
             return array_get($m, 'austrittsDatum')  == '';
-        }));
+        }))->once();
         $this->app->instance(MemberReceiver::class, $receiver);
 
         $manager = app(MemberManager::class);
@@ -121,17 +121,55 @@ class MemberManagerPushTest extends NamiTestCase {
     }
 
     /** @test */
-    public function it_sets_the_members_beitragsart() {
-        $localMember = $this->create('Member', ['nami_id' => 23]);
+    public function it_sets_the_members_vorname() {
+        $localMember = $this->create('Member', ['nami_id' => 23, 'firstname' => 'Philipp']);
 
 
         $receiver = M::mock(MemberReceiver::class);
         $receiver->shouldReceive('single')->with(23)->andReturn($this->localNamiMember([
-            'beitragsart' => 'T'
+            'vorname' => 'T'
         ]));
         $receiver->shouldReceive('update')->with(23, M::on(function($m) {
-            return array_get($m, 'beitragsart')  == 'T';
-        }));
+            return array_get($m, 'vorname')  == 'Philipp';
+        }))->once();
+        $this->app->instance(MemberReceiver::class, $receiver);
+
+        $manager = app(MemberManager::class);
+
+        $manager->push($localMember);
+    }
+
+    /** @test */
+    public function it_sets_the_members_nachname() {
+        $localMember = $this->create('Member', ['nami_id' => 23, 'lastname' => 'Lang']);
+
+
+        $receiver = M::mock(MemberReceiver::class);
+        $receiver->shouldReceive('single')->with(23)->andReturn($this->localNamiMember([
+            'nachname' => 'T'
+        ]));
+        $receiver->shouldReceive('update')->with(23, M::on(function($m) {
+            return array_get($m, 'nachname')  == 'Lang';
+        }))->once();
+        $this->app->instance(MemberReceiver::class, $receiver);
+
+        $manager = app(MemberManager::class);
+
+        $manager->push($localMember);
+    }
+
+    /** @test */
+    public function it_sets_the_members_spitzname() {
+        $localMember = $this->create('Member', ['nami_id' => 23, 'nickname' => 'Lang']);
+
+
+        $receiver = M::mock(MemberReceiver::class);
+        $receiver->shouldReceive('single')->with(23)->andReturn($this->localNamiMember([
+            'spitzname' => 'T'
+        ]));
+        $receiver->shouldReceive('update')->with(23, M::on(function($m) {
+            return array_get($m, 'spitzname')  == 'Lang';
+        }))->once();
         $this->app->instance(MemberReceiver::class, $receiver);
 
         $manager = app(MemberManager::class);
@@ -153,7 +191,7 @@ class MemberManagerPushTest extends NamiTestCase {
         ]));
         $receiver->shouldReceive('update')->with(23, M::on(function($m) use ($subscription) {
             return array_get($m, 'beitragsartId')  == $subscription->fee->nami_id;
-        }));
+        }))->once();
         $this->app->instance(MemberReceiver::class, $receiver);
 
         $manager = app(MemberManager::class);
@@ -175,7 +213,7 @@ class MemberManagerPushTest extends NamiTestCase {
         ]));
         $receiver->shouldReceive('update')->with(23, M::on(function($m) use ($gender) {
             return array_get($m, 'geschlechtId')  == $gender->nami_id;
-        }));
+        }))->once();
         $this->app->instance(MemberReceiver::class, $receiver);
 
         $manager = app(MemberManager::class);
@@ -197,7 +235,7 @@ class MemberManagerPushTest extends NamiTestCase {
         ]));
         $receiver->shouldReceive('update')->with(23, M::on(function($m) {
             return array_get($m, 'geschlechtId')  == 66;
-        }));
+        }))->once();
         $this->app->instance(MemberReceiver::class, $receiver);
 
         $manager = app(MemberManager::class);
@@ -219,7 +257,7 @@ class MemberManagerPushTest extends NamiTestCase {
         ]));
         $receiver->shouldReceive('update')->with(23, M::on(function($m) use ($region) {
             return array_get($m, 'regionId')  == $region->nami_id;
-        }));
+        }))->once();
         $this->app->instance(MemberReceiver::class, $receiver);
 
         $manager = app(MemberManager::class);
@@ -241,7 +279,7 @@ class MemberManagerPushTest extends NamiTestCase {
         ]));
         $receiver->shouldReceive('update')->with(23, M::on(function($m) {
             return array_get($m, 'regionId') == 56;
-        }));
+        }))->once();
         $this->app->instance(MemberReceiver::class, $receiver);
 
         $manager = app(MemberManager::class);
@@ -263,7 +301,51 @@ class MemberManagerPushTest extends NamiTestCase {
         ]));
         $receiver->shouldReceive('update')->with(23, M::on(function($m) {
             return array_get($m, 'konfessionId') == 300;
-        }));
+        }))->once();
+        $this->app->instance(MemberReceiver::class, $receiver);
+
+        $manager = app(MemberManager::class);
+
+        $manager->push($localMember);
+    }
+
+    /** @test */
+    public function it_sets_the_members_nationality() {
+        $nationality = \App\Nationality::where('title', 'Englisch')->first();
+        $localMember = $this->create('Member', [
+            'nami_id' => 23,
+            'nationality_id' => $nationality->id
+        ]);
+
+        $receiver = M::mock(MemberReceiver::class);
+        $receiver->shouldReceive('single')->with(23)->andReturn($this->localNamiMember([
+            'staatsangehoerigkeitId' => 999
+        ]));
+        $receiver->shouldReceive('update')->with(23, M::on(function($m) {
+            return array_get($m, 'staatsangehoerigkeitId') == 584;
+        }))->once();
+        $this->app->instance(MemberReceiver::class, $receiver);
+
+        $manager = app(MemberManager::class);
+
+        $manager->push($localMember);
+    }
+
+    /** @test */
+    public function it_sets_the_members_country() {
+        $country = \App\Country::where('title', 'Englisch')->first();
+        $localMember = $this->create('Member', [
+            'nami_id' => 23,
+            'country_id' => $country->id
+        ]);
+
+        $receiver = M::mock(MemberReceiver::class);
+        $receiver->shouldReceive('single')->with(23)->andReturn($this->localNamiMember([
+            'landId' => 999
+        ]));
+        $receiver->shouldReceive('update')->with(23, M::on(function($m) {
+            return array_get($m, 'landId') == 455;
+        }))->once();
         $this->app->instance(MemberReceiver::class, $receiver);
 
         $manager = app(MemberManager::class);
@@ -285,7 +367,7 @@ class MemberManagerPushTest extends NamiTestCase {
         ]));
         $receiver->shouldReceive('update')->with(23, M::on(function($m) {
             return array_get($m, 'konfessionId') === null;
-        }));
+        }))->once();
         $this->app->instance(MemberReceiver::class, $receiver);
 
         $manager = app(MemberManager::class);
@@ -306,7 +388,7 @@ class MemberManagerPushTest extends NamiTestCase {
         ]));
         $receiver->shouldReceive('update')->with(23, M::on(function($m) {
             return array_get($m, 'eintrittsdatum')  == '2018-07-07T00:00:00';
-        }));
+        }))->once();
         $this->app->instance(MemberReceiver::class, $receiver);
 
         $manager = app(MemberManager::class);
@@ -327,7 +409,31 @@ class MemberManagerPushTest extends NamiTestCase {
         ]));
         $receiver->shouldReceive('update')->with(23, M::on(function($m) {
             return array_get($m, 'email')  == 'pille@aa.de';
-        }));
+        }))->once();
+        $this->app->instance(MemberReceiver::class, $receiver);
+
+        $manager = app(MemberManager::class);
+
+        $manager->push($localMember);
+    }
+
+    /** @test */
+    public function it_sets_the_members_keepdata_and_sendnewspaper() {
+        $localMember = $this->create('Member', [
+            'nami_id' => 23,
+            'keepdata' => true,
+            'sendnewspaper' => true
+        ]);
+
+        $receiver = M::mock(MemberReceiver::class);
+        $receiver->shouldReceive('single')->with(23)->andReturn($this->localNamiMember([
+            'wiederverwendenFlag' => false,
+            'keepdata' => false
+        ]));
+        $receiver->shouldReceive('update')->with(23, M::on(function($m) {
+            return array_get($m, 'wiederverwendenFlag') === true
+            && array_get($m, 'zeitschriftenversand') === true;
+        }))->once();
         $this->app->instance(MemberReceiver::class, $receiver);
 
         $manager = app(MemberManager::class);
@@ -345,10 +451,10 @@ class MemberManagerPushTest extends NamiTestCase {
         $receiver = M::mock(MemberReceiver::class);
         $receiver->shouldReceive('single')->with(23)->andReturn($this->localNamiMember([
             'emailVertretungsberechtigter' => 'pp@aaa.de'
-        ]));
+        ]))->once();
         $receiver->shouldReceive('update')->with(23, M::on(function($m) {
             return array_get($m, 'emailVertretungsberechtigter')  == 'pille@aa.de';
-        }));
+        }))->once();
         $this->app->instance(MemberReceiver::class, $receiver);
 
         $manager = app(MemberManager::class);
@@ -357,7 +463,28 @@ class MemberManagerPushTest extends NamiTestCase {
     }
 
     /** @test */
-    public function it_sets_the_members_birthday() {
+    public function it_sets_the_members_staatsangehoerigkeitText() {
+        $localMember = $this->create('Member', [
+            'nami_id' => 23,
+            'other_country' => 'Zu'
+        ]);
+
+        $receiver = M::mock(MemberReceiver::class);
+        $receiver->shouldReceive('single')->with(23)->andReturn($this->localNamiMember([
+            'staatsangehoerigkeitText' => 'II'
+        ]));
+        $receiver->shouldReceive('update')->with(23, M::on(function($m) {
+            return array_get($m, 'staatsangehoerigkeitText')  == 'Zu';
+        }))->once();
+        $this->app->instance(MemberReceiver::class, $receiver);
+
+        $manager = app(MemberManager::class);
+
+        $manager->push($localMember);
+    }
+
+    /** @test */
+    public function it_sets_the_members_geburtsdatum() {
         $localMember = $this->create('Member', [
             'nami_id' => 23,
             'birthday' => '2018-07-06 00:00:00'
@@ -369,7 +496,67 @@ class MemberManagerPushTest extends NamiTestCase {
         ]));
         $receiver->shouldReceive('update')->with(23, M::on(function($m) {
             return array_get($m, 'geburtsDatum')  === '2018-07-06 00:00:00';
-        }));
+        }))->once();
+        $this->app->instance(MemberReceiver::class, $receiver);
+
+        $manager = app(MemberManager::class);
+
+        $manager->push($localMember);
+    }
+
+    /** @test */
+    public function it_sets_the_members_address_and_zip() {
+        $localMember = $this->create('Member', [
+            'nami_id' => 23,
+            'address' => 'Muenchenerstr',
+            'zip' => 45555,
+            'further_address' => 'Str4',
+            'city' => 'Muenchen'
+        ]);
+
+        $receiver = M::mock(MemberReceiver::class);
+        $receiver->shouldReceive('single')->with(23)->andReturn($this->localNamiMember([
+            'strasse' => 'ZZ',
+            'plz' => 'ZZ',
+            'further_address' => 'UU',
+            'ort' => 'ZZ'
+        ]));
+        $receiver->shouldReceive('update')->with(23, M::on(function($m) {
+            return array_get($m, 'strasse')  === 'Muenchenerstr'
+            && array_get($m, 'plz') === '45555'
+            && array_get($m, 'nameZusatz') === 'Str4'
+            && array_get($m, 'ort') === 'Muenchen';
+        }))->once();
+        $this->app->instance(MemberReceiver::class, $receiver);
+
+        $manager = app(MemberManager::class);
+
+        $manager->push($localMember);
+    }
+
+    /** @test */
+    public function it_sets_the_members_phones() {
+        $localMember = $this->create('Member', [
+            'phone' => '7888',
+            'mobile' => '4666',
+            'business_phone' => '4555',
+            'fax' => '3333',
+            'nami_id' => 23
+        ]);
+
+        $receiver = M::mock(MemberReceiver::class);
+        $receiver->shouldReceive('single')->with(23)->andReturn($this->localNamiMember([
+            'telefon1' => 'ZZ',
+            'telefon2' => 'ZZ',
+            'telefon3' => 'UU',
+            'telefax' => 'ZZ'
+        ]));
+        $receiver->shouldReceive('update')->with(23, M::on(function($m) {
+            return array_get($m, 'telefon1')  === '7888'
+            && array_get($m, 'telefon2') === '4666'
+            && array_get($m, 'telefon3') === '4555'
+            && array_get($m, 'telefax') === '3333';
+        }))->once();
         $this->app->instance(MemberReceiver::class, $receiver);
 
         $manager = app(MemberManager::class);
