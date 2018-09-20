@@ -85,7 +85,7 @@
                             </v-layout>
                         </v-container>
                     </v-tabs-content>
-                       
+
                     <!-- System -->
                     <v-tabs-content key="tab-system" id="tab-system">
                         <v-container grid-list-md class="pt-4 pl-4 pr-4" fluid>
@@ -159,8 +159,6 @@
                                         item-text="title"
                                         item-value="id"
                                         clearable
-                                        required
-                                        :rules="[validateSelected()]"
                                     >
                                     </v-select>
                                 </v-flex>
@@ -171,7 +169,6 @@
                                         label="Staatsangehörigeit"
                                         item-text="title"
                                         item-value="id"
-                                        clearable
                                         required
                                         :rules="[validateSelected()]"
                                     >
@@ -184,7 +181,6 @@
                                         label="Land"
                                         item-text="title"
                                         item-value="id"
-                                        clearable
                                         required
                                         :rules="[validateSelected()]"
                                     >
@@ -241,8 +237,8 @@
 
                 if (! this.values.activity) {
                     return [];
-                } 
-            
+                }
+
                 var filteredActivities = this.activities.filter(function(a) {
                     return a.id == vm.values.activity;
                 });

@@ -147,7 +147,6 @@
                                         label="Staatsangehörigeit"
                                         item-text="title"
                                         item-value="id"
-                                        clearable
                                         required
                                         :rules="[validateSelected()]"
                                     >
@@ -160,7 +159,6 @@
                                         label="Land"
                                         item-text="title"
                                         item-value="id"
-                                        clearable
                                         required
                                         :rules="[validateSelected()]"
                                     >
