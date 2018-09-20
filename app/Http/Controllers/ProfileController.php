@@ -33,7 +33,7 @@ class ProfileController extends Controller
 		return response()->json([
 			'conf' => Conf::first()->toArray(),
             'countries' => \App\Country::get()->toArray(),
-            'regions' => \App\Region::get()->toArray(),
+            'regions' => \App\Region::where('is_null', false)->get()->toArray(),
             'activities' => \App\Activity::with('groups')->get()->toArray(),
             'confessions' => \App\Confession::get()->toArray(),
             'fees' => \App\Fee::get()->toArray(),
