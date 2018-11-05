@@ -1,13 +1,13 @@
 <?php
 
-namespace Tests\Integration\PdfCreation;
+namespace Tests\Feature\Pdf;
 
-use Tests\IntegrationTestCase;
+use Tests\FeatureTestCase;
 use App\Payment;
 use App\Subscription;
 use App\Status;
 
-class CreatesBillPdfTest extends IntegrationTestCase
+class CreatesBillPdfTest extends FeatureTestCase
 {
     public function setUp()
     {

@@ -12,6 +12,9 @@ use App\Payment;
 use App\Status;
 use App\Subscription;
 
+/**
+ * @deprecated
+ */
 class BillTest extends FeatureTestCase {
 
 	use DatabaseMigrations;

@@ -7,6 +7,7 @@ use App\Jobs\SyncAllNamiMembers;
 use App\Member;
 use Illuminate\Support\Facades\Queue;
 use Tests\FeatureTestCase;
+use Setting;
 
 class ImportMembersTest extends FeatureTestCase {
 	public $config;
@@ -19,14 +20,13 @@ class ImportMembersTest extends FeatureTestCase {
 		$this->runSeeder('CountrySeeder');
 		$this->runSeeder('ConfSeeder');
 
+        Queue::fake();
+        $this->authAsApi();
 	}
 
 	/** @test */
 	public function it_synchs_active_and_inactive_members() {
-        Queue::fake();
-		$this->authAsApi();
-
-		\App\Conf::first()->update(['namiEnabled' => true]);
+		Setting::set('namiEnabled', true);
 
 		$this->postApi('nami/getmembers', ['active' => true, 'inactive' => true])
 			->assertSuccess();
@@ -38,10 +38,7 @@ class ImportMembersTest extends FeatureTestCase {
 
     /** @test */
     public function it_synchs_active_members() {
-        Queue::fake();
-        $this->authAsApi();
-
-        \App\Conf::first()->update(['namiEnabled' => true]);
+        Setting::set('namiEnabled', true);
 
         $this->postApi('nami/getmembers', ['active' => true, 'inactive' => false])
             ->assertSuccess();
@@ -53,10 +50,7 @@ class ImportMembersTest extends FeatureTestCase {
 
     /** @test */
     public function it_synchs_inactive_members() {
-        Queue::fake();
-        $this->authAsApi();
-
-        \App\Conf::first()->update(['namiEnabled' => true]);
+        Setting::set('namiEnabled', true);
 
         $this->postApi('nami/getmembers', ['active' => false, 'inactive' => true])
             ->assertSuccess();
@@ -68,10 +62,7 @@ class ImportMembersTest extends FeatureTestCase {
 
     /** @test */
     public function it_synchs_no_members_without_any_filter() {
-        Queue::fake();
-        $this->authAsApi();
-
-        \App\Conf::first()->update(['namiEnabled' => true]);
+        Setting::set('namiEnabled', true);
 
         $this->postApi('nami/getmembers', ['active' => false, 'inactive' => false])
             ->assertSuccess();
@@ -83,12 +74,9 @@ class ImportMembersTest extends FeatureTestCase {
 
 	/** @test */
 	public function it_doesnt_sync_when_nami_is_not_enabled() {
-        Queue::fake();
 		$this->withExceptionHandling();
 
-		$this->authAsApi();
-
-		\Setting::set('namiEnabled', false);
+        Setting::set('namiEnabled', false);
 
 		$this->postApi('nami/getmembers', ['active' => true, 'inactive' => true])
 			->assertValidationFailedWith('error');

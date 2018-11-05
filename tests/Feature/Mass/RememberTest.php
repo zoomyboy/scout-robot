@@ -11,6 +11,9 @@ use App\Subscription;
 use App\Payment;
 use App\Status;
 
+/**
+ * @deprecated
+ */
 class RememberTest extends FeatureTestCase {
 
 	use DatabaseMigrations;
