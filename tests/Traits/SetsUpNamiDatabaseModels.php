@@ -30,4 +30,8 @@ trait SetsUpNamiDatabaseModels {
 
         $this->runSeeder(\ConfSeeder::class);
     }
+
+    public function setUpActivityGroups() {
+        $this->runSeeder(\ActivitySeeder::class);
+    }
 }

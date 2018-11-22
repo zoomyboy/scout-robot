@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Queue;
 use Tests\FeatureTestCase;
 use Setting;
 
-class ImportMembersTest extends FeatureTestCase {
+class PushGetmembersJobToQueueTest extends FeatureTestCase {
 	public $config;
 
 	public function setUp() {
