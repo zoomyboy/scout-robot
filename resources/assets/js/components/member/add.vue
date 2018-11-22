@@ -18,7 +18,7 @@
                                 <v-flex md12>
                                     <v-select
                                         :items="genders"
-                                        v-model="values.gender"
+                                        v-model="values.gender_id"
                                         label="Geschlecht"
                                         item-text="title"
                                         item-value="id"
@@ -93,7 +93,7 @@
                                 <v-flex md6>
                                     <v-select
                                         :items="ways"
-                                        v-model="values.way"
+                                        v-model="values.way_id"
                                         label="Rechnung versenden über"
                                         item-text="title"
                                         item-value="id"
@@ -103,7 +103,7 @@
                                     </v-select>
                                     <v-select
                                         :items="activities"
-                                        v-model="values.activity"
+                                        v-model="values.activity_id"
                                         label="Tätigkeit"
                                         item-text="title"
                                         item-value="id"
@@ -113,7 +113,7 @@
                                     </v-select>
                                     <v-select
                                         :items="loadedGroups"
-                                        v-model="values.group"
+                                        v-model="values.group_id"
                                         label="Abteilung"
                                         item-text="title"
                                         item-value="id"
@@ -123,7 +123,7 @@
                                     </v-select>
                                     <v-select
                                         :items="subscriptions"
-                                        v-model="values.subscription"
+                                        v-model="values.subscription_id"
                                         label="Beitrag"
                                         item-text="title"
                                         item-value="id"
@@ -154,7 +154,7 @@
                                 <v-flex md6>
                                     <v-select
                                         :items="regions"
-                                        v-model="values.region"
+                                        v-model="values.region_id"
                                         label="Bundesland"
                                         item-text="title"
                                         item-value="id"
@@ -165,7 +165,7 @@
                                 <v-flex md6>
                                     <v-select
                                         :items="nationalities"
-                                        v-model="values.nationality"
+                                        v-model="values.nationality_id"
                                         label="Staatsangehörigeit"
                                         item-text="title"
                                         item-value="id"
@@ -177,7 +177,7 @@
                                 <v-flex md6>
                                     <v-select
                                         :items="countries"
-                                        v-model="values.country"
+                                        v-model="values.country_id"
                                         label="Land"
                                         item-text="title"
                                         item-value="id"
@@ -189,7 +189,7 @@
                                 <v-flex md6>
                                     <v-select
                                         :items="confessions"
-                                        v-model="values.confession"
+                                        v-model="values.confession_id"
                                         label="Konfession"
                                         item-text="title"
                                         item-value="id"
@@ -206,7 +206,6 @@
             </v-tabs>
             <div class="pa-4">
                 <v-btn :disabled="!valid" @click="submit" color="primary" class="ma-0">Absenden</v-btn>
-                <v-btn @click="submit" color="primary" class="ma-0">Absenden</v-btn>
             </div>
         </v-form>
     </v-card>
@@ -223,7 +222,7 @@
                 values: {
                     firstname: '',
                     lastname: '',
-                    gender: null,
+                    gender_id: null,
                     birthday: '',
                     joined_at: '',
                     sendnewspaper: false,
@@ -235,12 +234,12 @@
             loadedGroups: function() {
                 var vm = this;
 
-                if (! this.values.activity) {
+                if (! this.values.activity_id) {
                     return [];
                 }
 
                 var filteredActivities = this.activities.filter(function(a) {
-                    return a.id == vm.values.activity;
+                    return a.id == vm.values.activity_id;
                 });
 
                 if (filteredActivities.length == 0) {
@@ -250,12 +249,12 @@
                 return filteredActivities.shift().groups;
             },
             subscriptionRequired: function() {
-                if(!this.values.activity) {
+                if(!this.values.activity_id) {
                     return false;
                 }
 
                 var act = this.activities.filter((act) => {
-                    return act.id == this.values.activity;
+                    return act.id == this.values.activity_id;
                 }).shift();
 
                 if (!act) {
@@ -265,12 +264,12 @@
                 return act.is_payable;
             },
             subscriptionRules: function() {
-                if(!this.values.activity) {
+                if(!this.values.activity_id) {
                     return [];
                 }
 
                 var act = this.activities.filter((act) => {
-                    return act.id == this.values.activity;
+                    return act.id == this.values.activity_id;
                 }).shift();
 
                 if (!act) {
@@ -299,9 +298,9 @@
 
             this.values.sendnewspaper = this.config.default_sendnewspaper;
             this.values.keepdata = this.config.default_keepdata;
-            this.values.nationality = (this.config.default_nationality) ? this.config.default_nationality.id : null;
-            this.values.country = (this.config.default_country) ? this.config.default_country.id : null;
-            this.values.region = (this.config.default_region) ? this.config.default_region.id : null;
+            this.values.nationality_id = (this.config.default_nationality) ? this.config.default_nationality.id : null;
+            this.values.country_id = (this.config.default_country) ? this.config.default_country.id : null;
+            this.values.region_id = (this.config.default_region) ? this.config.default_region.id : null;
         }
     }
 </script>

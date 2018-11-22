@@ -94,7 +94,8 @@ class StoreTest extends NamiTestCase {
             'activity_id' => 1,
             'group_id' => 1,
             'nationality_id' => 1,
-            'subscription_id' => 1
+            'subscription_id' => 1,
+            'confession_id' => 1
         ], $overwrites);
     }
 
