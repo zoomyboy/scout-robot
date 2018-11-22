@@ -20,8 +20,6 @@ class UpdateMembersTest extends NamiTestCase {
 		Queue::fake();
 
 		$this->authAsApi();
-
-		\App\User::first()->usergroup->rights()->attach(\App\Right::where('key', 'member.manage')->first());
 	}
 
 	/** @test */
