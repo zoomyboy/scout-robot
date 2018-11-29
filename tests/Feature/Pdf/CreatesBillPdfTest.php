@@ -25,9 +25,10 @@ class CreatesBillPdfTest extends FeatureTestCase
 
         $member = $this->create('Member', ['firstname' => 'Max', 'lastname' => 'Must']);
 
-        $this->createPayment($member, [
-            'status' => 1,
-            'subscription' => 1,
+        \App\Payment::create([
+            'status_id' => 1,
+            'member_id' => $member->id,
+            'subscription_id' => 1,
             'nr' => 50
         ]);
 
@@ -46,9 +47,10 @@ class CreatesBillPdfTest extends FeatureTestCase
 
         $member = $this->create('Member', ['firstname' => 'Max', 'lastname' => 'Must']);
 
-        $this->createPayment($member, [
-            'status' => 1,
-            'subscription' => 1,
+        \App\Payment::create([
+            'status_id' => 1,
+            'member_id' => $member->id,
+            'subscription_id' => 1,
             'nr' => 50
         ]);
 
