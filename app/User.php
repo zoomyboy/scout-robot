@@ -16,7 +16,7 @@ class User extends Authenticatable
 
 	//--------------------------------- Boilerplate ---------------------------------
 	protected $fillable = [
-		'name', 'email', 'password'
+		'name', 'email', 'password', 'usergroup_id'
 	];
 
 	protected $hidden = [
