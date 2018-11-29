@@ -3,6 +3,7 @@
 namespace Tests;
 
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Tests\Traits\SeedsDatabase;
 use Zoomyboy\Tests\Traits\AuthenticatesUsers;
 use Zoomyboy\Tests\Traits\CreatesModels;
 use Zoomyboy\Tests\Traits\FakesGuzzle;
@@ -18,6 +19,7 @@ class FeatureTestCase extends \Tests\TestCase {
 	use TestsEmails;
     use FakesGuzzle;
 	use DatabaseMigrations;
+    use SeedsDatabase;
 
 	public function setUp() {
 		parent::setUp();
