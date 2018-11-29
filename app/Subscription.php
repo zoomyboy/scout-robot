@@ -2,10 +2,13 @@
 
 namespace App;
 
+use App\Traits\HasTitle;
 use Illuminate\Database\Eloquent\Model;
 
 class Subscription extends Model
 {
+    use HasTitle;
+
     public $fillable = ['title', 'amount'];
 
 	public $casts = [

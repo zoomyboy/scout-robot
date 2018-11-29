@@ -2,10 +2,12 @@
 
 namespace App;
 
+use App\Traits\HasTitle;
 use Illuminate\Database\Eloquent\Model;
 
 class Way extends Model
 {
+    use HasTitle;
 
 	public $fillable = ['title'];
 	public $timestamps = false;
