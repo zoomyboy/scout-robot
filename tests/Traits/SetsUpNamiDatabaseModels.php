@@ -6,9 +6,7 @@ use Illuminate\Support\Facades\Config;
 
 trait SetsUpNamiDatabaseModels {
     public function setupNamiDatabaseModels() {
-        \App\Country::create(['nami_title' => 'NDeutsch', 'nami_id' => 1054, 'title' => 'Deutsch']);
-        $default = \App\Country::create(['nami_title' => 'NEng', 'nami_id' => 455, 'title' => 'Englisch']);
-        Config::set('seed.default_country', 'Englisch');
+        $this->createCountries();
 
         \App\Nationality::create(['nami_title' => 'NDeutsch', 'nami_id' => 334, 'title' => 'Deutsch']);
         \App\Nationality::create(['nami_title' => 'NEng', 'nami_id' => 584, 'title' => 'Englisch']);
