@@ -2,9 +2,11 @@
 
 namespace App\Pdf\Traits;
 
+use App\Pdf\Interfaces\LetterPageInterface;
+
 trait HasDate
 {
-    public function generateDate($page)
+    public function generateDate(LetterPageInterface $page)
     {
         $this->pdf->SetFont('OpenSans', '', 8);
         $this->pdf->SetTextColor(0, 0, 0);

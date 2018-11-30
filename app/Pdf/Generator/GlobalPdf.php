@@ -2,6 +2,7 @@
 
 namespace App\Pdf\Generator;
 
+use Storage;
 use App\Traits\ParsesHtmlContent;
 
 define('FPDF_FONTPATH', resource_path('fonts'));
@@ -18,12 +19,15 @@ abstract class GlobalPdf
         $this->pdf = new \FPDF;
     }
 
-    public function save($filename)
-    {
-        $contents = $this->pdf->output('S', '/tmp/file.pdf');
-        $file = \Storage::disk('public')->put('pdf/'.$filename, $contents);
+    public function generate($filename) {
+        return $this->save(str_slug($filename).'.pdf');
+    }
 
-        return \Storage::disk('public')->url('pdf/'.$filename);
+    private function save($filename)
+    {
+        $this->pdf->output('F', Storage::disk('temp')->path($filename));
+
+        return Storage::disk('temp')->url($filename);
     }
 
     public function formatHtml($string)

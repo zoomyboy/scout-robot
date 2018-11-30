@@ -2,36 +2,44 @@
 
 namespace App\Pdf\Repositories;
 
+use Setting;
 use Carbon\Carbon;
 
-class BillPageRepository extends LetterContentRepository
+class BillPageRepository extends LetterPageRepository
 {
-    public $members;
+    private $members;
+    private $attributes;
 
     /**
-     * Private constructor
+     * Constructor
      *
      * @param Member[] $members
+     * @param Array $attributes The Attributes for the Page - e.g. the Deadline
      * @return static
      */
-    private function __construct($members)
+    public function __construct($members, $attributes)
     {
-        parent::__construct();
-
         $this->members = $members;
+        $this->attributes = $attributes;
 
         return $this;
     }
 
     /**
-     * Creates a new Reposittory for a single Bill PDF Page
-     *
-     * @param Member[] $members
-     * @return static
+     * Gets the Bank details for the sidebar
      */
-    public static function fromMemberCollection($members)
+    public function getBankDetails()
     {
-        return new static($members);
+        return [
+            'Kontoinhaber:' => $this->getGroupname(),
+            'IBAN:' => Setting::get('letterIban'),
+            'BIC:' => Setting::get('letterBic'),
+            'Verwendungszweck:' => str_replace(
+                '[name]',
+                $this->members[0]->lastname,
+                Setting::get('letterZweck')
+            )
+        ];
     }
 
     public function getHeaderAddress()
@@ -91,10 +99,10 @@ class BillPageRepository extends LetterContentRepository
      * @param Member $member
      * @param date $deadline
      */
-    public function getMiddleText($deadline)
+    public function getMiddleText()
     {
-        $deadline = $deadline
-            ? Carbon::parse($deadline)->format('d.m.Y')
+        $deadline = $this->attributes['deadline']
+            ? Carbon::parse($this->attributes['deadline'])->format('d.m.Y')
             : false;
 
         $text = [
@@ -119,5 +127,35 @@ class BillPageRepository extends LetterContentRepository
     public function getTotalAmount()
     {
         return $this->members->totalAmount([1]);
+    }
+
+    /**
+     * Gets the Name of the Group
+     *
+     * @return string
+     */
+    public function getGroupname()
+    {
+        return Setting::get('groupname');
+    }
+
+    /**
+     * Gets the contact info line by line
+     *
+     * @return string[]
+     */
+    public function getContactInfo()
+    {
+        return [
+            Setting::get('personName'),
+            Setting::get('personFunction'),
+            '',
+            Setting::get('personAddress'),
+            Setting::get('personZip').' '.Setting::get('personCity'),
+            '',
+            Setting::get('personTel'),
+            Setting::get('personMail'),
+            Setting::get('website')
+        ];
     }
 }

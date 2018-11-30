@@ -2,10 +2,11 @@
 
 namespace Tests\Feature\Pdf;
 
-use Tests\FeatureTestCase;
+use Storage;
+use App\Status;
 use App\Payment;
 use App\Subscription;
-use App\Status;
+use Tests\FeatureTestCase;
 
 class CreatesBillPdfTest extends FeatureTestCase
 {
@@ -13,7 +14,9 @@ class CreatesBillPdfTest extends FeatureTestCase
     {
         parent::setUp();
 
-        $this->runSeeder('DatabaseSeeder');
+        \Storage::fake('temp');
+        $this->createConfigs();
+        $this->createMembers();
     }
 
     /** @test */
@@ -21,21 +24,18 @@ class CreatesBillPdfTest extends FeatureTestCase
     {
         $this->authAsApi();
 
-        \Storage::fake('public');
-
         $member = $this->create('Member', ['firstname' => 'Max', 'lastname' => 'Must']);
 
-        \App\Payment::create([
+        $member->createPayment([
             'status_id' => 1,
-            'member_id' => $member->id,
             'subscription_id' => 1,
             'nr' => 50
         ]);
 
         $this->postApi("member/$member->id/billpdf", ['includeFamilies' => false, 'deadline' => null])
-            ->assertSuccess();
+            ->assertSee(Storage::disk('temp')->url('rechnung-fur-must.pdf'));
 
-        \Storage::disk('public')->assertExists("pdf/rechnung-fur-must.pdf");
+        Storage::disk('temp')->assertExists("rechnung-fur-must.pdf");
     }
 
     /** @test */
@@ -43,20 +43,17 @@ class CreatesBillPdfTest extends FeatureTestCase
     {
         $this->authAsApi();
 
-        \Storage::fake('public');
-
         $member = $this->create('Member', ['firstname' => 'Max', 'lastname' => 'Must']);
 
-        \App\Payment::create([
+        $member->createPayment([
             'status_id' => 1,
-            'member_id' => $member->id,
             'subscription_id' => 1,
             'nr' => 50
         ]);
 
         $this->postApi("member/$member->id/billpdf", ['includeFamilies' => true, 'deadline' => null])
-            ->assertSuccess();
+            ->assertSee(Storage::disk('temp')->url('rechnung-fur-must.pdf'));
 
-        \Storage::disk('public')->assertExists("pdf/rechnung-fur-must.pdf");
+        Storage::disk('temp')->assertExists("rechnung-fur-must.pdf");
     }
 }

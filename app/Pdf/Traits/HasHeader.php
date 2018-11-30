@@ -2,13 +2,13 @@
 
 namespace App\Pdf\Traits;
 
-use App\Pdf\Repositories\LetterContentRepository;
+use App\Pdf\Interfaces\LetterPageInterface;
 
 trait HasHeader
 {
-    public function generateHeader(LetterContentRepository $page)
+    public function generateHeader(LetterPageInterface $page)
     {
-        $filename = $this->content->getLogoFilename();
+        $filename = $page->getLogoFilename();
 
         if ($filename !== false) {
             $this->pdf->Image($filename, $this->pdf->GetPageWidth() - 45, 5, 40);
@@ -23,7 +23,7 @@ trait HasHeader
 
         $this->pdf->setX(0);
         $this->pdf->setY(44);
-        $this->pdf->Cell(0, 8, utf8_decode($this->content->getFrom()), 0, 1);
+        $this->pdf->Cell(0, 8, utf8_decode($page->getFrom()), 0, 1);
 
         $this->pdf->setFont('OpenSans', '', 10);
         foreach ($page->getHeaderAddress() as $addressPart) {
@@ -34,7 +34,7 @@ trait HasHeader
 
         $this->pdf->setFont('OpenSans', '', 12);
         $this->pdf->SetX(165);
-        $this->pdf->Cell(0, 5, utf8_decode($this->content->getGroupname()), 0, 1);
+        $this->pdf->Cell(0, 5, utf8_decode($page->getGroupname()), 0, 1);
 
         $this->pdf->SetRightMargin(48);
     }

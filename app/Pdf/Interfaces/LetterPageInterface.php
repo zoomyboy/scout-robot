@@ -2,7 +2,7 @@
 
 namespace App\Pdf\Interfaces;
 
-interface LetterContentInterface
+interface LetterPageInterface
 {
     /**
      * Gets the Date for the document

@@ -58,6 +58,10 @@ class Member extends Model
             : explode("\n", $this->letter_address);
     }
 
+    public function getFullnameAttribute() {
+        return $this->firstname.' '.$this->lastname;
+    }
+
     //---------------------------------- Relations ----------------------------------
     public function country()
     {
@@ -109,10 +113,10 @@ class Member extends Model
         return $this->belongsTo(Subscription::class);
     }
 
-    public function familyMembers()
-    {
-        return $this->hasSame(['lastname', 'city', 'plz', 'city']);
+    public function createPayment($attributes) {
+        $this->payments()->create($attributes);
     }
+
 
     //----------------------------------- Scopes ------------------------------------
     public function scopeFamily($q, $member)

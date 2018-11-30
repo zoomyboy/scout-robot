@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Collections\OwnCollection;
 use App\Member;
 use App\Pdf\Generator\LetterGenerator;
-use App\Pdf\Repositories\BillContentRepository;
+use App\Pdf\Repositories\BillPageRepository;
 use App\Pdf\Repositories\RememberContentRepository;
 use App\Queries\BillPdfQuery;
 use App\Queries\RememberPdfQuery;
@@ -21,13 +21,13 @@ class MemberPdfController extends Controller
             : (new OwnCollection([$member]))
         ;
 
-        $service = app()->makeWith(LetterGenerator::class, [
-            'members' => $members->groupBy('lastname'),
-            'atts' => ['deadline' => request()->deadline],
-            'content' => new BillContentRepository($members->groupBy('lastname'))
+        $content = new BillPageRepository($members, [
+            'deadline' => request()->deadline
         ]);
 
-        return $service->handle(str_slug('Rechnung für '.$member->lastname).'.pdf');
+        return app(LetterGenerator::class)
+            ->addPage($content)
+            ->generate('Rechnung für '.$members[0]->lastname);
     }
 
     public function allBill(Member $member)

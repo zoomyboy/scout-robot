@@ -2,9 +2,11 @@
 
 namespace App\Pdf\Traits;
 
+use App\Pdf\Interfaces\LetterPageInterface;
+
 trait HasSubject
 {
-    public function generateSubject($page)
+    public function generateSubject(LetterPageInterface $page)
     {
         $this->pdf->SetFont('Arvo', '', 14);
         $this->pdf->SetTextColor(0, 48, 86);

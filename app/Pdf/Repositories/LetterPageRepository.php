@@ -2,41 +2,13 @@
 
 namespace App\Pdf\Repositories;
 
-use App\Conf;
-use App\Pdf\Interfaces\LetterContentInterface;
+use Setting;
 use App\Traits\GeneratesBlade;
+use App\Pdf\Interfaces\LetterPageInterface;
 
-abstract class LetterContentRepository implements LetterContentInterface
+abstract class LetterPageRepository implements LetterPageInterface
 {
     use GeneratesBlade;
-
-    /**
-     * @var \App\Conf $configModel The Config Eloquent Model
-     */
-    private $configModel;
-
-    /**
-     * Creates a new Reposittory for a single Bill PDF Page
-     *
-     * @param Member[] $members
-     * @return static
-     */
-    public static function fromMemberCollection($members)
-    {
-        return new static($members);
-    }
-
-    /**
-     * Constructor
-     *
-     * @return static
-     */
-    public function __construct()
-    {
-        $this->configModel = Conf::first();
-
-        return $this;
-    }
 
     /**
      * Gets the Date for the document
@@ -45,7 +17,7 @@ abstract class LetterContentRepository implements LetterContentInterface
      */
     public function getDateString()
     {
-        return $this->generateView($this->configModel->letterDate, ['date' => date('d.m.Y')]);
+        return $this->generateView(Setting::get('letterDate'), ['date' => date('d.m.Y')]);
     }
 
     /**
@@ -56,7 +28,7 @@ abstract class LetterContentRepository implements LetterContentInterface
      */
     public function getFrom()
     {
-        return $this->configModel->letterFrom;
+        return Setting::get('letterFrom');
     }
 
     /**
@@ -66,23 +38,11 @@ abstract class LetterContentRepository implements LetterContentInterface
      */
     public function getLogoFilename()
     {
-        return $this->configModel->files->count()
-            ? storage_path('app/public/'.$this->configModel->files->first()->filename)
+        return Setting::get('files')->count()
+            ? storage_path('app/public/'.Setting::get('files')->first()->filename)
             : false;
     }
 
-    /**
-     * Gets the Bank details for the sidebar
-     */
-    public function getBankDetails()
-    {
-        return [
-            'Kontoinhaber:' => $this->getGroupname(),
-            'IBAN:' => $this->configModel->letterIban,
-            'BIC:' => $this->configModel->letterBic,
-            'Verwendungszweck:' => str_replace('[name]', $this->members[0]->lastname, $this->configModel->letterZweck)
-        ];
-    }
 
     /**
      * Gets the Name of the responsible Person for Money
@@ -91,7 +51,7 @@ abstract class LetterContentRepository implements LetterContentInterface
      */
     public function getPersonName()
     {
-        return $this->configModel->personName;
+        return Setting::get('personName');
     }
 
     /**
@@ -101,7 +61,7 @@ abstract class LetterContentRepository implements LetterContentInterface
      */
     public function getPersonMail()
     {
-        return $this->configModel->personMail;
+        return Setting::get('personMail');
     }
 
     /**
@@ -111,7 +71,7 @@ abstract class LetterContentRepository implements LetterContentInterface
      */
     public function getPersonPhone()
     {
-        return $this->configModel->personTel;
+        return Setting::get('personTel');
     }
 
     /**
@@ -121,7 +81,7 @@ abstract class LetterContentRepository implements LetterContentInterface
      */
     public function getPersonFunction()
     {
-        return $this->configModel->personFunction;
+        return Setting::get('personFunction');
     }
 
     /**
