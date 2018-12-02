@@ -27,13 +27,17 @@ trait SeedsDatabase {
     }
 
     public function createMembers() {
+        $this->prepareMembers();
+        $this->create('Member');
+    }
+
+    public function prepareMembers() {
         $this->runSeeder('GenderSeeder');
         $this->createRegions();
         $this->createConfessions();
         $this->createSubscriptions();
         $this->createNationalities();
         $this->createWays();
-        $this->create('Member');
     }
 
     public function createConfessions() {

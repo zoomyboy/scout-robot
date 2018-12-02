@@ -45,18 +45,6 @@ class IntegrationTestCase extends \Tests\TestCase
         });
     }
 
-    /** @todo in Trait auslagern */
-    public function createPayment(\App\Member $member, $values)
-    {
-        $member->payments()->save(
-            (new \App\Payment([
-                'nr' => $values['nr']
-            ]))
-            ->subscription()->associate(\App\Subscription::find($values['subscription']))
-            ->status()->associate(\App\Status::find($values['status']))
-        );
-    }
-
     public function seedForMember() {
         $this->runSeeder('GenderSeeder');
         factory(\App\Country::class)->create();
