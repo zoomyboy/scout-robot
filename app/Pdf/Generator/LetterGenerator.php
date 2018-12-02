@@ -31,7 +31,7 @@ class LetterGenerator extends GlobalPdf
 
         $this->pdf->Cell(0, 5, '', 0, 1);
 
-        foreach ($page->getPaymentsFor() as $key => $value) {
+        foreach ($page->getPayments() as $key => $value) {
             $this->pdf->cell(110, 5, $this->formatStringWithEuro($key), 0, 0);
             $this->pdf->cell(0, 5, $this->formatStringWithEuro($value), 0, 1, 'R');
         }

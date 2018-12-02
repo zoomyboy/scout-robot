@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Collections\OwnCollection;
+use \FPDF;
 use App\Member;
-use App\Pdf\Generator\LetterGenerator;
-use App\Pdf\Repositories\BillPageRepository;
-use App\Pdf\Repositories\RememberContentRepository;
+use Illuminate\Http\Request;
 use App\Queries\BillPdfQuery;
 use App\Queries\RememberPdfQuery;
-use Illuminate\Http\Request;
-use \FPDF;
+use App\Collections\OwnCollection;
+use App\Pdf\Generator\LetterGenerator;
+use App\Pdf\Repositories\BillPageRepository;
+use App\Pdf\Repositories\RememberPageRepository;
+use App\Pdf\Repositories\RememberContentRepository;
 
 class MemberPdfController extends Controller
 {
@@ -59,15 +60,18 @@ class MemberPdfController extends Controller
 
     public function remember(Member $member)
     {
-        $members = request()->includeFamilies === true ? Member::family($member)->get()->groupBy('lastname') : (new OwnCollection([$member]))->groupBy('lastname');
+        $members = request()->includeFamilies === true
+            ? Member::family($member)->get()
+            : (new OwnCollection([$member]))
+        ;
 
-        $service = app()->makeWith(BillPdfService::class, [
-            'members' => $members,
-            'atts' => ['deadline' => request()->deadline],
-            'content' => new RememberContentRepository()
+        $content = new RememberPageRepository($members, [
+            'deadline' => request()->deadline
         ]);
 
-        return $service->handle(str_slug('Erinnerung für '.$member->lastname).'.pdf');
+        return app(LetterGenerator::class)
+            ->addPage($content)
+            ->generate('Erinnerung für '.$members[0]->lastname);
     }
 
     public function allRemember(Member $member)

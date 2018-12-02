@@ -76,11 +76,9 @@ class BillPageRepository extends LetterPageRepository
     }
 
     /**
-     * Gets the payments for the given Member
-     *
-     * @param Member[] $member
+     * Gets the payments
      */
-    public function getPaymentsFor()
+    public function getPayments()
     {
         $payments = [];
         foreach ($this->members as $m) {

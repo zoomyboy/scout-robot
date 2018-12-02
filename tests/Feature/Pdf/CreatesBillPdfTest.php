@@ -10,6 +10,8 @@ use Tests\FeatureTestCase;
 
 class CreatesBillPdfTest extends FeatureTestCase
 {
+    public $member;
+
     public function setUp()
     {
         parent::setUp();
@@ -17,43 +19,75 @@ class CreatesBillPdfTest extends FeatureTestCase
         \Storage::fake('temp');
         $this->createConfigs();
         $this->createMembers();
-    }
 
-    /** @test */
-    public function it_creates_a_pdf_for_a_single_member_with_no_families()
-    {
-        $this->authAsApi();
+        $this->member = $this->create('Member', ['firstname' => 'Max', 'lastname' => 'Must']);
 
-        $member = $this->create('Member', ['firstname' => 'Max', 'lastname' => 'Must']);
-
-        $member->createPayment([
+        $this->member->createPayment([
             'status_id' => 1,
             'subscription_id' => 1,
             'nr' => 50
         ]);
 
-        $this->postApi("member/$member->id/billpdf", ['includeFamilies' => false, 'deadline' => null])
+        $this->member->createPayment([
+            'status_id' => 2,
+            'subscription_id' => 1,
+            'nr' => 50
+        ]);
+    }
+
+    /** @test */
+    public function it_creates_a_bill_pdf_for_a_single_member_with_no_families()
+    {
+        $this->authAsApi();
+
+        $this->postApi("member/{$this->member->id}/billpdf", [
+            'includeFamilies' => false,
+            'deadline' => null
+        ])
             ->assertSee(Storage::disk('temp')->url('rechnung-fur-must.pdf'));
 
         Storage::disk('temp')->assertExists("rechnung-fur-must.pdf");
     }
 
     /** @test */
-    public function it_creates_a_pdf_for_a_single_member_with_families()
+    public function it_creates_a_bill_for_a_single_member_with_families()
     {
         $this->authAsApi();
 
-        $member = $this->create('Member', ['firstname' => 'Max', 'lastname' => 'Must']);
-
-        $member->createPayment([
-            'status_id' => 1,
-            'subscription_id' => 1,
-            'nr' => 50
-        ]);
-
-        $this->postApi("member/$member->id/billpdf", ['includeFamilies' => true, 'deadline' => null])
+        $this->postApi("member/{$this->member->id}/billpdf", [
+            'includeFamilies' => true,
+            'deadline' => null
+        ])
             ->assertSee(Storage::disk('temp')->url('rechnung-fur-must.pdf'));
 
         Storage::disk('temp')->assertExists("rechnung-fur-must.pdf");
+    }
+
+    /** @test */
+    public function it_creates_a_remmeber_pdf_for_a_single_member_with_families()
+    {
+        $this->authAsApi();
+
+        $this->postApi("member/{$this->member->id}/rememberpdf", [
+            'includeFamilies' => true,
+            'deadline' => null
+        ])
+            ->assertSee(Storage::disk('temp')->url('erinnerung-fur-must.pdf'));
+
+        Storage::disk('temp')->assertExists("erinnerung-fur-must.pdf");
+    }
+
+    /** @test */
+    public function it_creates_a_remmeber_pdf_for_a_single_member_with_no_families()
+    {
+        $this->authAsApi();
+
+        $this->postApi("member/{$this->member->id}/rememberpdf", [
+            'includeFamilies' => false,
+            'deadline' => null
+        ])
+            ->assertSee(Storage::disk('temp')->url('erinnerung-fur-must.pdf'));
+
+        Storage::disk('temp')->assertExists("erinnerung-fur-must.pdf");
     }
 }

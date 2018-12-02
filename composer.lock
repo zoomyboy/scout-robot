@@ -5615,16 +5615,11 @@
         {
             "name": "zoomyboy/tests",
             "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/zoomyboy/tests.git",
-                "reference": "c4010e45f5c51312b2e3858c8fc6d2aec3e32dbb"
-            },
             "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/zoomyboy/tests/zipball/c4010e45f5c51312b2e3858c8fc6d2aec3e32dbb",
-                "reference": "c4010e45f5c51312b2e3858c8fc6d2aec3e32dbb",
-                "shasum": ""
+                "type": "path",
+                "url": "./packages/tests",
+                "reference": "6acf2a38d9135594e3812eac5bd31f9a3354c009",
+                "shasum": null
             },
             "type": "library",
             "autoload": {
@@ -5632,14 +5627,15 @@
                     "Zoomyboy\\Tests\\": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "authors": [
                 {
                     "name": "Philipp Lang",
                     "email": "pille@zoomyboy.de"
                 }
             ],
-            "time": "2018-07-08T10:20:43+00:00"
+            "transport-options": {
+                "symlink": true
+            }
         }
     ],
     "aliases": [],

@@ -33,7 +33,6 @@ trait SeedsDatabase {
         $this->createSubscriptions();
         $this->createNationalities();
         $this->createWays();
-        $this->runSeeder('MemberSeeder');
         $this->create('Member');
     }
 

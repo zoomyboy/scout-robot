@@ -2,59 +2,44 @@
 
 namespace App\Pdf\Repositories;
 
-use App\Pdf\Interfaces\LetterContentInterface;
-use App\Pdf\Repositories\DefaultSidebarRepository;
-use App\Traits\GeneratesBlade;
+use Setting;
 use Carbon\Carbon;
 
-class RememberPageRepository extends LetterContentRepository
+class RememberPageRepository extends LetterPageRepository
 {
-    public $members;
+    private $members;
+    private $attributes;
 
     /**
-     * Creates a new Reposittory for a single Bill PDF Page
+     * Constructor
      *
      * @param Member[] $members
+     * @param Array $attributes The Attributes for the Page - e.g. the Deadline
      * @return static
      */
-    public static function fromMemberCollection($members)
+    public function __construct($members, $attributes)
     {
-        return new static($members);
-    }
-
-    /**
-     * Private constructor
-     *
-     * @param Member[] $members
-     * @return static
-     */
-    private function __construct($members)
-    {
-        parent::__construct();
-
         $this->members = $members;
+        $this->attributes = $attributes;
 
         return $this;
     }
 
     /**
-     * Gets the title (=Subject) of the letter
-     *
-     * @return string
+     * Gets the Bank details for the sidebar
      */
-    public function getTitle()
+    public function getBankDetails()
     {
-        return 'Zahlungserinnerung';
-    }
-
-    /**
-     * Gets the Intro text
-     *
-     * @return string
-     */
-    public function getIntro()
-    {
-        return 'Am Anfang des Jahres haben wir Ihnen Ihre bisherigen Ausstände in Höhe von '.$this->members->totalAmount([1]).' €'.' für '.$this->members->enumNames().' für den '.$this->getGroupname().' und die DPSG in Rechnung gestellt. Diese setzten sich wie folgt zusammen:';
+        return [
+            'Kontoinhaber:' => $this->getGroupname(),
+            'IBAN:' => Setting::get('letterIban'),
+            'BIC:' => Setting::get('letterBic'),
+            'Verwendungszweck:' => str_replace(
+                '[name]',
+                $this->members[0]->lastname,
+                Setting::get('letterZweck')
+            )
+        ];
     }
 
     public function getHeaderAddress()
@@ -71,11 +56,29 @@ class RememberPageRepository extends LetterContentRepository
     }
 
     /**
-     * Gets the payments for the given Member
+     * Gets the Intro text
      *
-     * @param Member[] $member
+     * @return string
      */
-    public function getPaymentsFor()
+    public function getIntro()
+    {
+        return 'Am Anfang des Jahres haben wir Ihnen Ihre bisherigen Ausstände in Höhe von '.$this->members->totalAmount([1]).' €'.' für '.$this->members->enumNames().' für den '.$this->getGroupname().' und die DPSG in Rechnung gestellt. Diese setzten sich wie folgt zusammen:';
+    }
+
+    /**
+     * Gets the title (=Subject) of the letter
+     *
+     * @return string
+     */
+    public function getTitle()
+    {
+        return 'Zahlungserinnerung';
+    }
+
+    /**
+     * Gets the payments
+     */
+    public function getPayments()
     {
         $payments = [];
         foreach ($this->members as $m) {
@@ -94,10 +97,10 @@ class RememberPageRepository extends LetterContentRepository
      * @param Member $member
      * @param date $deadline
      */
-    public function getMiddleText($deadline)
+    public function getMiddleText()
     {
-        $deadline = $deadline
-            ? Carbon::parse($deadline)->format('d.m.Y')
+        $deadline = $this->attributes['deadline']
+            ? Carbon::parse($this->attributes['deadline'])->format('d.m.Y')
             : false;
 
         $text = [
@@ -122,5 +125,35 @@ class RememberPageRepository extends LetterContentRepository
     public function getTotalAmount()
     {
         return $this->members->totalAmount([1]);
+    }
+
+    /**
+     * Gets the Name of the Group
+     *
+     * @return string
+     */
+    public function getGroupname()
+    {
+        return Setting::get('groupname');
+    }
+
+    /**
+     * Gets the contact info line by line
+     *
+     * @return string[]
+     */
+    public function getContactInfo()
+    {
+        return [
+            Setting::get('personName'),
+            Setting::get('personFunction'),
+            '',
+            Setting::get('personAddress'),
+            Setting::get('personZip').' '.Setting::get('personCity'),
+            '',
+            Setting::get('personTel'),
+            Setting::get('personMail'),
+            Setting::get('website')
+        ];
     }
 }
