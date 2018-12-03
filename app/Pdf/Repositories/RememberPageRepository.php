@@ -62,7 +62,7 @@ class RememberPageRepository extends LetterPageRepository
      */
     public function getIntro()
     {
-        return 'Am Anfang des Jahres haben wir Ihnen Ihre bisherigen Ausstände in Höhe von '.$this->members->totalAmount([1]).' €'.' für '.$this->members->enumNames().' für den '.$this->getGroupname().' und die DPSG in Rechnung gestellt. Diese setzten sich wie folgt zusammen:';
+        return 'Am Anfang des Jahres haben wir Ihnen Ihre bisherigen Ausstände in Höhe von '.$this->getTotalAmount().' €'.' für '.$this->members->enumNames().' für den '.$this->getGroupname().' und die DPSG in Rechnung gestellt. Diese setzten sich wie folgt zusammen:';
     }
 
     /**
@@ -105,7 +105,7 @@ class RememberPageRepository extends LetterPageRepository
 
         $text = [
             'Da von Ihnen bislang keine Zahlung eingegangen ist, erinnern wir Sie nun freundlichst daran, den Betrag in Höhe von',
-            '<strong>'.$this->members->totalAmount([2]).' €'.'</strong>',
+            '<strong>'.$this->getTotalAmount().' €'.'</strong>',
         ];
 
         if ($deadline) {
@@ -124,7 +124,7 @@ class RememberPageRepository extends LetterPageRepository
      */
     public function getTotalAmount()
     {
-        return $this->members->totalAmount([1]);
+        return $this->members->totalAmount([2]);
     }
 
     /**
