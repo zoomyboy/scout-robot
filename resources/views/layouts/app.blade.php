@@ -10,6 +10,8 @@
 
 	<title>{{ config('app.name', 'Laravel') }}</title>
     <link href='https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons' rel="stylesheet">
+    <link href="/css/app.css" rel="stylesheet">
+
     <script src="{{ config('broadcasting.socket_host') }}/socket.io/socket.io.js"></script>
 
     <meta name="socket_host" content="{{ config('broadcasting.socket_host') }}">

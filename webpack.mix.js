@@ -21,4 +21,5 @@ mix.options({
 })
 
 mix.js('resources/assets/js/app.js', 'public/js')
-	.js('resources/assets/js/full.js', 'public/js');
+	.js('resources/assets/js/full.js', 'public/js')
+    .sass('resources/assets/sass/app.scss', 'public/css');

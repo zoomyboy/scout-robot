@@ -1,12 +1,6 @@
 <template>
 </template>
 
-<style lang="less">
-    .cp-wrap.cp-js-nav {
-
-    }
-</style>
-
 <script>
     export default {
         data: function() {

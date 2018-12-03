@@ -13,12 +13,6 @@
     </div>
 </template>
 
-<style lang="less">
-    .cp-wrap.cp-createpayments-index {
-
-    }
-</style>
-
 <script>
     export default {
         data: function() {

@@ -24,23 +24,12 @@
     </div>
 </template>
 
-<style lang="less">
-    .cp-wrap.cp-js-App {
-
-    }
-</style>
-
-<script>
-</script>
-
 <script>
     import {mapState, mapGetters} from 'vuex';
 
     export default {
         data: function() {
             return {};
-        },
-        methods: {
         },
         computed: {
             ...mapState(['notification', 'appname', 'ready', 'toolbar', 'apptitle']),

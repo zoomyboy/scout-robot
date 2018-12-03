@@ -16,12 +16,6 @@
     </v-dialog>
 </template>
 
-<style lang="less">
-    .cp-wrap.cp-mass-confirm {
-
-    }
-</style>
-
 <script>
 	import {mapState} from 'vuex';
 

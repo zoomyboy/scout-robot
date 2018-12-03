@@ -60,15 +60,8 @@
     </div>
 </template>
 
-<style lang="less">
-	.cp-wrap.cp-mass-index {
-
-	}
-</style>
-
 <script>
 	import {mapState} from 'vuex';
-	import swal from 'sweetalert2';
 
 	export default {
 		data: function() {

@@ -14,7 +14,7 @@
                     <v-form v-model="addValid">
                         <v-text-field v-model="add.title" required label="Name" :rules="[validateRequired()]"></v-text-field>
                         <v-text-field v-model="add.amount" required label="Beitrag" :rules="[validateRequired(), validateCurrency()]"></v-text-field>
-                        <v-select 
+                        <v-select
                             :items="fees"
                             v-model="add.fee"
                             label="NaMi-Beitrag"
@@ -35,7 +35,7 @@
                     <v-form v-model="editValid">
                         <v-text-field v-model="edit.title" required label="Name" :rules="[validateRequired()]"></v-text-field>
                         <v-text-field v-model="edit.amount" required label="Beitrag" :rules="[validateRequired(), validateCurrency()]"></v-text-field>
-                        <v-select 
+                        <v-select
                             :items="fees"
                             v-model="edit.fee"
                             label="NaMi-Beitrag"
@@ -70,12 +70,6 @@
         </v-data-table>
 	</div>
 </template>
-
-<style lang="less">
-	.cp-wrap.cp-fee-index {
-
-	}
-</style>
 
 <script>
     import accounting from 'accounting';

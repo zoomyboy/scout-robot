@@ -12,12 +12,6 @@
     </v-card>
 </template>
 
-<style lang="less">
-	.cp-wrap.cp-nami-get {
-
-	}
-</style>
-
 <script>
 	export default {
 		data: function() {

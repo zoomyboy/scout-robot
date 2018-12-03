@@ -66,15 +66,6 @@
     </div>
 </template>
 
-<style lang="less">
-    .cp-wrap.cp-js-App {
-
-    }
-</style>
-
-<script>
-</script>
-
 <script>
     import {mapState, mapGetters} from 'vuex';
 

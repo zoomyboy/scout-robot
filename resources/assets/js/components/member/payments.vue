@@ -7,7 +7,7 @@
                 <v-container>
                     <v-form v-model="addValid" @submit.prevent="triggerAdd">
                         <v-text-field v-model="add.nr" required label="Name" :rules="[validateRequired()]"></v-text-field>
-                        <v-select 
+                        <v-select
                             :items="statuses"
                             v-model="add.status"
                             label="Status"
@@ -17,7 +17,7 @@
                             :rules="[validateSelected()]"
                         >
                         </v-select>
-                        <v-select 
+                        <v-select
                             :items="subscriptions"
                             v-model="add.subscription"
                             label="Beitrag"
@@ -39,7 +39,7 @@
                 <v-container>
                     <v-form v-model="editValid" @submit.prevent="triggerEdit">
                         <v-text-field v-model="editData.nr" required label="Name" :rules="[validateRequired()]"></v-text-field>
-                        <v-select 
+                        <v-select
                             :items="statuses"
                             v-model="editData.status"
                             label="Status"
@@ -49,7 +49,7 @@
                             :rules="[validateSelected()]"
                         >
                         </v-select>
-                        <v-select 
+                        <v-select
                             :items="subscriptions"
                             v-model="editData.subscription"
                             label="Beitrag"
@@ -148,12 +148,6 @@
         </v-container>
     </v-card>
 </template>
-
-<style lang="less">
-    .cp-wrap.cp-member-payment {
-
-    }
-</style>
 
 <script>
     import {mapState} from 'vuex';
