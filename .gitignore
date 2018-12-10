@@ -15,6 +15,5 @@ npm-debug.log
 /resources/assets/js/lib
 tags
 yarn.lock
-packages/
 /resources/views/temp
 /resources/temp

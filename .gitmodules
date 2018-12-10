@@ -1,0 +1,9 @@
+[submodule "packages/tests"]
+	path = packages/tests
+	url = git@github.com:zoomyboy/tests.git
+[submodule "packages/better-notifications"]
+	path = packages/better-notifications
+	url = git@github.com:zoomyboy/better-notifications.git
+[submodule "packages/fileupload"]
+	path = packages/fileupload
+	url = git@github.com:zoomyboy/fileupload.git
