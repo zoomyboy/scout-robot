@@ -22,9 +22,9 @@ class MemberCreated implements ShouldBroadcastNow
      *
      * @return void
      */
-    public function __construct($member, $currentIndex, $all)
+    public function __construct($member, $progress)
     {
-        $this->progress = round($currentIndex / $all, 2) * 100;
+        $this->progress = $progress;
         $this->member = $member;
     }
 

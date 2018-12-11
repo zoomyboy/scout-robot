@@ -2,10 +2,11 @@
 
 namespace App\Http\Requests;
 
-use App\Jobs\SyncAllNamiMembers;
+use \App\Member;
+use App\Jobs\SyncNamiMember;
 use Illuminate\Validation\Rule;
 use Zoomyboy\BaseRequest\Request;
-use \App\Member;
+use App\Nami\Receiver\Member as MemberReceiver;
 
 class NamiGetRequest extends Request
 {
@@ -33,24 +34,27 @@ class NamiGetRequest extends Request
 	}
 
 	public function persist($model = null) {
-        if (!$this->active && !$this->inactive) {$filter = [];}
+        if (!$this->active && !$this->inactive) {return;}
 
         if (!$this->active && $this->inactive) {
-            $filter = ['status' => ['Inaktiv']];
+            $status = ['Inaktiv'];
         }
 
         if ($this->active && !$this->inactive) {
-            $filter = ['status' => ['Aktiv']];
+            $status = ['Aktiv'];
         }
 
         if ($this->active && $this->inactive) {
-            $filter = ['status' => ['Aktiv', 'Inaktiv']];
+            $status = ['Aktiv', 'Inaktiv'];
         }
 
-        if (!$this->active && !$this->inactive) {
-            $filter = ['status' => []];
-        }
+        $allMembers = app(MemberReceiver::class)->all()
+        ->filter(function($member) use ($status) {
+            return in_array($member->entries_status, $status);
+        })->values();
 
-		SyncAllNamiMembers::dispatch($filter);
+        foreach($allMembers as $i => $member) {
+            SyncNamiMember::dispatch($member->id, ($i+1) / count($allMembers) * 100);
+        }
 	}
 }
