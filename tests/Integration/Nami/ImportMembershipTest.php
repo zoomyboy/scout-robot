@@ -9,18 +9,15 @@ use App\Nami\Receiver\Membership as MembershipReceiver;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Config;
 use Tests\Integration\NamiTestCase;
-use Tests\Traits\CreatesNamiMember;
 use \Mockery as M;
 
 class ImportMembershipTest extends NamiTestCase {
-    use CreatesNamiMember;
-
     public function setUp() {
         parent::setUp();
 
         $this->setupNamiDatabaseModels();
 
-        $this->member = $this->create('Member', ['nami_id' => 23]);
+        $this->member = $this->create('Member', ['nami_id' => 5678]);
 
         $this->activities = $this->createMany('Activity', 2, [
             ['nami_id' => 251], ['nami_id' => 252]
@@ -39,28 +36,19 @@ class ImportMembershipTest extends NamiTestCase {
     public function it_imports_all_memberships_that_are_active() {
         $endingDate = Carbon::now()->addDays(10)->format('Y-m-d').' 00:00:00';
 
-        $receiver = M::mock(MembershipReceiver::class);
-        $receiver->shouldReceive('all')->with(23)->once()
-            ->andReturn(collect(json_decode('[{"id": 588}, {"id": 589}]')));
-
-        $receiver->shouldReceive('single')->with(23, 588)->once()->andReturn((object)[
-            'aktivVon' => '2016-01-01 00:00:00',
-            'aktivBis' => "",
-            'id' => 588,
-            'taetigkeitId' => 251,
-            'untergliederungId' => 301
+        $this->fakeOnlineNamiMembers([
+            ['memberships' => [
+                [],
+                [
+                    'aktivBis' => $endingDate,
+                    'id' => 589,
+                    'taetigkeitId' => 252,
+                    'untergliederungId' => 401
+                ]
+            ]]
         ]);
 
-        $receiver->shouldReceive('single')->with(23, 589)->once()->andReturn((object)[
-            'aktivVon' => '2017-01-01 00:00:00',
-            'aktivBis' => $endingDate,
-            'id' => 589,
-            'taetigkeitId' => 252,
-            'untergliederungId' => 401
-        ]);
-        $this->app->instance(MembershipReceiver::class, $receiver);
-
-        app(MembershipManager::class)->pull(23);
+        app(MembershipManager::class)->pull(5678);
 
         $this->assertDatabaseHas('memberships', [
             'activity_id' => $this->activities[0]->id,
@@ -84,15 +72,15 @@ class ImportMembershipTest extends NamiTestCase {
             'activity_id' => $this->activities[0]->id,
             'group_id' => $this->groups[0]->id
         ]);
-        Member::nami(23)->first()->memberships()->save($membership);
+        Member::nami(5678)->first()->memberships()->save($membership);
 
         $endingDate = Carbon::now()->addDays(10)->format('Y-m-d').' 00:00:00';
 
         $receiver = M::mock(MembershipReceiver::class);
-        $receiver->shouldReceive('all')->with(23)->once()
+        $receiver->shouldReceive('all')->with(5678)->once()
             ->andReturn(collect(json_decode('[{"id": 588}]')));
 
-        $receiver->shouldReceive('single')->with(23, 588)->once()->andReturn((object)[
+        $receiver->shouldReceive('single')->with(5678, 588)->once()->andReturn((object)[
             'aktivVon' => '2016-01-01 00:00:00',
             'aktivBis' => "",
             'id' => 588,
@@ -102,7 +90,7 @@ class ImportMembershipTest extends NamiTestCase {
 
         $this->app->instance(MembershipReceiver::class, $receiver);
 
-        app(MembershipManager::class)->pull(23);
+        app(MembershipManager::class)->pull(5678);
 
         $this->assertDatabaseHas('memberships', [
             'activity_id' => $this->activities[1]->id,
@@ -123,15 +111,15 @@ class ImportMembershipTest extends NamiTestCase {
             'activity_id' => $this->activities[0]->id,
             'group_id' => $this->groups[0]->id
         ]);
-        Member::nami(23)->first()->memberships()->save($membership);
+        Member::nami(5678)->first()->memberships()->save($membership);
 
         $endingDate = Carbon::now()->subDays(10)->format('Y-m-d').' 00:00:00';
 
         $receiver = M::mock(MembershipReceiver::class);
-        $receiver->shouldReceive('all')->with(23)->once()
+        $receiver->shouldReceive('all')->with(5678)->once()
             ->andReturn(collect(json_decode('[{"id": 588}]')));
 
-        $receiver->shouldReceive('single')->with(23, 588)->once()->andReturn((object)[
+        $receiver->shouldReceive('single')->with(5678, 588)->once()->andReturn((object)[
             'aktivVon' => '2016-01-01 00:00:00',
             'aktivBis' => $endingDate,
             'id' => 588,
@@ -141,7 +129,7 @@ class ImportMembershipTest extends NamiTestCase {
 
         $this->app->instance(MembershipReceiver::class, $receiver);
 
-        app(MembershipManager::class)->pull(23);
+        app(MembershipManager::class)->pull(5678);
 
         $this->assertDatabaseMissing('memberships', [
             'member_id' => $this->member->id
@@ -153,10 +141,10 @@ class ImportMembershipTest extends NamiTestCase {
         $endingDate = Carbon::now()->addDays(10)->format('Y-m-d').' 00:00:00';
 
         $receiver = M::mock(MembershipReceiver::class);
-        $receiver->shouldReceive('all')->with(23)->once()
+        $receiver->shouldReceive('all')->with(5678)->once()
             ->andReturn(collect(json_decode('[{"id": 588}, {"id": 589}]')));
 
-        $receiver->shouldReceive('single')->with(23, 588)->once()->andReturn((object)[
+        $receiver->shouldReceive('single')->with(5678, 588)->once()->andReturn((object)[
             'aktivVon' => '2016-01-01 00:00:00',
             'aktivBis' => "",
             'id' => 588,
@@ -164,7 +152,7 @@ class ImportMembershipTest extends NamiTestCase {
             'untergliederungId' => 301
         ]);
 
-        $receiver->shouldReceive('single')->with(23, 589)->once()->andReturn((object)[
+        $receiver->shouldReceive('single')->with(5678, 589)->once()->andReturn((object)[
             'aktivVon' => '2016-01-01 00:00:00',
             'aktivBis' => "",
             'id' => 588,
@@ -174,7 +162,7 @@ class ImportMembershipTest extends NamiTestCase {
 
         $this->app->instance(MembershipReceiver::class, $receiver);
 
-        app(MembershipManager::class)->pull(23);
+        app(MembershipManager::class)->pull(5678);
 
         $this->assertDatabaseMissing('memberships', [
             'member_id' => $this->member->id
@@ -186,10 +174,10 @@ class ImportMembershipTest extends NamiTestCase {
         $endingDate = Carbon::now()->addDays(10)->format('Y-m-d').' 00:00:00';
 
         $receiver = M::mock(MembershipReceiver::class);
-        $receiver->shouldReceive('all')->with(23)->once()
+        $receiver->shouldReceive('all')->with(5678)->once()
             ->andReturn(collect(json_decode('[{"id": 588}]')));
 
-        $receiver->shouldReceive('single')->with(23, 588)->once()->andReturn((object)[
+        $receiver->shouldReceive('single')->with(5678, 588)->once()->andReturn((object)[
             'aktivVon' => '2016-01-01 00:00:00',
             'aktivBis' => "",
             'id' => 588,
@@ -198,7 +186,7 @@ class ImportMembershipTest extends NamiTestCase {
 
         $this->app->instance(MembershipReceiver::class, $receiver);
 
-        app(MembershipManager::class)->pull(23);
+        app(MembershipManager::class)->pull(5678);
 
         $this->assertDatabaseHas('memberships', [
             'member_id' => $this->member->id,
@@ -210,10 +198,10 @@ class ImportMembershipTest extends NamiTestCase {
     /** @test */
     public function it_doesnt_import_a_members_membership_that_has_a_valid_taetigkeit_but_no_local_matching_group() {
         $receiver = M::mock(MembershipReceiver::class);
-        $receiver->shouldReceive('all')->with(23)->once()
+        $receiver->shouldReceive('all')->with(5678)->once()
             ->andReturn(collect(json_decode('[{"id": 588}, {"id": 589}]')));
 
-        $receiver->shouldReceive('single')->with(23, 588)->once()->andReturn((object)[
+        $receiver->shouldReceive('single')->with(5678, 588)->once()->andReturn((object)[
             'aktivVon' => '2016-01-01 00:00:00',
             'aktivBis' => "",
             'id' => 588,
@@ -221,7 +209,7 @@ class ImportMembershipTest extends NamiTestCase {
             'untergliederungId' => 401
         ]);
 
-        $receiver->shouldReceive('single')->with(23, 589)->once()->andReturn((object)[
+        $receiver->shouldReceive('single')->with(5678, 589)->once()->andReturn((object)[
             'aktivVon' => '2016-01-01 00:00:00',
             'aktivBis' => "",
             'id' => 589,
@@ -231,7 +219,7 @@ class ImportMembershipTest extends NamiTestCase {
 
         $this->app->instance(MembershipReceiver::class, $receiver);
 
-        app(MembershipManager::class)->pull(23);
+        app(MembershipManager::class)->pull(5678);
 
         $this->assertDatabaseMissing('memberships', [
             'member_id' => $this->member->id
@@ -243,10 +231,10 @@ class ImportMembershipTest extends NamiTestCase {
         $endingDate = Carbon::now()->subDays(10)->format('Y-m-d').' 00:00:00';
 
         $receiver = M::mock(MembershipReceiver::class);
-        $receiver->shouldReceive('all')->with(23)->once()
+        $receiver->shouldReceive('all')->with(5678)->once()
             ->andReturn(collect(json_decode('[{"id": 588}]')));
 
-        $receiver->shouldReceive('single')->with(23, 588)->once()->andReturn((object)[
+        $receiver->shouldReceive('single')->with(5678, 588)->once()->andReturn((object)[
             'aktivVon' => '2016-01-01 00:00:00',
             'aktivBis' => $endingDate,
             'id' => 588,
@@ -256,7 +244,7 @@ class ImportMembershipTest extends NamiTestCase {
 
         $this->app->instance(MembershipReceiver::class, $receiver);
 
-        app(MembershipManager::class)->pull(23);
+        app(MembershipManager::class)->pull(5678);
 
         $this->assertDatabaseMissing('memberships', [
             'member_id' => $this->member->id

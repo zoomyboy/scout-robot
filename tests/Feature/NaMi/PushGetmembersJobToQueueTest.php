@@ -8,6 +8,7 @@ use Tests\FeatureTestCase;
 use App\Facades\NaMi\NaMiMember;
 use App\Jobs\SyncAllNamiMembers;
 use App\Events\Import\MemberCreated;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Queue;
 
 class PushGetmembersJobToQueueTest extends FeatureTestCase {
@@ -16,12 +17,11 @@ class PushGetmembersJobToQueueTest extends FeatureTestCase {
 	public function setUp() {
 		parent::setUp();
 
-		$this->runSeeder('UsergroupSeeder');
-		$this->runSeeder('WaySeeder');
-		$this->runSeeder('CountrySeeder');
-		$this->runSeeder('ConfSeeder');
+        $this->setupNamiDatabaseModels();
 
         $this->authAsApi();
+
+        Event::fake();
 	}
 
 	/** @test */
@@ -132,6 +132,8 @@ class PushGetmembersJobToQueueTest extends FeatureTestCase {
 
 	/** @test */
 	public function it_doesnt_sync_when_nami_is_not_enabled() {
+        $this->withExceptionHandling();
+
         Setting::set('namiEnabled', false);
 
         $this->fakeOnlineNamiMembers([
@@ -140,7 +142,7 @@ class PushGetmembersJobToQueueTest extends FeatureTestCase {
         ]);
 
         $this->postApi('nami/getmembers', ['active' => false, 'inactive' => false])
-            ->assertSuccess();
+            ->assertStatus(422);
 
         $this->assertDatabaseMissing('members', ['nami_id' => 2334]);
         $this->assertDatabaseMissing('members', ['nami_id' => 2335]);

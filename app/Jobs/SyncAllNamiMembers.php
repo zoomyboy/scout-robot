@@ -38,7 +38,7 @@ class SyncAllNamiMembers implements ShouldQueue
     {
         $members = $receiver->all()->filter(function($member) {
             return in_array($member->entries_status, $this->filter['status']);
-        });
+        })->values();
 
         foreach($members as $i => $member) {
             if (Member::nami($member->id)->exists()) {
