@@ -2,9 +2,9 @@
 
 namespace Tests\Feature\Member;
 
-use Tests\Feature\NamiTestCase;
+use Tests\FeatureTestCase;
 
-class IndexTest extends NamiTestCase {
+class IndexTest extends FeatureTestCase {
     public function setUp() {
         parent::setUp();
 

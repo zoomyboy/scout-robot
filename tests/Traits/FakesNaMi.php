@@ -33,7 +33,6 @@ trait FakesNaMi {
         $allMembers = collect($members)->map(function($member) {
             return (object) [
                 'id' => $member['id'] ?? 5678,
-                'id' => 23,
                 'entries_status' => $member['status'] ?? 'Aktiv'
             ];
         });

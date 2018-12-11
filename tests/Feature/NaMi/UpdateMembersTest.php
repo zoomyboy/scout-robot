@@ -2,13 +2,13 @@
 
 namespace App\Integration\NaMi;
 
-use App\Facades\NaMi\NaMiMember;
 use App\Member;
+use Tests\FeatureTestCase;
 use App\Nami\Jobs\UpdateMember;
+use App\Facades\NaMi\NaMiMember;
 use Illuminate\Support\Facades\Queue;
-use Tests\Feature\NamiTestCase;
 
-class UpdateMembersTest extends NamiTestCase {
+class UpdateMembersTest extends FeatureTestCase {
 	public $config;
 
 	public function setUp() {

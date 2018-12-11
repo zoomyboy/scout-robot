@@ -3,13 +3,13 @@
 namespace App\Feature\Member;
 
 use Setting;
-use App\Facades\NaMi\NaMiMember;
-use App\Jobs\StoreNaMiMember;
 use App\Member;
+use Tests\FeatureTestCase;
+use App\Jobs\StoreNaMiMember;
+use App\Facades\NaMi\NaMiMember;
 use Illuminate\Support\Facades\Queue;
-use Tests\Feature\NamiTestCase;
 
-class StoreTest extends NamiTestCase {
+class StoreTest extends FeatureTestCase {
 	public $config;
 
 	public function setUp() {
