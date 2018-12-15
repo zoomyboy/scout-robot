@@ -1,7 +1,7 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
     "content-hash": "6464c1f72b788f1c248b2a297388d185",
@@ -292,16 +292,16 @@
         },
         {
             "name": "doctrine/dbal",
-            "version": "v2.9.0",
+            "version": "v2.9.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/dbal.git",
-                "reference": "21fdabe2fc01e004e1966f200d900554876bc63c"
+                "reference": "ec74d6e300d78fbc896669c3ca57ef9719adc9c6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/dbal/zipball/21fdabe2fc01e004e1966f200d900554876bc63c",
-                "reference": "21fdabe2fc01e004e1966f200d900554876bc63c",
+                "url": "https://api.github.com/repos/doctrine/dbal/zipball/ec74d6e300d78fbc896669c3ca57ef9719adc9c6",
+                "reference": "ec74d6e300d78fbc896669c3ca57ef9719adc9c6",
                 "shasum": ""
             },
             "require": {
@@ -370,7 +370,7 @@
                 "php",
                 "queryobject"
             ],
-            "time": "2018-12-04T04:39:48+00:00"
+            "time": "2018-12-14T04:51:13+00:00"
         },
         {
             "name": "doctrine/event-manager",
@@ -3065,16 +3065,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "7.5.0",
+            "version": "7.5.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "520723129e2b3fc1dc4c0953e43c9d40e1ecb352"
+                "reference": "c23d78776ad415d5506e0679723cb461d71f488f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/520723129e2b3fc1dc4c0953e43c9d40e1ecb352",
-                "reference": "520723129e2b3fc1dc4c0953e43c9d40e1ecb352",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/c23d78776ad415d5506e0679723cb461d71f488f",
+                "reference": "c23d78776ad415d5506e0679723cb461d71f488f",
                 "shasum": ""
             },
             "require": {
@@ -3145,7 +3145,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2018-12-07T07:08:12+00:00"
+            "time": "2018-12-12T07:20:32+00:00"
         },
         {
             "name": "predis/predis",
@@ -5631,11 +5631,16 @@
         {
             "name": "zoomyboy/better-notifications",
             "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/zoomyboy/better-notifications.git",
+                "reference": "5e2f0a64b0b541a39cc6c0ab8f3b541db8c9270d"
+            },
             "dist": {
-                "type": "path",
-                "url": "./packages/better-notifications",
-                "reference": "3b00bd5081921499d85669281f3e09428d7d11d2",
-                "shasum": null
+                "type": "zip",
+                "url": "https://api.github.com/repos/zoomyboy/better-notifications/zipball/5e2f0a64b0b541a39cc6c0ab8f3b541db8c9270d",
+                "reference": "5e2f0a64b0b541a39cc6c0ab8f3b541db8c9270d",
+                "shasum": ""
             },
             "type": "library",
             "autoload": {
@@ -5643,6 +5648,7 @@
                     "Zoomyboy\\BetterNotifications\\": "src/"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "authors": [
                 {
                     "name": "Philipp Lang",
@@ -5650,18 +5656,21 @@
                 }
             ],
             "description": "A little enhancement to the normal Notifications Library of Laravel 5.4",
-            "transport-options": {
-                "symlink": true
-            }
+            "time": "2018-03-01T15:01:56+00:00"
         },
         {
             "name": "zoomyboy/fileupload",
             "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/zoomyboy/fileupload.git",
+                "reference": "0fb935f0fed93a8bbf60770fb01f14f94cbe1e83"
+            },
             "dist": {
-                "type": "path",
-                "url": "./packages/fileupload",
+                "type": "zip",
+                "url": "https://api.github.com/repos/zoomyboy/fileupload/zipball/0fb935f0fed93a8bbf60770fb01f14f94cbe1e83",
                 "reference": "0fb935f0fed93a8bbf60770fb01f14f94cbe1e83",
-                "shasum": null
+                "shasum": ""
             },
             "type": "library",
             "autoload": {
@@ -5669,6 +5678,7 @@
                     "Zoomyboy\\Fileupload\\": "src/"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "authors": [
                 {
                     "name": "Philipp Lang",
@@ -5676,9 +5686,7 @@
                 }
             ],
             "description": "FileUpload for Laravel",
-            "transport-options": {
-                "symlink": true
-            }
+            "time": "2018-01-07T09:10:38+00:00"
         }
     ],
     "packages-dev": [
