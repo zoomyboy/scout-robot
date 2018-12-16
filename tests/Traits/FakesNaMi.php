@@ -3,9 +3,10 @@
 namespace Tests\Traits;
 
 use Mockery as M;
+use Tests\Utilities\NaMiFake;
+use App\Nami\Interfaces\UserResolver;
 use App\Nami\Receiver\Member as MemberReceiver;
 use App\Nami\Receiver\Membership as MembershipReceiver;
-use Tests\Utilities\NaMiFake;
 
 trait FakesNaMi {
     public function setupNamiDatabaseModels() {
@@ -74,28 +75,26 @@ trait FakesNaMi {
         return (object) array_merge([
             'austrittsDatum' => '',
             'beitragsartId' => 1,
-            'jungpfadfinder' => null,
-            'mglType' => 'Mitglied',
-            'geschlecht' => 'männlich',
-            'staatsangehoerigkeit' => 'deutsch',
             'ersteTaetigkeitId' => null,
             'ersteUntergliederung' => 'Jungpfadfinder',
+            'ersteUntergliederungId' => null,
             'emailVertretungsberechtigter' => 'eltern@test.de',
+            'genericField1' => '',
+            'genericField2' => '',
+            'geschlecht' => 'männlich',
+            'jungpfadfinder' => null,
+            'landId' => 1054,
             'lastUpdated' => '2016-01-20 19:45:24',
+            'mglType' => 'Mitglied',
             'ersteTaetigkeit' => null,
             'nameZusatz' => 'Zusatz',
             'id' => 5678,
-            'staatsangehoerigkeitId' => 584,
             'version' => 30,
-            'sonst01' => false,
-            'sonst02' => false,
-            'spitzname' => 'Spitz',
-            'landId' => 1054,
-            'staatsangehoerigkeitText' => 'Andere',
             'gruppierungId' => 100105,
             'mglTypeId' => 'MITGLIED',
             'beitragsart' => 'Voller Beitrag',
             'nachname' => 'Mustermann',
+            'plz' => '42777',
             'eintrittsdatum' =>'2015-05-27 00:00:00',
             'rover' => null,
             'region' => 'Nordrhein-Westfalen (Deutschland)',
@@ -131,13 +130,21 @@ trait FakesNaMi {
             'gruppierung' => 'Solingen-Wald, Silva 100105',
             'geburtsDatum' => '2005-12-28 00:00:00',
             'ort' => 'City',
-            'ersteUntergliederungId' => null,
-            'wiederverwendenFlag' => true,
             'regionId' => 200,
+            'sonst01' => false,
+            'sonst02' => false,
+            'staatsangehoerigkeit' => 'deutsch',
+            'staatsangehoerigkeitId' => 584,
             'stufe' => 'Jungpfadfinder',
-            'genericField1' => '',
-            'genericField2' => '',
-            'plz' => '42777'
+            'spitzname' => 'Spitz',
+            'staatsangehoerigkeitText' => 'Andere',
+            'wiederverwendenFlag' => true,
         ], $overrides);
+    }
+
+    public function mockNamiUser($group) {
+        $resolver = M::mock(UserResolver::class);
+        $resolver->shouldReceive('getGroup')->andReturn($group);
+        $this->app->instance(UserResolver::class, $resolver);
     }
 }

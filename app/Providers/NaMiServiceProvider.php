@@ -40,7 +40,7 @@ class NaMiServiceProvider extends ServiceProvider
 		});
 
 		$this->app->singleton('nami', function() {
-			return app(\App\Services\Nami\NaMiService::class);
+			return app(\App\Nami\Service::class);
 		});
     }
 

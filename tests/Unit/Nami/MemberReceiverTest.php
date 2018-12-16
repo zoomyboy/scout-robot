@@ -13,9 +13,7 @@ class MemberReceiverTest extends UnitTestCase {
     public function setUp() {
         parent::setUp();
 
-        $resolver = M::mock(UserResolver::class);
-        $resolver->shouldReceive('getGroup')->andReturn(3);
-        $this->app->instance(UserResolver::class, $resolver);
+        $this->mockNamiUser(3);
     }
 
     /** @test */

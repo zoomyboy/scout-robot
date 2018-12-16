@@ -47,6 +47,7 @@ Route::get('member/table', 'MemberController@table');
 Route::get('member/{member}/table', 'MemberController@tableOne');
 Route::post('member/{member}/billpdf', 'MemberPdfController@bill');
 Route::post('member/{member}/rememberpdf', 'MemberPdfController@remember');
+Route::apiResource('member.cancel', 'MemberCancelController')->only('index');
 Route::apiResource('member', 'MemberController');
 Route::apiResource('member.payments', 'MemberPaymentsController');
 Route::apiResource('paymentbatch', 'PaymentbatchController', ['only' => 'store']);
