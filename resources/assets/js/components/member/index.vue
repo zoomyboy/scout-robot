@@ -47,17 +47,17 @@
 			rows-per-page-text="Einträge pro Seite"
 			dark expand must-sort
 		>
-			<template slot="items" slot-scope="prop">
-				<td>{{ prop.item.lastname }}</td>
-				<td>{{ prop.item.firstname }}</td>
-				<td>{{ prop.item.address }}</td>
-				<td>{{ prop.item.zip }}</td>
-				<td>{{ prop.item.city }}</td>
+			<template slot="items" slot-scope="{item}">
+				<td>{{ item.lastname }}</td>
+				<td>{{ item.firstname }}</td>
+				<td>{{ item.address }}</td>
+				<td>{{ item.zip }}</td>
+				<td>{{ item.city }}</td>
 				<td>
 					<v-btn-toggle>
-                        <v-btn @click="$router.push({name: 'member.edit', params: {id: prop.item.id}})"><v-icon>fa-pencil</v-icon></v-btn>
-                        <v-btn @click="paymentsModal = true; payments = prop.item"><v-icon>fa-money</v-icon></v-btn>
-						<v-btn><v-icon>fa-close</v-icon></v-btn>
+                        <v-btn @click="$router.push({name: 'member.edit', params: {id: item.id}})"><v-icon>fa-pencil</v-icon></v-btn>
+                        <v-btn @click="paymentsModal = true; payments = item"><v-icon>fa-money</v-icon></v-btn>
+						<v-btn @click="cancelMember(item)"><v-icon>fa-close</v-icon></v-btn>
 					</v-btn-toggle>
 				</td>
 			</template>
@@ -66,7 +66,10 @@
 </template>
 
 <script>
+    import Confirm from '../../lib/Confirm.js';
+
 	export default {
+        mixins: [ Confirm ],
 		data: function() {
 			return {
 				actions: [
@@ -150,7 +153,7 @@
 			},
 			reloadmember: function(member) {
 				var vm = this;
-			
+
 				axios.get('/api/member/'+member.id+'/table').then(function(data) {
 					vm.members = vm.members.map(function(m) {
 						if (m.id == data.data.id) {return data.data;}
@@ -159,6 +162,15 @@
 					});
 				});
 			},
+            cancelMember(member) {
+                Promise.all([
+                    this.confirm('Wollen Sie dieses Mitglied abmelden'),
+                    axios.get('/api/member/'+member.id+'/cancel')
+                ])
+                .then(() => {
+                    this.destroyById(member.id);
+                });
+            },
 			openInfo: function(row, action) {
 				this.member = row;
 			}
