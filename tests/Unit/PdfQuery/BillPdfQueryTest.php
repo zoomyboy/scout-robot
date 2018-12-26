@@ -55,12 +55,4 @@ class BillPdfQueryTest extends IntegrationTestCase {
         $this->assertContains($this->members[1]->id, BillPdfQuery::members()->filterWays([2])->get()->pluck('id'));
         $this->assertCount(2, BillPdfQuery::members()->get());
     }
-
-    private function createPayment($member, $status, $subscription, $nr) {
-        $member->createPayment([
-            'status_id' => Status::title($status)->first()->id,
-            'subscription_id' => Subscription::title($subscription)->first()->id,
-            'nr' => $nr
-        ]);
-    }
 }

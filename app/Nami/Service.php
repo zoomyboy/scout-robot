@@ -80,31 +80,22 @@ class Service {
         return collect($json);
     }
 
-    /** @todo mit guzzle lösen und testen */
     public function post($url, $fields) {
-        return $this->login(function() use ($url, $fields) {
-            $handle = curl_init($this->getBaseUrl().$url);
+        $this->login();
 
-            curl_setopt($handle, CURLOPT_CUSTOMREQUEST, 'POST');
-            if (!env('NAMI_SSL')) {
-                curl_setopt($handle, CURLOPT_SSL_VERIFYHOST, 0);
-                curl_setopt($handle, CURLOPT_SSL_VERIFYPEER, 0);
-            }
-            curl_setopt($handle, CURLOPT_POSTFIELDS, json_encode($fields));
-            curl_setopt($handle, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt ($handle, CURLOPT_COOKIEJAR, $this->getCookie());
-            curl_setopt ($handle, CURLOPT_COOKIEFILE, $this->getCookie());
-            curl_setopt ($handle, CURLOPT_HTTPHEADER, [
-                'Content-Type: application/json',
-                'Accept: application/json'
-            ]);
-            $body = curl_exec($handle);
-            curl_close($handle);
+        $response = $this->client->request('POST', $this->baseUrl.$url, [
+            'http_errors' => false,
+            'cookies' => $this->cookie,
+            'headers' => [
+                'Accept' => 'application/json',
+                'Content-Type' => 'application/json'
+            ],
+            'json' => $fields
+        ]);
 
-            if(config('nami.log')) {\Log::debug('NaMi-Response: '.$body);}
+        $json = json_decode((string) $response->getBody());
 
-            return json_decode($body);
-        });
+        return collect($json);
     }
 
     public function put($url, $fields) {
