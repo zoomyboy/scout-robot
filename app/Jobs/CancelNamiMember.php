@@ -37,7 +37,7 @@ class CancelNamiMember implements ShouldQueue
     public function handle(UserResolver $user)
     {
         if ($this->member->isNami()) {
-            $response = app('nami')->post('https://nami.dpsg.de/ica/rest/nami/mitglied/filtered-for-navigation/mglschaft-beenden?gruppierung='.$user->getGroup(), [
+            $response = app('nami')->post('/ica/rest/nami/mitglied/filtered-for-navigation/mglschaft-beenden?gruppierung='.$user->getGroup(), [
                 'id' => $this->member->nami_id,
                 'isConfirmed' => true,
                 'beendenZumDatum' => Carbon::now()->format('Y-m-d').' 00:00:00'

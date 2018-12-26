@@ -27,7 +27,7 @@ class MemberCancelTest extends FeatureTestCase
     /** @test */
     public function it_cancels_the_member_when_keepdata_is_false() {
         $service = M::mock(Service::class);
-        $service->shouldReceive('post')->with('https://nami.dpsg.de/ica/rest/nami/mitglied/filtered-for-navigation/mglschaft-beenden?gruppierung=3', [
+        $service->shouldReceive('post')->with('/ica/rest/nami/mitglied/filtered-for-navigation/mglschaft-beenden?gruppierung=3', [
             'id' => 2333,
             'isConfirmed' => true,
             'beendenZumDatum' => Carbon::now()->format('Y-m-d 00:00:00')
