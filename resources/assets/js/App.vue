@@ -58,6 +58,7 @@
                             {{ msg }}
                         </div>
                     </v-alert>
+                    <confirm></confirm>
                     <router-view></router-view>
                 </v-container>
             </v-content>
@@ -68,6 +69,7 @@
 
 <script>
     import {mapState, mapGetters} from 'vuex';
+    import Confirm from './components/Confirm.vue';
 
     export default {
         data: function() {
@@ -75,6 +77,7 @@
                 navInternalState: false
             };
         },
+        components: { Confirm },
         methods: {
             visitMenu: function(entry) {
                 if (undefined != entry.href) {

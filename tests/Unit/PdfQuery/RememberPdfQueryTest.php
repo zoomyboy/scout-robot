@@ -2,8 +2,6 @@
 
 namespace Tests\Unit\PdfQuery;
 
-use App\Status;
-use App\Subscription;
 use App\Queries\RememberPdfQuery;
 use Tests\IntegrationTestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
@@ -54,13 +52,5 @@ class RememberPdfQueryTest extends IntegrationTestCase {
         $this->assertContains($this->members[0]->id, RememberPdfQuery::members()->filterWays([1])->get()->pluck('id'));
         $this->assertContains($this->members[1]->id, RememberPdfQuery::members()->filterWays([2])->get()->pluck('id'));
         $this->assertCount(2, RememberPdfQuery::members()->get());
-    }
-
-    private function createPayment($member, $status, $subscription, $nr) {
-        $member->createPayment([
-            'status_id' => Status::title($status)->first()->id,
-            'subscription_id' => Subscription::title($subscription)->first()->id,
-            'nr' => $nr
-        ]);
     }
 }

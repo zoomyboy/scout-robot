@@ -38,6 +38,10 @@ class Member extends Model
         return new OwnCollection($models);
     }
 
+    public function isNami() {
+        return !is_null($this->nami_id);
+    }
+
     public function routeNotificationForMail()
     {
         return ($this->email_parents) ? $this->email_parents : $this->email;
@@ -131,5 +135,12 @@ class Member extends Model
     public function scopeActive($q)
     {
         return $q->where('active', true);
+    }
+
+    //----------------------------------- Boot -------------------------------------
+    public static function boot() {
+        static::deleting(function($model) {
+            $model->payments->each->delete();
+        });
     }
 }

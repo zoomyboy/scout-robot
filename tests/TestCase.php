@@ -3,12 +3,13 @@
 namespace Tests;
 
 use Carbon\Carbon;
-use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
-use Illuminate\Support\Facades\Auth;
 use Tests\Helpers\Response;
-use Tests\Traits\CreatesModels;
 use Tests\Traits\FakesNaMi;
 use Tests\Traits\MigratesDb;
+use Tests\Traits\CreatesModels;
+use Tests\Traits\CreatesPayments;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 
 abstract class TestCase extends BaseTestCase
 {
@@ -16,6 +17,7 @@ abstract class TestCase extends BaseTestCase
 	use MigratesDb;
 	use CreatesModels;
     use FakesNaMi;
+    use CreatesPayments;
 
 	public function assertCanLogin($email, $password, $guard = 'web') {
 		$this->assertTrue(Auth::guard($guard)->attempt(['email' => $email, 'password' => $password]));

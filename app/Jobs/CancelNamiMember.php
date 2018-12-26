@@ -6,6 +6,7 @@ use App\Member;
 use Carbon\Carbon;
 use App\Nami\Service;
 use Illuminate\Bus\Queueable;
+use App\Events\MemberCancelled;
 use App\Nami\Interfaces\UserResolver;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -35,14 +36,19 @@ class CancelNamiMember implements ShouldQueue
      */
     public function handle(UserResolver $user)
     {
-        $response = app('nami')->post('https://nami.dpsg.de/ica/rest/nami/mitglied/filtered-for-navigation/mglschaft-beenden?gruppierung='.$user->getGroup(), [
-            'id' => $this->member->nami_id,
-            'isConfirmed' => true,
-            'beendenZumDatum' => Carbon::now()->format('Y-m-d').' 00:00:00'
-        ]);
-
-        if ($response->get('success') === true && $response->get('responseType') == 'OK') {
+        if ($this->member->isNami()) {
+            $response = app('nami')->post('https://nami.dpsg.de/ica/rest/nami/mitglied/filtered-for-navigation/mglschaft-beenden?gruppierung='.$user->getGroup(), [
+                'id' => $this->member->nami_id,
+                'isConfirmed' => true,
+                'beendenZumDatum' => Carbon::now()->format('Y-m-d').' 00:00:00'
+            ]);
+            if ($response->get('success') === true && $response->get('responseType') == 'OK') {
+                $this->member->delete();
+            }
+        } else {
             $this->member->delete();
         }
+
+        event(new MemberCancelled($this->member->id));
     }
 }

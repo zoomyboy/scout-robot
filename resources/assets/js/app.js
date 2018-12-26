@@ -31,9 +31,11 @@ import echo from './mixins/echo.js';
 Vue.mixin(echo);
 
 import progress from './vuex/progress.js';
+import confirm from './vuex/confirm.js';
+import member from './vuex/member.js';
 
 const store = new Vuex.Store({
-    modules: { progress },
+    modules: { progress, confirm, member },
     state: {
         user: false,
         actions: [],

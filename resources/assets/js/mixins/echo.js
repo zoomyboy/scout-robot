@@ -13,7 +13,6 @@ export default {
 
             window.Echo.channel('import')
                 .listen('Import\\MemberCreated', function (e) {
-                    console.log(e);
                     store.commit('startProcess', {
                         name: 'memberImported',
                         amount: e.progress,
@@ -21,7 +20,6 @@ export default {
                     });
                 })
                 .listen('Import\\MemberUpdated', function (e) {
-                    console.log(e);
                     store.commit('startProcess', {
                         name: 'memberImported',
                         amount: e.progress,
@@ -29,6 +27,13 @@ export default {
                     });
                 })
             ;
+
+            window.Echo.channel('notification')
+                .listen('MemberCancelled', function(e) {
+                    store.commit('member/destroy', {
+                        id: e.memberId
+                    });
+                });
         }
     }
 }
