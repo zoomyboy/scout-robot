@@ -29,8 +29,8 @@ class MemberCancelTest extends FeatureTestCase
         $service = M::mock(Service::class);
         $service->shouldReceive('post')->with('/ica/rest/nami/mitglied/filtered-for-navigation/mglschaft-beenden?gruppierung=3', [
             'id' => 2333,
-            'isConfirmed' => true,
-            'beendenZumDatum' => Carbon::now()->format('Y-m-d 00:00:00')
+            'isConfirmed' => 'true',
+            'beendenZumDatum' => Carbon::now()->subDays(1)->format('Y-m-d 00:00:00')
         ])->once()->andReturn(collect(json_decode('{"success":true,"data":null,"responseType":"OK","message":"Die Mitgliedschaft wurde beendet.","title":null}')));
         $this->app->instance(Service::class, $service);
 
