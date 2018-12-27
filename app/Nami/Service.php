@@ -66,7 +66,6 @@ class Service {
         return true;
     }
 
-    /** @todo mit guzzle lösen und testen */
     public function get($url) {
         $this->login();
 
@@ -87,10 +86,10 @@ class Service {
             'http_errors' => false,
             'cookies' => $this->cookie,
             'headers' => [
-                'Accept' => 'application/json',
-                'Content-Type' => 'application/json'
+                'Accept' => '*/*',
+                'Content-Type' => 'application/x-www-form-urlencoded; charset=UTF-8'
             ],
-            'json' => $fields
+            'form_params' => $fields
         ]);
 
         $json = json_decode((string) $response->getBody());

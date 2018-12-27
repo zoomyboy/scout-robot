@@ -39,14 +39,8 @@ class CancelNamiMember implements ShouldQueue
         if ($this->member->isNami()) {
             $response = app('nami')->post('/ica/rest/nami/mitglied/filtered-for-navigation/mglschaft-beenden?gruppierung='.$user->getGroup(), [
                 'id' => $this->member->nami_id,
-                'isConfirmed' => false,
-                'beendenZumDatum' => ''
-            ]);
-            dd($response);
-            $response = app('nami')->post('/ica/rest/nami/mitglied/filtered-for-navigation/mglschaft-beenden?gruppierung='.$user->getGroup(), [
-                'id' => $this->member->nami_id,
-                'isConfirmed' => true,
-                'beendenZumDatum' => Carbon::now()->format('Y-m-d').' 00:00:00'
+                'isConfirmed' => 'true',
+                'beendenZumDatum' => Carbon::now()->subDays(1)->format('Y-m-d').' 00:00:00'
             ]);
             if ($response->get('success') === true && $response->get('responseType') == 'OK') {
                 $this->member->delete();
