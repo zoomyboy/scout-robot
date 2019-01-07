@@ -93,7 +93,7 @@ class Member {
             'vorname' => $member->firstname,
             'nachname' => $member->lastname,
             'spitzname' => $member->nickname,
-            'beitragsartId' => $member->subscription->fee->nami_id,
+            'beitragsartId' => $member->subscription ? $member->subscription->fee->nami_id : null,
             'email' => $member->email,
             'emailVertretungsberechtigter' =>  $member->email_parents,
             'geburtsDatum' => $member->birthday->format('Y-m-d').' 00:00:00',

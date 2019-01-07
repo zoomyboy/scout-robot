@@ -12,6 +12,8 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use App\Nami\Manager\Member as MemberManager;
+use App\Nami\Receiver\Member as MemberReceiver;
 
 class CancelNamiMember implements ShouldQueue
 {
@@ -36,17 +38,36 @@ class CancelNamiMember implements ShouldQueue
      */
     public function handle(UserResolver $user)
     {
-        if ($this->member->isNami()) {
-            $response = app('nami')->post('/ica/rest/nami/mitglied/filtered-for-navigation/mglschaft-beenden?gruppierung='.$user->getGroup(), [
+        if (!$this->member->isNami()) {
+            $this->member->delete();
+            event(new MemberCancelled($this->member->id));
+            return;
+        }
+
+        $currentMember = app(MemberReceiver::class)->all()->keyBy('id')->get($this->member->nami_id);
+
+        if (!$currentMember) {
+            $this->member->delete();
+            event(new MemberCancelled($this->member->id));
+            return;
+        }
+
+        if($currentMember->entries_status == 'Inaktiv') {
+            app('nami')->post('/ica/rest/nami/mitglied/filtered-for-navigation/mgl-aktivieren?gruppierung='.$user->getGroup(), [
                 'id' => $this->member->nami_id,
-                'isConfirmed' => 'true',
-                'beendenZumDatum' => Carbon::now()->subDays(1)->format('Y-m-d').' 00:00:00'
+                'isConfirmed' => 'true'
             ]);
-            if ($response->get('success') === true && $response->get('responseType') == 'OK') {
-                $this->member->delete();
-                event(new MemberCancelled($this->member->id));
-            }
-        } else {
+
+            $this->member->update(['keepdata' => false]);
+            app(MemberManager::class)->push($this->member);
+        }
+
+        $response = app('nami')->post('/ica/rest/nami/mitglied/filtered-for-navigation/mglschaft-beenden?gruppierung='.$user->getGroup(), [
+            'id' => $this->member->nami_id,
+            'isConfirmed' => 'true',
+            'beendenZumDatum' => Carbon::now()->subDays(1)->format('Y-m-d').' 00:00:00'
+        ]);
+        if ($response->get('success') === true && $response->get('responseType') == 'OK') {
             $this->member->delete();
             event(new MemberCancelled($this->member->id));
         }
