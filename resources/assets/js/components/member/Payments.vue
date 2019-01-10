@@ -9,7 +9,7 @@
                         <v-text-field v-model="add.nr" required label="Name" :rules="[validateRequired()]"></v-text-field>
                         <v-select
                             :items="statuses"
-                            v-model="add.status"
+                            v-model="add.status_id"
                             label="Status"
                             item-text="title"
                             item-value="id"
@@ -19,7 +19,7 @@
                         </v-select>
                         <v-select
                             :items="subscriptions"
-                            v-model="add.subscription"
+                            v-model="add.subscription_id"
                             label="Beitrag"
                             item-text="title"
                             item-value="id"
@@ -41,7 +41,7 @@
                         <v-text-field v-model="editData.nr" required label="Name" :rules="[validateRequired()]"></v-text-field>
                         <v-select
                             :items="statuses"
-                            v-model="editData.status"
+                            v-model="editData.status_id"
                             label="Status"
                             item-text="title"
                             item-value="id"
@@ -51,7 +51,7 @@
                         </v-select>
                         <v-select
                             :items="subscriptions"
-                            v-model="editData.subscription"
+                            v-model="editData.subscription_id"
                             label="Beitrag"
                             item-text="title"
                             item-value="id"
@@ -86,7 +86,7 @@
         <v-container>
             <v-toolbar class="blue darken-3" dark>
                 <v-toolbar-items>
-                    <v-btn @click="adddialog=true; add = {status: 1, nr: '', subscription: member.subscription_id}" flat>Hinzufügen</v-btn>
+                    <v-btn @click="adddialog=true; add = {status_id: 1, nr: '', subscription_id: member.subscription_id}" flat>Hinzufügen</v-btn>
                     <v-btn @click="billDialog = !billDialog; rememberDialog = false" flat>
                         <v-icon v-if="!billDialog">fa-money</v-icon><v-icon v-if="billDialog">fa-close</v-icon>
                         &nbsp;&nbsp;
@@ -122,7 +122,7 @@
             </v-container>
             <v-divider></v-divider>
             <v-data-table
-                v-bind:headers="[
+                :headers="[
                     {text: 'Nr', value: 'nr', align: 'left'},
                     {text: 'Status', value: 'status.title', align: 'left'},
                     {text: 'Beitrag', value: 'subscription.title', align: 'left'},
@@ -150,6 +150,7 @@
 </template>
 
 <script>
+    /* @todo Refactor */
     import {mapState} from 'vuex';
 
     export default {
@@ -160,16 +161,16 @@
                 addValid: false,
                 add: {
                     nr: '',
-                    status: null,
-                    subscription: null
+                    status_id: null,
+                    subscription_id: null
                 },
                 editdialog: false,
                 editValid: false,
                 editData: {
                     id: -1,
                     nr: '',
-                    status: null,
-                    subscription: null
+                    status_id: null,
+                    subscription_id: null
                 },
                 deletedialog: false,
                 deleteData: {
@@ -197,43 +198,50 @@
             }
         },
         methods: {
-            triggerAdd: function() {
-                var vm = this;
-
+            triggerAdd() {
                 axios.post('/api/member/'+this.member.id+'/payments', this.add).then((ret) => {
-                    vm.getPayments(vm.member);
-                    vm.adddialog = false;
+                    this.getPayments(this.member);
+                    this.adddialog = false;
+                    this.$store.commit('member/setStrikes', {
+                        id: this.member.id,
+                        strikes: ret.data.strikes
+                    });
                 });
             },
-            triggerEdit: function() {
-                var vm = this;
+            triggerEdit() {
+                var url = '/api/member/'+this.member.id+'/payments/'+this.editData.id;
 
-                axios.patch('/api/member/'+this.member.id+'/payments/'+this.editData.id, this.editData).then((ret) => {
-                    vm.getPayments(vm.member);
-                    vm.editdialog = false;
+                axios.patch(url, this.editData).then((ret) => {
+                    this.getPayments(this.member);
+                    this.editdialog = false;
+                    this.$store.commit('member/setStrikes', {
+                        id: this.member.id,
+                        strikes: ret.data.strikes
+                    });
                 });
             },
-            triggerDelete: function() {
-                var vm = this;
-
-                axios.delete('/api/member/'+this.member.id+'/payments/'+this.deleteData.id).then((ret) => {
-                    vm.getPayments(vm.member);
-                    vm.deletedialog = false;
+            triggerDelete() {
+                var url = '/api/member/'+this.member.id+'/payments/'+this.deleteData.id;
+                axios.delete(url).then((ret) => {
+                    this.getPayments(this.member);
+                    this.deletedialog = false;
+                    this.$store.commit('member/setStrikes', {
+                        id: this.member.id,
+                        strikes: ret.data.strikes
+                    });
                 });
             },
             getPayments: function(m) {
-                var vm = this;
-
                 axios.get('/api/member/'+m.id+'/payments').then((ret) => {
-                    vm.payments = ret.data;
+                    this.payments = ret.data;
                 });
             },
             editModel: function(payment) {
                 this.editData = {
                     id: payment.id,
                     nr: payment.nr,
-                    status: payment.status_id,
-                    subscription: payment.subscription_id
+                    status_id: payment.status_id,
+                    subscription_id: payment.subscription_id
                 };
             },
             deleteModel: function(payment) {

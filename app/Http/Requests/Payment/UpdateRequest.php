@@ -18,8 +18,8 @@ class UpdateRequest extends Request {
 					->where('member_id', $this->route('member')->id)
 					->where('id', '!=', $this->route('payment')->id);
 			})],
-			'status' => 'required|exists:statuses,id',
-			'subscription' => 'required|exists:subscriptions,id',
+			'status_id' => 'required|exists:statuses,id',
+			'subscription_id' => 'required|exists:subscriptions,id',
 		];
 	}
 
@@ -30,12 +30,11 @@ class UpdateRequest extends Request {
 	}
 
     public function persist($model = null) {
-        $model->fill(['nr' => $this->nr]);
+        $model->update($this->only(['subscription_id', 'nr', 'status_id']));
 
-        $model->status()->associate(Status::find($this->status));
-        $model->subscription()->associate(Subscription::find($this->subscription));
-        $model->save();
-
-        return $model;
+        return [
+            'payment' => $model,
+            'strikes' => $this->route()->member->strikes
+        ];
     }
 }

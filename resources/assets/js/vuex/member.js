@@ -29,6 +29,10 @@ export default {
             store.members = store.members.filter((m) => {
                 return m.id !== member.id;
             });
+        },
+        setStrikes(store, {id, strikes}) {
+            var index = store.members.findIndex(member => member.id == id);
+            store.members[index].strikes = strikes;
         }
     }
 }

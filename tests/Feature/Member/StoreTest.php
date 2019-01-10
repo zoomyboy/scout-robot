@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Feature\Member;
+namespace Tests\Feature\Member;
 
 use Setting;
 use App\Member;

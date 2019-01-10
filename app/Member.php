@@ -118,7 +118,7 @@ class Member extends Model
     }
 
     public function createPayment($attributes) {
-        $this->payments()->create($attributes);
+        return $this->payments()->create($attributes);
     }
 
 

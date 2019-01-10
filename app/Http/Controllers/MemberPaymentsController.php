@@ -16,18 +16,18 @@ class MemberPaymentsController extends Controller
     }
 
     public function store(Member $member, StoreRequest $request) {
-        $request->persist();
+        return response()->json($request->persist());
     }
 
     public function update(Member $member, Payment $payment, UpdateRequest $request) {
-        $request->persist($payment);
-
-        $payment = $payment->fresh(['subscription', 'status']);
-
-        return response()->json($payment->toArray());
+        return response()->json($request->persist($payment));
     }
 
     public function destroy(Member $member, Payment $payment) {
         $payment->delete();
+
+        return response()->json([
+            'strikes' => $member->strikes
+        ]);
     }
 }
