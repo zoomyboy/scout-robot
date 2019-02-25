@@ -6,8 +6,8 @@ use Illuminate\Http\Request;
 use \FPDF;
 use App\Member;
 use App\Collections\OwnCollection;
-use App\Services\Pdf\Bill as BillPdfService;
-use App\Services\Pdf\Remember as RememberPdfService;
+use App\Pdf\Generator\Bill as BillPdfService;
+use App\Pdf\Generator\Remember as RememberPdfService;
 use App\Queries\BillPdfQuery;
 use App\Queries\RememberPdfQuery;
 
@@ -19,7 +19,10 @@ class MemberPdfController extends Controller
             : (new OwnCollection([$member]))
         ;
 
-		$service = new BillPdfService($members->groupBy('lastname'), ['deadline' => request()->deadline]);
+		$service = app()->makeWith(BillPdfService::class, [
+            'members' => $members->groupBy('lastname'),
+            'atts' => ['deadline' => request()->deadline]
+        ]);
 
 		return $service->handle(str_slug('Rechnung für '.$member->lastname).'.pdf');
     }
@@ -44,7 +47,11 @@ class MemberPdfController extends Controller
 
 	public function remember(Member $member) {
 		$members = request()->includeFamilies === true ? Member::family($member)->get()->groupBy('lastname') : (new OwnCollection([$member]))->groupBy('lastname');
-		$service = new RememberPdfService($members, ['deadline' => request()->deadline]);
+
+        $service = app()->makeWith(RememberPdfService::class, [
+            'members' => $members,
+            'atts' => ['deadline' => request()->deadline]
+        ]);
 
 		return $service->handle(str_slug('Erinnerung für '.$member->lastname).'.pdf');
     }

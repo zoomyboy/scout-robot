@@ -1,17 +1,32 @@
 <?php
 
-namespace App\Services\Pdf;
+namespace App\Pdf\Generator;
 
+use App\Pdf\Interfaces\LetterSidebarInterface;
+use App\Pdf\Repositories\RememberContentRepository;
+use App\Pdf\Traits\HasDate;
+use App\Pdf\Traits\HasHeader;
+use App\Pdf\Traits\HasSidebar;
+use App\Pdf\Traits\HasSubject;
 use Carbon\Carbon;
 
 class Remember extends GlobalPdf {
 
+    use HasHeader;
+    use HasSidebar;
+    use HasSubject;
+    use HasDate;
+
     public $members;
     public $deadline;
+    public $content;
+    public $sidebar;
 
-    public function __construct($members, $atts) {
+    public function __construct($members, $atts, LetterSidebarInterface $sidebar) {
         parent::__construct();
+        $this->content = new RememberContentRepository();
 
+        $this->sidebar = $sidebar;
         $this->members = $members;
         $this->deadline = $atts['deadline'] ? Carbon::parse($atts['deadline'])->format('d.m.Y') : '';
     }
@@ -19,21 +34,15 @@ class Remember extends GlobalPdf {
     public function handle($filename) {
         foreach($this->members as $member) {
             $this->pdf->AddPage();
-            $this->header($member[0]);
+            $this->generateHeader($member[0]);
 
-            $this->pdf->SetFont('Arvo', '', 14);
-            $this->pdf->SetTextColor(0, 48, 86);
-            $this->pdf->Cell(0, 10, '', 0, 1);
-            $this->pdf->Cell(60, 12, utf8_decode('Zahlungserinnerung'), 0, 0);
-
-            $this->pdf->SetFont('OpenSans', '', 8);
-            $this->pdf->SetTextColor(0, 0, 0);
-            $this->pdf->Cell(0, 12, utf8_decode('Solingen, den '.date('d.m.Y')), 0, 1, 'R');
+            $this->generateSubject();
+            $this->generateDate();
 
             $this->pdf->SetFont('OpenSans', '', 10);
             $this->pdf->SetTextColor(0, 0, 0);
-            $this->pdf->Cell(0, 10, utf8_decode('Liebe Familie '.$member[0]->lastname).',', 0, 1);
-            $this->pdf->MultiCell(0, 5, utf8_decode('Am Anfang dieses Jahres haben wir Ihnen Ihre bisherigen Ausstände von '.$member->totalAmount([2]).' ').EURO.utf8_decode(' für den '.$this->config->groupname.' und die DPSG in Rechnung gestellt. Diese setzen sich wie folgt zusammen:'), 0, 1);
+            $this->pdf->Cell(0, 10, utf8_decode($this->content->getGreeting($member[0]->lastname)).',', 0, 1);
+            $this->pdf->MultiCell(0, 5, $this->formatStringWithEuro($this->content->getIntro($member)), 0, 1);
 
             $this->pdf->Cell(0, 5, '', 0, 1);
             foreach ($member as $m) {
@@ -100,7 +109,7 @@ class Remember extends GlobalPdf {
 
             $this->pdf->Image(resource_path('img/end.png'), 154, $this->pdf->GetY() - 10, 4);
 
-            $this->sidebar();
+            $this->generateSidebar();
         }
 
         return $this->save($filename);
