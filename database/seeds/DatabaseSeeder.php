@@ -12,9 +12,9 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $this->call(FeeSeeder::class);
-		$this->call(SubscriptionSeeder::class);
+        $this->call(SubscriptionSeeder::class);
         $this->call(ActivitySeeder::class);
-		$this->call(NationalitySeeder::class);
+        $this->call(NationalitySeeder::class);
         $this->call(RightSeeder::class);
         $this->call(UsergroupSeeder::class);
         $this->call(UserSeeder::class);
@@ -23,7 +23,7 @@ class DatabaseSeeder extends Seeder
         $this->call(RegionSeeder::class);
         $this->call(ConfessionSeeder::class);
         $this->call(StatusSeeder::class);
-        $this->call(ConfSeeder::class);
+        $this->call(SettingSeeder::class);
         $this->call(WaySeeder::class);
 
         if (app()->environment() != 'local' && app()->environment() != 'production') {

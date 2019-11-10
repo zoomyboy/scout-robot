@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateConfsTable extends Migration
+class CreateSettingsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,11 @@ class CreateConfsTable extends Migration
      */
     public function up()
     {
-        Schema::create('confs', function (Blueprint $table) {
+        Schema::create('settings', function (Blueprint $table) {
             $table->increments('id');
-			$table->text('emailBillText');
-			$table->text('emailRememberText');
-			$table->text('emailGreeting');
+            $table->text('emailBillText');
+            $table->text('emailRememberText');
+            $table->text('emailGreeting');
         });
     }
 
@@ -28,6 +28,6 @@ class CreateConfsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('confs');
+        Schema::dropIfExists('settings');
     }
 }

@@ -20,9 +20,6 @@ Route::post('/pdf/bill', 'MemberPdfController@allBill');
 Route::post('/pdf/remember', 'MemberPdfController@allRemember');
 
 Route::get('files/{file}', 'FileController@display')
-	->where('file', '[0-9a-zA-Z\/\.]+');
+    ->where('file', '[0-9a-zA-Z\/\.]+');
 
 Route::get('/nami/login', 'NaMiController@login');
-
-Route::get('/{vue}', 'HomeController@index')
-	->where('vue', '[a-zA-Z0-9\-\/\_]*');

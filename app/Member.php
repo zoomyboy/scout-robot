@@ -139,6 +139,7 @@ class Member extends Model
 
     //----------------------------------- Boot -------------------------------------
     public static function boot() {
+        parent::boot();
         static::deleting(function($model) {
             $model->payments->each->delete();
         });

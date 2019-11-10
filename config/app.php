@@ -94,7 +94,7 @@ return [
     */
 
     'fallback_locale' => 'en',
-	'faker_locale' => 'de_DE',
+    'faker_locale' => 'de_DE',
 
     /*
     |--------------------------------------------------------------------------
@@ -165,11 +165,10 @@ return [
         App\Providers\HorizonServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Providers\PdfServiceProvider::class,
-		Laravel\Passport\PassportServiceProvider::class,
-		Intervention\Image\ImageServiceProvider::class,
-	    Barryvdh\DomPDF\ServiceProvider::class,
-		Zoomyboy\BetterNotifications\ServiceProvider::class,
-		\App\Providers\NaMiServiceProvider::class,
+        Laravel\Passport\PassportServiceProvider::class,
+        Intervention\Image\ImageServiceProvider::class,
+        Zoomyboy\BetterNotifications\ServiceProvider::class,
+        \App\Providers\NaMiServiceProvider::class,
         \App\Providers\SettingServiceProvider::class
     ],
 
