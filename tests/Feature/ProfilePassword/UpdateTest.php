@@ -145,8 +145,4 @@ class UpdateTest extends TestCase {
         ]);
         $this->assertCanLogin('admin@example.tz', 'admin22');
     }
-
-    private function assertCanLogin($email, $password, $guard = 'web') {
-        $this->assertTrue(Auth::guard($guard)->attempt(['email' => $email, 'password' => $password]));
-    }
 }
